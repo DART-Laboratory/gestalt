@@ -1,0 +1,28 @@
+%% \documentclass[11pt,letterpaper,twocolumn]{article}
+%% % conference specific style
+%% \usepackage[11pt,nocopyright]{sty/sigmin}
+
+\documentclass[conference]{sty/IEEEtran}
+\IEEEoverridecommandlockouts
+
+% include custom and table macros 
+\include{macros}
+\include{tables/inspection-macros}
+
+\begin{document}
+
+\title{\Sys: TITLE GOES HERE}
+\maketitle
+\input{abstract}
+\input{intro}
+\input{design}
+\input{eval}
+\input{relwk}
+\input{conclusion}
+%% \input{ack}
+\balance
+\bibliographystyle{abbrvnat}
+\footnotesize
+\setlength{\bibsep}{3pt}
+\bibliography{bib-files/hassan-prov,bib-files/hassan-misc}
+\end{document}

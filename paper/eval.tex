@@ -1,0 +1,22 @@
+\section{Evaluation}
+\label{s:eval}
+See Table~\ref{tab:comparing:inspections} for detailed results.
+
+\input{tables/inspection-table}
+
+\input{tables/dataset-table}
+
+\begin{figure*}[t!]
+  \centering
+            \subfloat[\Sys response times to assign scores and build concise graphs.\label{fig:cdf:response:score}]
+                     {\includegraphics[width=0.40\textwidth]{fig/backforwardresponse/responsetime.pdf}}\hfill
+                     
+            \subfloat[Underlying provenance tracker response times to build complete graphs.\label{fig:cdf:response}]
+                     {\includegraphics[width=0.30\textwidth]{fig/backforwardresponse/responsetime.pdf}}\hfill
+                       
+\caption{CDF of query response times for all the threat alerts in our dataset.}
+\vspace{-3ex}
+\end{figure*}
+
+
+
