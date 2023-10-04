@@ -48,3 +48,11 @@ Thumbs.db
 *.mov
 *.wmv
 
+*.pdf
+*.bbl
+*.blg
+*.fls
+*.out
+*.gz
+*.aux
+*.fdb_latexmk
