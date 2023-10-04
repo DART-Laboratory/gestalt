@@ -1,28 +1,45 @@
-%% \documentclass[11pt,letterpaper,twocolumn]{article}
-%% % conference specific style
-%% \usepackage[11pt,nocopyright]{sty/sigmin}
+% % \documentclass[11pt,letterpaper,twocolumn]{article}
+% % conference specific style
+% \usepackage{sty/usenix}
+%
+% % conference specific style
+% \usepackage{sty/usenix}
 
-\documentclass[conference]{sty/IEEEtran}
-\IEEEoverridecommandlockouts
+\documentclass[conference,compsoc]{IEEEtran}
+%\IEEEoverridecommandlockouts
 
-% include custom and table macros 
+% common packages
 \include{macros}
-\include{tables/inspection-macros}
 
 \begin{document}
 
-\title{\Sys: TITLE GOES HERE}
+\title{\Sys: A Privacy Preserving Host Intrusion Detection System}
 \maketitle
 \input{abstract}
 \input{intro}
+\input{background}
+\input{threat}
 \input{design}
+% \input{impl}
 \input{eval}
+\input{discussion}
 \input{relwk}
 \input{conclusion}
-%% \input{ack}
+
+% \input{ack}
+% \balance
+% \bibliographystyle{abbrvnat}
+% \footnotesize
+% \setlength{\bibsep}{3pt}
+% \bibliography{bib-files/hassan,bib-files/hassan-misc}
+% \input{appendix}
+% \end{document}
+
 \balance
-\bibliographystyle{abbrvnat}
+\bibliographystyle{IEEEtranS}
+{
 \footnotesize
 \setlength{\bibsep}{3pt}
-\bibliography{bib-files/hassan-prov,bib-files/hassan-misc}
+\bibliography{bib-files/hassan,bib-files/hassan-misc}}
+\input{appendix}
 \end{document}
