@@ -1,7 +1,6 @@
 \section{Evaluation}
 \label{sec:eval}
 
-\PP{Data Diversity in OpTC Dataset} \\
 
 \PP{Federated Learning Using Local Language Models} In this experiment, we employed a federated learning setup comprising one central server and three client machines. The central server's primary role is to execute the FedAvg algorithm on the \gnn models. Initially, the server initializes the weights of a \gnnshort model, which it subsequently dispatches to each client machine. This ensures that all client machines commence training with identical initial weights for the \gnnshort. Each client machine employs its local dataset to initially train a \wordvec model, responsible for encoding semantic attributes in audit logs into a vector space. Subsequently, using these feature vectors, each client machine proceeds to train a \gnnshort model. Once trained, each client sends its respective \gnnshort model to the server for federated averaging. The server then returns the averaged model to the clients for additional rounds of federated learning. The experimental results are presented in Table~\ref{local:wordvec}. \\
 
@@ -19,7 +18,7 @@
         \label{local:wordvec}
     \end{table}
 
-\PP{Federated Learning Using Central Language Model} \\
+\PP{\Sys Performance Using Central Language Model} \\
 
 \begin{table}[h!]
     \centering
@@ -34,7 +33,7 @@
         \end{tabular}
     \end{table}
 
-\PP{Federated Learning Using Space Aligned Language Model} \\
+\PP{\Sys Performance Using Space Aligned Language Model} \\
 
 \begin{table}[h!]
     \centering
@@ -49,7 +48,7 @@
         \end{tabular}
     \end{table}
 
-\PP{Federated Learning Using FedAvg Language Model} \\
+\PP{\Sys Performance Using FedAvg Language Model} \\
 
 \begin{table}[h!]
     \centering
@@ -65,6 +64,8 @@
     \end{table}
 
 \PP{Space Aligning Language Models Using Procustes Analysis} \\
+
+\PP{\Sys Performance Using Hash based Semantic Encoding} \\
 
 \PP{PIDS Performance With One-Host vs Multi-Host Data} \\
 
