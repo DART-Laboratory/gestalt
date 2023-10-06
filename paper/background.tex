@@ -1,3 +1,29 @@
 \section{Motivation}
 \label{sec:motivation}
 
+1. System logs may contain private information. According to \cite{datadog}, audit logs can potentially include sensitive data like bank account numbers. \\
+
+2. Traditional intrusion detection systems require substantial volumes of data for training, which is typically not available on a single host machine. As a result, data must be aggregated from multiple hosts, potentially compromising privacy. Training on data from a single host can also result in suboptimal performance. \\
+
+3. Sensitive organizations, such as banks or hospitals, often handle relatively smaller but highly confidential datasets. Conventional intrusion detectors may prove ineffective in such specialized domains. \\
+
+4. The existing design of intrusion detection systems impedes the integration of federated learning techniques. \\
+
+\begin{table}[h!]
+  \centering
+  \scriptsize
+    \caption{Effect of hosts on PIDS.}
+      \begin{tabular}{ |c | c | c | c | c |}
+        \hline
+          \bf IDS & Hosts & \bf Precision & \bf Recall & \bf \fscore \\
+          \hline
+          \threatrace & 1 & 0.52  & 0.83 & 0.64  \\
+          \hline
+          \threatrace & 3 & 0.85  & 0.86 & 0.85  \\
+          \hline
+          Flash & 1 & 0.63  & 0.85 & 0.72  \\
+          \hline
+          Flash & 3 & 0.92  & 0.93 & 0.92  \\
+          \hline
+      \end{tabular}
+  \end{table}
