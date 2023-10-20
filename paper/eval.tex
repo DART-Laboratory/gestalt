@@ -1,9 +1,6 @@
 \section{Evaluation}
 \label{sec:eval}
 
-
-\PP{Federated Learning Using Local Language Models} In this experiment, we employed a federated learning setup comprising one central server and three client machines. The central server's primary role is to execute the FedAvg algorithm on the \gnn models. Initially, the server initializes the weights of a \gnnshort model, which it subsequently dispatches to each client machine. This ensures that all client machines commence training with identical initial weights for the \gnnshort. Each client machine employs its local dataset to initially train a \wordvec model, responsible for encoding semantic attributes in audit logs into a vector space. Subsequently, using these feature vectors, each client machine proceeds to train a \gnnshort model. Once trained, each client sends its respective \gnnshort model to the server for federated averaging. The server then returns the averaged model to the clients for additional rounds of federated learning. The experimental results are presented in Table~\ref{local:wordvec}. \\
-
 \begin{table}[h!]
     \centering
     \scriptsize
@@ -18,7 +15,26 @@
         \label{local:wordvec}
     \end{table}
 
-\PP{\Sys Performance Using Central Language Model} \\
+
+  \begin{table}[h!]
+    \centering
+    \scriptsize
+      \caption{Effect of logs quantity on existing PIDS.}
+        \begin{tabular}{ |c | c | c | c | c |}
+          \hline
+            \bf IDS & Hosts & \bf Precision & \bf Recall & \bf \fscore \\
+            \hline
+            \threatrace & 1 & 0.52  & 0.83 & 0.64  \\
+            \hline
+            \threatrace & 3 & 0.85  & 0.86 & 0.85  \\
+            \hline
+            Flash & 1 & 0.63  & 0.85 & 0.72  \\
+            \hline
+            Flash & 3 & 0.92  & 0.93 & 0.92  \\
+            \hline
+        \end{tabular}
+    \end{table}
+
 
 \begin{table}[h!]
     \centering
@@ -33,7 +49,6 @@
         \end{tabular}
     \end{table}
 
-\PP{\Sys Performance Using Space Aligned Language Model} \\
 
 \begin{table}[h!]
     \centering
@@ -48,25 +63,37 @@
         \end{tabular}
     \end{table}
 
-\PP{PIDS Performance Using Utility Server Architecture} \\
-
-\begin{table}[h!]
+  {\renewcommand{\arraystretch}{1.2}% for the vertical padding
+  \begin{table*}[t!]
     \centering
     \scriptsize
-      \caption{PIDS Performance Using Utility Server Architecture.}
-        \begin{tabular}{ | c | c | c | c | c | c | c |}
-          \hline
-            \bf Dataset & \bf Precision & \bf Recall & \bf \fscore & \bf TP & \bf FP  & \bf TN\\
-          \hline
-           OpTC & 0.86  & 0.95 & 0.90 & 620 & 100 & 30 \\
-           Cadets & 0.92  & 0.99 & 0.95 & 12851 & 1062 & 1 \\
-           Trace & 0.63  & 0.99 & 0.77 & 67382 & 39995 & 1 \\
-           Theia & 0.64  & 0.99 & 0.78 & 25317 & 13973 & 2 \\
-           Fivedirections & -  & - & - & - & - & - \\
+    \caption{Performance of \Sys (Utility Server) against \threatrace.}
+    \setlength{\tabcolsep}{8pt}
+    \begin{tabular}{ccccccccccccc}
+      \toprule
 
-          \hline
-        \end{tabular}
-    \end{table}
+    \multirow{2}{*}{\textbf{Datasets}}
+    & \multicolumn{4}{c }{\Norothead{ \bf \threatrace}}
+    & \multicolumn{4}{c }{\Norothead{ \bf \Sys}}
+    \\ \cmidrule(r{\tbspace}){2-5} \cmidrule(r{\tbspace}){6-9} \cmidrule(r{\tbspace}){10-13}
+
+      & {\bf Precision} &  {\bf Recall} & {\bf \fscore} & {\bf TP} / {\bf FP}  & {\bf Precision.}  & {\bf Recall} & {\bf \fscore} & {\bf TP} / {\bf FP}   \\
+
+    \midrule
+
+    Cadets (E3) &  \TCP  & \TCR & \TCF & \TCTP/ \TCFP & \FCP & \FCR & \FCF & \FCTP/ \FCFP  \\
+    Trace (E3) &  \TTP  & \TTR & \TTF & \TTTP/ \TTFP & \FTP  & \FTR & \FTF & \FTTP / \FTFP   \\
+    Theia (E3) &  \TTHP  & \TTHR & \TTHF & \TTHTP/ \TTHFP & \FTHP  & \FTHR & \FTHF & \FTHTP / \FTHFP  \\
+    Fivedirections (E3) &  \TFP  & \TFR & \TFF & \TFTP/ \TFFP & \FFP  & \FFR & \FFF & \FFTP / \FFFP  \\
     
+    \optc & \TOAP  & \TOAR & \TOAF & \TOATP/ \TOAFP & \FOAP  & \FOAR & \FOAF & \FOATP/ \FOAFP \\
+    
+    Cadets (E5) &  -  & - & - & -/ - & - & - & - & -/ -  \\
+    Trace (E5) &  -  & - & - & -/ - & - & - & - & -/ -  \\
+    Theia (E5) &  -  & - & - & -/ - & - & - & - & -/ -  \\
+    Fivedirections (E5) &  -  & - & - & -/ - & - & - & - & -/ -  \\
 
-
+    \bottomrule
+    \end{tabular}
+  \label{summary:benchmarks:large}
+  \end{table*}}
