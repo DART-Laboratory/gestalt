@@ -1,2 +1,8 @@
 
 \section{Threat Model \& Assumptions}
+
+To build a comprehensive threat model, we make several assumptions about the attacker's behavior and the system's characteristics. We assume that attackers are covert and actively conceal their malicious actions by blending them with legitimate background data. This approach makes it challenging to identify malicious activity and differentiate it from benign behavior. Moreover, attackers may use zero-day exploits to target the system, implying that there are no known attack patterns available for training. This lack of prior knowledge poses a significant challenge to developing effective detection techniques.
+
+In our threat model, we assume that attackers must leave behind identifiable patterns in the system's records to carry out malicious activities distinct from typical behavior. These patterns will differentiate the structure of the attacker's node from those of legitimate nodes with the same label. By analyzing the graph structure and the features of the nodes, we can identify unusual entities corresponding to the attacker's behavior and track them over time. Similar to other data provenance works~\cite{nodoze2019,priotracker2018,mzx2016,bates2017transparent}, we assume that the provenance collection system provides accurate and complete records of all activities and changes occurring in the computer system. Moreover, we assume that the integrity of the collected audit logs and the embedding recycling database is maintained all the time by using existing tamper-resistant storages~\cite{paccagnella2020custos,hardlog}. This ensures that the provenance graphs constructed by \Sys are reliable and can be used effectively for detecting and analyzing cybersecurity threats.
+
+
