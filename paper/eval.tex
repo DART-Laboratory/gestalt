@@ -1,117 +1,115 @@
-\section{Evaluation}
-\label{sec:eval}
+ \section{Evaluation}
+ \label{sec:eval}
 
-\begin{table}[h!]
-    \centering
-    \scriptsize
-      \caption{Federated Learning Using Local Language Models.}
-        \begin{tabular}{ | c | c | c | c | c | c |}
-          \hline
-            \bf Precision & \bf Recall & \bf \fscore & \bf TP & \bf FP  & \bf TN\\
-          \hline
-           0.66  & 0.97 & 0.79 & 636 & 325 & 14 \\
-          \hline
-        \end{tabular}
-        \label{local:wordvec}
-    \end{table}
-
-
-  \begin{table}[h!]
-    \centering
-    \scriptsize
-      \caption{Effect of logs quantity on existing PIDS.}
-        \begin{tabular}{ |c | c | c | c | c |}
-          \hline
-            \bf IDS & Hosts & \bf Precision & \bf Recall & \bf \fscore \\
-            \hline
-            \threatrace & 1 & 0.52  & 0.83 & 0.64  \\
-            \hline
-            \threatrace & 3 & 0.85  & 0.86 & 0.85  \\
-            \hline
-            Flash & 1 & 0.63  & 0.85 & 0.72  \\
-            \hline
-            Flash & 3 & 0.92  & 0.93 & 0.92  \\
-            \hline
-        \end{tabular}
-    \end{table}
+% \begin{table}[h!]
+%     \centering
+%     \scriptsize
+%       \caption{Federated Learning Using Local Language Models.}
+%         \begin{tabular}{ | c | c | c | c | c | c |}
+%           \hline
+%             \bf Precision & \bf Recall & \bf \fscore & \bf TP & \bf FP  & \bf TN\\
+%           \hline
+%            0.66  & 0.97 & 0.79 & 636 & 325 & 14 \\
+%           \hline
+%         \end{tabular}
+%         \label{local:wordvec}
+%     \end{table}
 
 
-\begin{table}[h!]
-    \centering
-    \scriptsize
-      \caption{Federated Learning Using Central Language Model.}
-        \begin{tabular}{ | c | c | c | c | c | c |}
-          \hline
-            \bf Precision & \bf Recall & \bf \fscore & \bf TP & \bf FP  & \bf TN\\
-          \hline
-           0.89  & 0.96 & 0.92 & 624 & 71 & 26 \\
-          \hline
-        \end{tabular}
-    \end{table}
+%   \begin{table}[h!]
+%     \centering
+%     \scriptsize
+%       \caption{Effect of logs quantity on existing PIDS.}
+%         \begin{tabular}{ |c | c | c | c | c |}
+%           \hline
+%             \bf IDS & Hosts & \bf Precision & \bf Recall & \bf \fscore \\
+%             \hline
+%             \threatrace & 1 & 0.52  & 0.83 & 0.64  \\
+%             \hline
+%             \threatrace & 3 & 0.85  & 0.86 & 0.85  \\
+%             \hline
+%             Flash & 1 & 0.63  & 0.85 & 0.72  \\
+%             \hline
+%             Flash & 3 & 0.92  & 0.93 & 0.92  \\
+%             \hline
+%         \end{tabular}
+%     \end{table}
 
 
-\begin{table}[h!]
-    \centering
-    \scriptsize
-      \caption{Federated Learning Using Space Aligned Language Model.}
-        \begin{tabular}{ | c | c | c | c | c | c |}
-          \hline
-            \bf Precision & \bf Recall & \bf \fscore & \bf TP & \bf FP  & \bf TN\\
-          \hline
-           0.64  & 0.96 & 0.77 & 625 & 360 & 25 \\
-          \hline
-        \end{tabular}
-    \end{table}
+% \begin{table}[h!]
+%     \centering
+%     \scriptsize
+%       \caption{Federated Learning Using Central Language Model.}
+%         \begin{tabular}{ | c | c | c | c | c | c |}
+%           \hline
+%             \bf Precision & \bf Recall & \bf \fscore & \bf TP & \bf FP  & \bf TN\\
+%           \hline
+%            0.89  & 0.96 & 0.92 & 624 & 71 & 26 \\
+%           \hline
+%         \end{tabular}
+%     \end{table}
 
-  {\renewcommand{\arraystretch}{1.2}% for the vertical padding
-  \begin{table*}[t!]
-    \centering
-    \scriptsize
-    \caption{Performance of \Sys (Utility Server) against \threatrace.}
-    \setlength{\tabcolsep}{8pt}
-    \begin{tabular}{ccccccccccccc}
-      \toprule
 
-    \multirow{2}{*}{\textbf{Datasets}}
-    & \multicolumn{4}{c }{\Norothead{ \bf \threatrace}}
-    & \multicolumn{4}{c }{\Norothead{ \bf \Sys}}
-    \\ \cmidrule(r{\tbspace}){2-5} \cmidrule(r{\tbspace}){6-9} \cmidrule(r{\tbspace}){10-13}
+% \begin{table}[h!]
+%     \centering
+%     \scriptsize
+%       \caption{Federated Learning Using Space Aligned Language Model.}
+%         \begin{tabular}{ | c | c | c | c | c | c |}
+%           \hline
+%             \bf Precision & \bf Recall & \bf \fscore & \bf TP & \bf FP  & \bf TN\\
+%           \hline
+%            0.64  & 0.96 & 0.77 & 625 & 360 & 25 \\
+%           \hline
+%         \end{tabular}
+%     \end{table}
 
-      & {\bf Precision} &  {\bf Recall} & {\bf \fscore} & {\bf TP} / {\bf FP}  & {\bf Precision.}  & {\bf Recall} & {\bf \fscore} & {\bf TP} / {\bf FP}   \\
+%   {\renewcommand{\arraystretch}{1.2}% for the vertical padding
+%   \begin{table*}[t!]
+%     \centering
+%     \scriptsize
+%     \caption{Performance of \Sys (Utility Server) against \threatrace.}
+%     \setlength{\tabcolsep}{8pt}
+%     \begin{tabular}{ccccccccccccc}
+%       \toprule
 
-    \midrule
+%     \multirow{2}{*}{\textbf{Datasets}}
+%     & \multicolumn{4}{c }{\Norothead{ \bf \threatrace}}
+%     & \multicolumn{4}{c }{\Norothead{ \bf \Sys}}
+%     \\ \cmidrule(r{\tbspace}){2-5} \cmidrule(r{\tbspace}){6-9} \cmidrule(r{\tbspace}){10-13}
 
-    Cadets (E3) &  \TCP  & \TCR & \TCF & \TCTP/ \TCFP & \FCP & \FCR & \FCF & \FCTP/ \FCFP  \\
-    Trace (E3) &  \TTP  & \TTR & \TTF & \TTTP/ \TTFP & \FTP  & \FTR & \FTF & \FTTP / \FTFP   \\
-    Theia (E3) &  \TTHP  & \TTHR & \TTHF & \TTHTP/ \TTHFP & \FTHP  & \FTHR & \FTHF & \FTHTP / \FTHFP  \\
-    %Fivedirections (E3) &  \TFP  & \TFR & \TFF & \TFTP/ \TFFP & \FFP  & \FFR & \FFF & \FFTP / \FFFP  \\
+%       & {\bf Precision} &  {\bf Recall} & {\bf \fscore} & {\bf TP} / {\bf FP}  & {\bf Precision.}  & {\bf Recall} & {\bf \fscore} & {\bf TP} / {\bf FP}   \\
+
+%     \midrule
+
+%     Cadets (E3) &  \TCP  & \TCR & \TCF & \TCTP/ \TCFP & \FCP & \FCR & \FCF & \FCTP/ \FCFP  \\
+%     Trace (E3) &  \TTP  & \TTR & \TTF & \TTTP/ \TTFP & \FTP  & \FTR & \FTF & \FTTP / \FTFP   \\
+%     Theia (E3) &  \TTHP  & \TTHR & \TTHF & \TTHTP/ \TTHFP & \FTHP  & \FTHR & \FTHF & \FTHTP / \FTHFP  \\
     
-    \optc & \TOAP  & \TOAR & \TOAF & \TOATP/ \TOAFP & \FOAP  & \FOAR & \FOAF & \FOATP/ \FOAFP \\
+%     \optc & \TOAP  & \TOAR & \TOAF & \TOATP/ \TOAFP & \FOAP  & \FOAR & \FOAF & \FOATP/ \FOAFP \\
     
-    Cadets (E5) &  -  & - & - & -/ - & - & - & - & -/ -  \\
-    Trace (E5) &  -  & - & - & -/ - & - & - & - & -/ -  \\
-    Theia (E5) &  -  & - & - & -/ - & - & - & - & -/ -  \\
-    %Fivedirections (E5) &  -  & - & - & -/ - & - & - & - & -/ -  \\
+%     Cadets (E5) &  -  & - & - & -/ - & - & - & - & -/ -  \\
+%     Trace (E5) &  -  & - & - & -/ - & - & - & - & -/ -  \\
+%     Theia (E5) &  -  & - & - & -/ - & - & - & - & -/ -  \\
 
-    \bottomrule
-    \end{tabular}
-  \label{summary:benchmarks:large}
-  \end{table*}}
+%     \bottomrule
+%     \end{tabular}
+%   \label{summary:benchmarks:large}
+%   \end{table*}}
 
 
-  \PP{False alarms analysis for E3 dataset}
-  The performance of \Sys on the Darpa E3 dataset is notably poor. A more comprehensive analysis of the distribution of false alarms provides the following insights:\\
+%   \PP{False alarms analysis for E3 dataset}
+%   The performance of \Sys on the Darpa E3 dataset is notably poor. A more comprehensive analysis of the distribution of false alarms provides the following insights:\\
 
-  \textbf{Cadets:} The performance on the Cadets dataset stands out positively compared to other datasets. This can be attributed to the dataset's relative simplicity, characterized by a smaller variety of node types. Notably, the majority of false alarms on Cadets were generated for nodes FILE\_OBJECT\_DIR, FILE\_OBJECT\_CHAR, and FILE\_OBJECT\_LINK, collectively accounting for 92\% of false alarms.\\
+%   \textbf{Cadets:} The performance on the Cadets dataset stands out positively compared to other datasets. This can be attributed to the dataset's relative simplicity, characterized by a smaller variety of node types. Notably, the majority of false alarms on Cadets were generated for nodes FILE\_OBJECT\_DIR, FILE\_OBJECT\_CHAR, and FILE\_OBJECT\_LINK, collectively accounting for 92\% of false alarms.\\
 
-  \textbf{Trace:} On the Trace dataset, \Sys exhibited a rather average performance. Among the node types, MemoryObject and FILE\_OBJECT\_NAMED\_PIPE contributed to 80\% of the false alarms.\\
+%   \textbf{Trace:} On the Trace dataset, \Sys exhibited a rather average performance. Among the node types, MemoryObject and FILE\_OBJECT\_NAMED\_PIPE contributed to 80\% of the false alarms.\\
 
-  \textbf{Theia:} When applied to the Theia dataset, the most problematic nodes were FILE\_OBJECT\_DIR and FILE\_OBJECT\_CHAR, making up 77\% of the false alarms.\\
+%   \textbf{Theia:} When applied to the Theia dataset, the most problematic nodes were FILE\_OBJECT\_DIR and FILE\_OBJECT\_CHAR, making up 77\% of the false alarms.\\
 
-  \textbf{Fivedirections:} In the case of the Fivedirections dataset, the nodes FILE\_OBJECT\_CHAR, PRINCIPAL\_REMOTE, and SRCSINK\_DATABASE accounted for the majority of false alarms, constituting approximately 90\% of them.\\
+%   \textbf{Fivedirections:} In the case of the Fivedirections dataset, the nodes FILE\_OBJECT\_CHAR, PRINCIPAL\_REMOTE, and SRCSINK\_DATABASE accounted for the majority of false alarms, constituting approximately 90\% of them.\\
 
-  The analysis above reveals a highly skewed distribution of false alarms, primarily attributed to the intricate nature of node-level classification, which becomes even more challenging when combined with Federated Learning. This complexity results in the model's inability to comprehensively understand every node type, leading to gaps in its comprehension.
+%   The analysis above reveals a highly skewed distribution of false alarms, primarily attributed to the intricate nature of node-level classification, which becomes even more challenging when combined with Federated Learning. This complexity results in the model's inability to comprehensively understand every node type, leading to gaps in its comprehension.
 
-  To address this issue, we need a design change in our anomaly detector, shifting from node-level to graph-level classification. By prioritizing the learning of high-level behaviors within provenance graphs rather than focusing on individual nodes, we can improve the model's overall performance.
+%   To address this issue, we need a design change in our anomaly detector, shifting from node-level to graph-level classification. By prioritizing the learning of high-level behaviors within provenance graphs rather than focusing on individual nodes, we can improve the model's overall performance.
 
-  Furthermore, the \threatrace approach to anomaly detection lacks intuitiveness, causing ongoing confusion. To enhance clarity and alignment with established practices, we should advocate for transitioning to a more conventional and widely-accepted unsupervised learning approach following~\cite{yangprographer,shadewatcher,sigl}.
+%   Furthermore, the \threatrace approach to anomaly detection lacks intuitiveness, causing ongoing confusion. To enhance clarity and alignment with established practices, we should advocate for transitioning to a more conventional and widely-accepted unsupervised learning approach following~\cite{yangprographer,shadewatcher,sigl}.
