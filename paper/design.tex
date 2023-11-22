@@ -1,7 +1,9 @@
 \section{\Sys Design}
 \label{sec:methodology}
 
-\Sys, illustrated in Figure \ref{arch}, is composed of five key modules: a provenance graph constructor, a Federated Averaging server, a utility server, and client machines. At a high-level, \Sys generates provenance graphs from system logs, uses semantic attributes to create feature vectors for nodes, and applies \gnnshort for context-aware encoding. These embeddings are stored in a database and later used by a lightweight classifier during threat detection.
+\Sys, depicted in Figure \ref{arch}, comprises five key modules: a provenance graph constructor, a main server, a utility server, and client machines. The main server is responsible for initiating the global model weights, which are then transmitted to the client machines. The clients use these weights as their starting point and conduct model training on their respective local datasets. Subsequently, the clients send their updated weights back to the main server for federated averaging.
+
+In addition to the primary task, each client machine also trains a word2vec model to feature semantic attributes in audit logs. It's noteworthy that the word2vec models on different clients may yield distinct embeddings for the same tokens. To address this potential non-iid data problem, \Sys employs the utility server to harmonize these models.
 
 \begin{figure}[t!]
     \centering
