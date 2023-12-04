@@ -6,6 +6,7 @@
 In addition to the primary task, each client machine also trains a word2vec model to feature semantic attributes in audit logs. It's noteworthy that the word2vec models on different clients may yield distinct embeddings for the same tokens. To address this potential non-iid data problem, \Sys employs the utility server to harmonize these models.
 
 \subsection{Provenance Graph Constructor}
+Our approach starts by converting system logs into provenance graphs through a three-step process. Initially, the system, \Sys, processes system logs like Windows Event Logs or Linux Audit Logs, which are composed of host event details including process activities, file interactions, and network engagements. \Sys works with batches of audit logs, utilizing a sliding window technique to create the provenance graph. This graph consists of two kinds of nodes: process nodes and object nodes. The object nodes represent various system entities such as files, network streams, modules, and other system components. The connections between these nodes are marked with labels indicating the event type, elucidating the cause-and-effect relationship among the connected nodes and the event's timestamp. Additionally, these nodes are equipped with attributes like process identifiers, command lines, file paths, IP addresses, port details, and module paths, offering additional insights and specifics.
 
 \subsection{Semantic Vectors Harmonization}
 
