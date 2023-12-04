@@ -1,9 +1,18 @@
 \section{\Sys Design}
 \label{sec:methodology}
 
-\Sys, depicted in Figure \ref{arch}, comprises five key modules: a provenance graph constructor, a main server, a utility server, and client machines. The main server is responsible for initiating the global model weights, which are then transmitted to the client machines. The clients use these weights as their starting point and conduct model training on their respective local datasets. Subsequently, the clients send their updated weights back to the main server for federated averaging.
+\Sys, depicted in Figure \ref{arch}, comprises four key modules: a provenance graph constructor, a Semantic Vectors Harmonization, Federated Learning Module, and Anomaly Detection. The main server is responsible for initiating the global model weights, which are then transmitted to the client machines. The clients use these weights as their starting point and conduct model training on their respective local datasets. Subsequently, the clients send their updated weights back to the main server for federated averaging.
 
 In addition to the primary task, each client machine also trains a word2vec model to feature semantic attributes in audit logs. It's noteworthy that the word2vec models on different clients may yield distinct embeddings for the same tokens. To address this potential non-iid data problem, \Sys employs the utility server to harmonize these models.
+
+\subsection{Provenance Graph Constructor}
+
+\subsection{Semantic Vectors Harmonization}
+
+\subsection{Federated Learning Module}
+
+\subsection{Anomaly Detection}
+
 
 \begin{figure}[t!]
     \centering
