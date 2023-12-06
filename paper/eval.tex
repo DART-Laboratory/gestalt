@@ -1,6 +1,24 @@
  \section{Evaluation}
  \label{sec:eval}
 
+ In our comprehensive assessment of \Sys, we explore several key research questions. Our testing environment comprised a machine with 8 Intel vCPUs, 80 GB RAM, an NVIDIA RTX2080 GPU, and ran on Ubuntu 18.04.6 LTS.
+
+\begin{itemize}[leftmargin=*]
+\item \textbf{RQ1.} What is the comparative detection accuracy of \Sys against current systems?
+\item \textbf{RQ2.} What is the effectiveness of word2vec harmonization in a utility server setting?
+\end{itemize}
+
+\PP{Implementation} We developed \Sys using Python and incorporated the Torch Geometric library for our \gnnshort model. This model employs Sage Convolutions, a graph convolution layer that aggregates features from adjacent nodes to generate new node features. To enhance generalization, the model integrates dropout and ReLU activation functions across layers. For our \wordvec model, we utilized the Gensim library.
+
+\PP{Datasets} \Sys underwent testing with two open-source datasets: \darpa E3~\cite{darpae3} and \darpa \optc~\cite{darpatc}. The E3 dataset, originating from \darpa's third red-vs-blue team exercise, includes audit logs depicting both normal and malicious activities. The \darpa \optc dataset offers a comprehensive view of benign and malevolent audit records from around 1000 hosts. It features six days of normal activities for training, followed by three days showcasing different types of attacks for evaluation purposes. The first day simulates a PowerShell Empire staging scenario, including the initial breach, lateral movements, and privilege escalations. The second day focuses on data exfiltration events, while the third day involves the deployment of malicious software.
+
+\PP{Detectors for Comparison} For benchmarking \Sys, we employed the \threatrace \cite{wang2022threatrace} system, adopting the same detection metrics for comparison. \threatrace, a provenance-based IDS, leverages a \gnn for node-level anomaly detection. It learns the structural patterns of nodes in benign datasets and detects anomalies based on deviations from these patterns. Unlike \Sys, however, \threatrace does not ensure the privacy of user logs and faces scalability issues.
+
+ \subsection*{RQ1. Detection Performance}
+
+ \subsection*{RQ1. Efficacy of Word2vec harmonization}
+
+
 % \begin{table}[h!]
 %     \centering
 %     \scriptsize
@@ -49,7 +67,6 @@
 %         \end{tabular}
 %     \end{table}
 
-
 % \begin{table}[h!]
 %     \centering
 %     \scriptsize
@@ -63,38 +80,33 @@
 %         \end{tabular}
 %     \end{table}
 
-%   {\renewcommand{\arraystretch}{1.2}% for the vertical padding
-%   \begin{table*}[t!]
-%     \centering
-%     \scriptsize
-%     \caption{Performance of \Sys (Utility Server) against \threatrace.}
-%     \setlength{\tabcolsep}{8pt}
-%     \begin{tabular}{ccccccccccccc}
-%       \toprule
+  {\renewcommand{\arraystretch}{1.2}% for the vertical padding
+  \begin{table*}[t!]
+    \centering
+    \scriptsize
+    \caption{Performance of \Sys against \threatrace.}
+    \setlength{\tabcolsep}{8pt}
+    \begin{tabular}{ccccccccccccc}
+      \toprule
 
-%     \multirow{2}{*}{\textbf{Datasets}}
-%     & \multicolumn{4}{c }{\Norothead{ \bf \threatrace}}
-%     & \multicolumn{4}{c }{\Norothead{ \bf \Sys}}
-%     \\ \cmidrule(r{\tbspace}){2-5} \cmidrule(r{\tbspace}){6-9} \cmidrule(r{\tbspace}){10-13}
+    \multirow{2}{*}{\textbf{Datasets}}
+    & \multicolumn{4}{c }{\Norothead{ \bf \threatrace}}
+    & \multicolumn{4}{c }{\Norothead{ \bf \Sys}}
+    \\ \cmidrule(r{\tbspace}){2-5} \cmidrule(r{\tbspace}){6-9} \cmidrule(r{\tbspace}){10-13}
 
-%       & {\bf Precision} &  {\bf Recall} & {\bf \fscore} & {\bf TP} / {\bf FP}  & {\bf Precision.}  & {\bf Recall} & {\bf \fscore} & {\bf TP} / {\bf FP}   \\
+      & {\bf Precision} &  {\bf Recall} & {\bf \fscore} & {\bf TP} / {\bf FP}  & {\bf Precision.}  & {\bf Recall} & {\bf \fscore} & {\bf TP} / {\bf FP}   \\
 
-%     \midrule
+    \midrule
 
-%     Cadets (E3) &  \TCP  & \TCR & \TCF & \TCTP/ \TCFP & \FCP & \FCR & \FCF & \FCTP/ \FCFP  \\
-%     Trace (E3) &  \TTP  & \TTR & \TTF & \TTTP/ \TTFP & \FTP  & \FTR & \FTF & \FTTP / \FTFP   \\
-%     Theia (E3) &  \TTHP  & \TTHR & \TTHF & \TTHTP/ \TTHFP & \FTHP  & \FTHR & \FTHF & \FTHTP / \FTHFP  \\
+    Cadets (E3) &  \TCP  & \TCR & \TCF & \TCTP/ \TCFP & \FCP & \FCR & \FCF & \FCTP/ \FCFP  \\
+    Trace (E3) &  \TTP  & \TTR & \TTF & \TTTP/ \TTFP & \FTP  & \FTR & \FTF & \FTTP / \FTFP   \\
+    Theia (E3) &  \TTHP  & \TTHR & \TTHF & \TTHTP/ \TTHFP & \FTHP  & \FTHR & \FTHF & \FTHTP / \FTHFP  \\
     
-%     \optc & \TOAP  & \TOAR & \TOAF & \TOATP/ \TOAFP & \FOAP  & \FOAR & \FOAF & \FOATP/ \FOAFP \\
-    
-%     Cadets (E5) &  -  & - & - & -/ - & - & - & - & -/ -  \\
-%     Trace (E5) &  -  & - & - & -/ - & - & - & - & -/ -  \\
-%     Theia (E5) &  -  & - & - & -/ - & - & - & - & -/ -  \\
-
-%     \bottomrule
-%     \end{tabular}
-%   \label{summary:benchmarks:large}
-%   \end{table*}}
+    \optc & \TOAP  & \TOAR & \TOAF & \TOATP/ \TOAFP & \FOAP  & \FOAR & \FOAF & \FOATP/ \FOAFP \\
+    \bottomrule
+    \end{tabular}
+  \label{summary:benchmarks:large}
+  \end{table*}}
 
 
 %   \PP{False alarms analysis for E3 dataset}
