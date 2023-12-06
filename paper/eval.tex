@@ -14,9 +14,38 @@
 
 \PP{Detectors for Comparison} For benchmarking \Sys, we employed the \threatrace \cite{wang2022threatrace} system, adopting the same detection metrics for comparison. \threatrace, a provenance-based IDS, leverages a \gnn for node-level anomaly detection. It learns the structural patterns of nodes in benign datasets and detects anomalies based on deviations from these patterns. Unlike \Sys, however, \threatrace does not ensure the privacy of user logs and faces scalability issues.
 
- \subsection*{RQ1. Detection Performance}
+{\renewcommand{\arraystretch}{1.2}% for the vertical padding
+  \begin{table*}[t!]
+    \centering
+    \scriptsize
+    \caption{Performance of \Sys against \threatrace.}
+    \setlength{\tabcolsep}{8pt}
+    \begin{tabular}{ccccccccccccc}
+      \toprule
 
- \subsection*{RQ1. Efficacy of Word2vec harmonization}
+    \multirow{2}{*}{\textbf{Datasets}}
+    & \multicolumn{4}{c }{\Norothead{ \bf \threatrace}}
+    & \multicolumn{4}{c }{\Norothead{ \bf \Sys}}
+    \\ \cmidrule(r{\tbspace}){2-5} \cmidrule(r{\tbspace}){6-9} \cmidrule(r{\tbspace}){10-13}
+
+      & {\bf Precision} &  {\bf Recall} & {\bf \fscore} & {\bf TP} / {\bf FP}  & {\bf Precision.}  & {\bf Recall} & {\bf \fscore} & {\bf TP} / {\bf FP}   \\
+
+    \midrule
+
+    Cadets (E3) &  \TCP  & \TCR & \TCF & \TCTP/ \TCFP & \FCP & \FCR & \FCF & \FCTP/ \FCFP  \\
+    %Trace (E3) &  \TTP  & \TTR & \TTF & \TTTP/ \TTFP & \FTP  & \FTR & \FTF & \FTTP / \FTFP   \\
+    %Theia (E3) &  \TTHP  & \TTHR & \TTHF & \TTHTP/ \TTHFP & \FTHP  & \FTHR & \FTHF & \FTHTP / \FTHFP  \\
+    
+    \optc & \TOAP  & \TOAR & \TOAF & \TOATP/ \TOAFP & \FOAP  & \FOAR & \FOAF & \FOATP/ \FOAFP \\
+    \bottomrule
+    \end{tabular}
+  \label{summary:benchmarks:large}
+  \end{table*}}
+
+ \subsection*{RQ1. Detection Performance}
+ Table~\ref{summary:benchmarks:large} presents a comparative analysis of the detection performance between \Sys and \threatrace. It reveals that \Sys achieves a detection performance comparable to that of \threatrace. The advantage of \Sys lies in its ability to preserve user log privacy via federated learning. Additionally, its scalability is enhanced as each client independently conducts anomaly detection on their logs. This decentralization of learning and detection tasks, enabled by federated learning, significantly enhances the scalability of our system.
+
+ \subsection*{RQ2. Efficacy of Word2vec harmonization}
 
 
 % \begin{table}[h!]
@@ -79,34 +108,6 @@
 %           \hline
 %         \end{tabular}
 %     \end{table}
-
-  {\renewcommand{\arraystretch}{1.2}% for the vertical padding
-  \begin{table*}[t!]
-    \centering
-    \scriptsize
-    \caption{Performance of \Sys against \threatrace.}
-    \setlength{\tabcolsep}{8pt}
-    \begin{tabular}{ccccccccccccc}
-      \toprule
-
-    \multirow{2}{*}{\textbf{Datasets}}
-    & \multicolumn{4}{c }{\Norothead{ \bf \threatrace}}
-    & \multicolumn{4}{c }{\Norothead{ \bf \Sys}}
-    \\ \cmidrule(r{\tbspace}){2-5} \cmidrule(r{\tbspace}){6-9} \cmidrule(r{\tbspace}){10-13}
-
-      & {\bf Precision} &  {\bf Recall} & {\bf \fscore} & {\bf TP} / {\bf FP}  & {\bf Precision.}  & {\bf Recall} & {\bf \fscore} & {\bf TP} / {\bf FP}   \\
-
-    \midrule
-
-    Cadets (E3) &  \TCP  & \TCR & \TCF & \TCTP/ \TCFP & \FCP & \FCR & \FCF & \FCTP/ \FCFP  \\
-    Trace (E3) &  \TTP  & \TTR & \TTF & \TTTP/ \TTFP & \FTP  & \FTR & \FTF & \FTTP / \FTFP   \\
-    Theia (E3) &  \TTHP  & \TTHR & \TTHF & \TTHTP/ \TTHFP & \FTHP  & \FTHR & \FTHF & \FTHTP / \FTHFP  \\
-    
-    \optc & \TOAP  & \TOAR & \TOAF & \TOATP/ \TOAFP & \FOAP  & \FOAR & \FOAF & \FOATP/ \FOAFP \\
-    \bottomrule
-    \end{tabular}
-  \label{summary:benchmarks:large}
-  \end{table*}}
 
 
 %   \PP{False alarms analysis for E3 dataset}
