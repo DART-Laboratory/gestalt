@@ -46,21 +46,22 @@
  Table~\ref{summary:benchmarks:large} presents a comparative analysis of the detection performance between \Sys and \threatrace. It reveals that \Sys achieves a detection performance comparable to that of \threatrace. The advantage of \Sys lies in its ability to preserve user log privacy via federated learning. Additionally, its scalability is enhanced as each client independently conducts anomaly detection on their logs. This decentralization of learning and detection tasks, enabled by federated learning, significantly enhances the scalability of our system.
 
  \subsection*{RQ2. Efficacy of Word2vec harmonization}
+ To evaluate the efficacy of our method, we performed experiments comparing the utility server-based harmonized model with a local word2vec model on each client. These experiments utilized the \optc dataset. The findings, detailed in Table~\ref{local:wordvec}, demonstrate that our strategy significantly enhances the performance of \Sys. This improvement is attributed to our approach's ability to minimize noise in disparate word2vec vectors, thereby facilitating a more accurate interpretation of various activity patterns in the provenance graph by the \gnnshort model.
 
-
-% \begin{table}[h!]
-%     \centering
-%     \scriptsize
-%       \caption{Federated Learning Using Local Language Models.}
-%         \begin{tabular}{ | c | c | c | c | c | c |}
-%           \hline
-%             \bf Precision & \bf Recall & \bf \fscore & \bf TP & \bf FP  & \bf TN\\
-%           \hline
-%            0.66  & 0.97 & 0.79 & 636 & 325 & 14 \\
-%           \hline
-%         \end{tabular}
-%         \label{local:wordvec}
-%     \end{table}
+\begin{table}[h!]
+    \centering
+    \scriptsize
+      \caption{Effectiveness of word2vec vectors harmonization.}
+        \begin{tabular}{ | c | c | c | c | c | c |}
+          \hline
+            \bf Word2vec Type & \bf Precision & \bf Recall & \bf \fscore & \bf TP & \bf FP \\
+          \hline
+           Vanilla & 0.66  & 0.97 & 0.79 & 636 & 325 \\
+           Harmonized & \FOAP  & \FOAR & \FOAF & \FOATP & \FOAFP \\
+          \hline
+        \end{tabular}
+        \label{local:wordvec}
+    \end{table}
 
 
 %   \begin{table}[h!]
