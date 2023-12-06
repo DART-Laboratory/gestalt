@@ -11,10 +11,7 @@ Our approach starts by converting system logs into provenance graphs through a t
 \subsection{Semantic Vectors Harmonization}
 Our system employs the word2vec model to encode various semantic attributes into a vector space, which is pivotal in distinguishing normal system entities from anomalies. Traditional approaches utilize a centralized word2vec model for this encoding. However, in a federated learning context, complexities arise as each individual client must train its word2vec model for attribute encoding. Consequently, different clients might encode the same attributes into diverse vectors, leading to a non-Independent and Identically Distributed (Non-IID) problem. This variation hampers the convergence of the Graph Neural Network (GNN) model in federated learning scenarios. 
 
-To address this issue, we have developed a technique that utilizes the concept of a utility server to synchronize these disparate models across clients. This method ensures uniformity in encoding the same attributes without necessitating clients to share their attributes, thus preserving privacy.
-
-
-
+To address this issue, we have developed a technique leveraging a utility server to synchronize disparate models across clients. This approach achieves uniformity in encoding the same attributes while preserving privacy, as clients are not required to share their attributes. The process initiates with the main server distributing an encryption and decryption key to each client. Clients then encrypt their word2vec model tokens, concealing their meanings. Subsequently, these encrypted models are sent to the utility server, which remains unaware of the encryption key used. The utility server then averages the vectors for the corresponding encrypted tokens, creating a unified and harmonized word2vec model. Finally, this model is returned to the clients, who utilize the decryption key to revert their encrypted tokens to their original attributes.
 
 \subsection{Federated Learning Module}
 
