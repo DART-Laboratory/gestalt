@@ -16,9 +16,7 @@ This module processes the provenance graph generated from audit logs by transfor
 \subsection{Semantic Vectors Harmonization}
 This module integrates individual client word2vec models into a unified model for use across all clients. The word2vec model functions as a key-value store, with vocabulary tokens as keys and their corresponding vector representations as values. To combine these models, we average the vectors of overlapping tokens from all client machines, creating a central model. However, transferring these tokens—containing sensitive data like process names, file names, and IP addresses—to a central server could breach user privacy. To address this, we employ a trusted utility server. Initially, the central server distributes an encryption and decryption key pair to each client. Clients then encrypt their word2vec model tokens using the encryption key and send them to the utility server. This server merges the models and dispatches the unified model back to the clients, who decrypt it using the decryption key. This procedure ensures that neither the central server nor the utility server can access the token information, assuming no collusion between the two servers.
 
-\subsection{Graph Learning}
-
-\subsection{Federated Learning}
+\subsection{Federated Graph Learning}
 
 \subsection{Anomaly Detection}
 
