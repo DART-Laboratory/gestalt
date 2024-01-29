@@ -7,16 +7,14 @@ The third module, \textit{Semantic Vectors Harmonization}, is tasked with mergin
 
 The fifth module, positioned on the central server, is the \textit{Federated Learning Module}. It employs the federated averaging algorithm to process \gnnshort models gathered from clients. Finally, the \textit{Anomaly Detection Module} utilizes the aggregated global models for local anomaly detection on each client machine. Figure \ref{arch} illustrates the overarching architecture of \Sys, with a more comprehensive explanation provided in the following subsections:
 
-\subsection{Provenance Graph Constructor}
+\subsection{Provenance Graph Constructor} 
+\Sys leverages audit logs to build a system provenance graph. Major operating systems, including Linux and Windows, have built-in mechanisms like the Linux Audit system and Windows Event Tracing to collect these logs. The gathered logs provide detailed insights into the interactions among various system entities. They capture a range of activities, from process executions and file operations to network connections. Using this data, \Sys constructs a graph in which nodes symbolize system entities such as processes, files, and sockets. The edges in this graph represent events, primarily denoted by syscalls, occurring between these entities. Furthermore, \Sys enriches each node with attributes such as process names, command lines, file names, and network IP addresses. These attributes enhance our system's ability to distinguish between nodes that have similar structural patterns in the graph.
+
 \subsection{Semantic Featurization}
 \subsection{Semantic Vectors Harmonization}
 \subsection{Graph Learning}
 \subsection{Federated Learning}
 \subsection{Anomaly Detection}
-
-
-
-
 
 % \subsection{Provenance Graph Constructor}
 % Our approach starts by converting system logs into provenance graphs through a three-step process. Initially, the system, \Sys, processes system logs like Windows Event Logs or Linux Audit Logs, which are composed of host event details including process activities, file interactions, and network engagements. \Sys works with batches of audit logs, utilizing a sliding window technique to create the provenance graph. This graph consists of two kinds of nodes: process nodes and object nodes. The object nodes represent various system entities such as files, network streams, modules, and other system components. The connections between these nodes are marked with labels indicating the event type, elucidating the cause-and-effect relationship among the connected nodes and the event's timestamp. Additionally, these nodes are equipped with attributes like process identifiers, command lines, file paths, IP addresses, port details, and module paths, offering additional insights and specifics.
