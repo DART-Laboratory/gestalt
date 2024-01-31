@@ -128,16 +128,15 @@ This formula averages the parameters of all client models, forming the global mo
   \DontPrintSemicolon
   \SetKwInOut{Input}{Inputs}
   \SetKwInOut{Output}{Output}
-  \Input{Set of client models $\{M_1, M_2, \ldots, M_N\}$;\\
-  Global GNN model $G$;}
-  \Output{Updated global GNN model $G$.}
+  \Input{Set of client models $\{M_1, M_2, \ldots, M_N\}$;\\}
+  \Output{Global GNN model $G$.}
   \BlankLine
   \tcc{Initialize global GNN model with random weights.}
   $G \leftarrow \text{InitializeRandomWeights}()$\\
   \tcc{Distribute $G$ to all clients.}
   \ForEach{client model $M_i$}{
     Send $G$ to $M_i$\\
-    $G_i \leftarrow \text{TrainOnLocalData}(M_i)$ \tcc*{Train $G$ locally on $M_i$.}
+    $G_i \leftarrow \text{TrainOnLocalData}(M_i)$
   }
   \BlankLine
   \tcc{Aggregate trained models from clients.}
