@@ -83,12 +83,12 @@ This procedure ensures that neither the central server nor the utility server ca
   $TokenCounts \leftarrow$ InitializeEmptyDictionary()\\
   \ForEach{encrypted model $M_i'$}{
     \ForEach{token $t$ in $M_i'$}{
-      $EncryptedVector \leftarrow M_i'[t]$\\
+      $Vector \leftarrow M_i'[t]$\\
       \eIf{$TokenVectors$.HasKey($t$)}{
-        $TokenVectors[t] \leftarrow TokenVectors[t] + EncryptedVector$\\
+        $TokenVectors[t] \leftarrow TokenVectors[t] + Vector$\\
         $TokenCounts[t] \leftarrow TokenCounts[t] + 1$\\
       }{
-        $TokenVectors[t] \leftarrow EncryptedVector$\\
+        $TokenVectors[t] \leftarrow Vector$\\
         $TokenCounts[t] \leftarrow 1$\\
       }
     }
@@ -97,13 +97,12 @@ This procedure ensures that neither the central server nor the utility server ca
   \ForEach{token $t$ in $TokenVectors$.Keys()}{
     $TokenVectors[t] \leftarrow TokenVectors[t] / TokenCounts[t]$\\
   }
-  $U' \leftarrow$ Encrypt($TokenVectors$, $E$) \tcc*{Re-encrypt the averaged model.}
-  \tcc{Dispatch averaged and encrypted model back to clients.}
+  $U' \leftarrow$ NewModel($TokenVectors$, $EncryptedTokens$) \tcc*{Constructing a new unified model.}
   \ForEach{client $C_i$}{
     Send $U'$ to $C_i$\\
   }
   \BlankLine
-  \Return{Averaged and encrypted unified model $U'$ has been dispatched to all clients.}\\
+  \Return{Harmonized model $U'$ has been dispatched to all clients.}\\
   \BlankLine
   \caption{Secure Integration and Averaging of Word2Vec Models}
   \label{alg:secure_integration_averaging_word2vec}
