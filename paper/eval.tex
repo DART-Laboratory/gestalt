@@ -15,32 +15,32 @@
 \PP{Detectors for Comparison} For benchmarking \Sys, we employed the \threatrace \cite{wang2022threatrace} system, adopting the same detection metrics for comparison. \threatrace, a provenance-based IDS, leverages a \gnn for node-level anomaly detection. It learns the structural patterns of nodes in benign datasets and detects anomalies based on deviations from these patterns. Unlike \Sys, however, \threatrace does not ensure the privacy of user logs and faces scalability issues.
 
 {\renewcommand{\arraystretch}{1.2}% for the vertical padding
-  \begin{table*}[t!]
-    \centering
-    \scriptsize
-    \caption{Performance of \Sys against \threatrace. \wajih{we decided to compare this against Flash as well. }}
-    \setlength{\tabcolsep}{8pt}
-    \begin{tabular}{ccccccccccccc}
-      \toprule
+\begin{table*}[t!]
+  \centering
+  \scriptsize
+  \caption{Comparison of \Sys against FLASH and KAIROS. Prec.: Precision; Rec.: Recall;}
+  \setlength{\tabcolsep}{2.2pt}
+  \begin{tabular}{ccccccccccccc}
+    \toprule
 
-    \multirow{2}{*}{\textbf{Datasets}}
-    & \multicolumn{4}{c }{\Norothead{ \bf \threatrace}}
-    & \multicolumn{4}{c }{\Norothead{ \bf \Sys}}
-    \\ \cmidrule(r{\tbspace}){2-5} \cmidrule(r{\tbspace}){6-9} \cmidrule(r{\tbspace}){10-13}
+  \multirow{2}{*}{\textbf{Datasets}}
+  & \multicolumn{4}{c }{\Norothead{ \bf \Sys}}
+  & \multicolumn{4}{c }{\Norothead{ \bf FlASH}}
+  & \multicolumn{4}{c }{\Norothead{ \bf KAIROS}}
+  \\ \cmidrule(r{\tbspace}){2-5} \cmidrule(r{\tbspace}){6-9} \cmidrule(r{\tbspace}){10-13}
 
-      & {\bf Precision} &  {\bf Recall} & {\bf \fscore} & {\bf TP} / {\bf FP}  & {\bf Precision.}  & {\bf Recall} & {\bf \fscore} & {\bf TP} / {\bf FP}   \\
+    & {\bf Prec.} &  {\bf Rec.} & {\bf \fscore} & {\bf TP}/ {\bf FP}/ {\bf FN}/ {\bf TN} & {\bf Prec.}  & {\bf Rec.} & {\bf \fscore} & {\bf TP}/ {\bf FP}/ {\bf FN}/ {\bf TN} & {\bf Prec.}  & {\bf Rec.} & {\bf \fscore} & {\bf TP}/ {\bf FP}/ {\bf FN}/ {\bf TN} \\
 
-    \midrule
+  \midrule
 
-    Cadets (E3) &  \TCP  & \TCR & \TCF & \TCTP/ \TCFP & \FCP & \FCR & \FCF & \FCTP/ \FCFP  \\
-    Trace (E3) &  \TTP  & \TTR & \TTF & \TTTP/ \TTFP & \FTP  & \FTR & \FTF & \FTTP / \FTFP   \\
-    Theia (E3) &  \TTHP  & \TTHR & \TTHF & \TTHTP/ \TTHFP & \FTHP  & \FTHR & \FTHF & \FTHTP / \FTHFP  \\
-    
-    \optc & \TOAP  & \TOAR & \TOAF & \TOATP/ \TOAFP & \FOAP  & \FOAR & \FOAF & \FOATP/ \FOAFP \\
-    \bottomrule
-    \end{tabular}
-  \label{summary:benchmarks:large}
-  \end{table*}}
+  DARPA-E3-CADETS &  - & - & - & - & - & - & - & - & - & - & - & - \\
+  DARPA-E3-TRACE &  - & - & - & - & - & - & - & - & - & - & - & - \\
+  DARPA-E3-THEIA &  - & - & - & - & - & - & - & - & - & - & - & - \\  
+  DARPA-OpTC & - & - & - & - & - & - & - & - & - & - & - & - \\
+  \bottomrule
+  \end{tabular}
+\label{summary:benchmarks:large}
+\end{table*}}
 
  \subsection*{RQ1. Detection Performance}
  Table~\ref{summary:benchmarks:large} presents a comparative analysis of the detection performance between \Sys and \threatrace. It reveals that \Sys achieves a detection performance comparable to that of \threatrace. The advantage of \Sys lies in its ability to preserve user log privacy via federated learning. Additionally, its scalability is enhanced as each client independently conducts anomaly detection on their logs. This decentralization of learning and detection tasks, enabled by federated learning, significantly enhances the scalability of our system.
@@ -48,20 +48,20 @@
  \subsection*{RQ2. Efficacy of Word2vec harmonization}
  To evaluate the efficacy of our method, we performed experiments comparing the utility server-based harmonized model with a local word2vec model on each client. These experiments utilized the \optc dataset. The findings, detailed in Table~\ref{local:wordvec}, demonstrate that our strategy significantly enhances the performance of \Sys. This improvement is attributed to our approach's ability to minimize noise in disparate word2vec vectors, thereby facilitating a more accurate interpretation of various activity patterns in the provenance graph by the \gnnshort model.
 
-\begin{table}[h!]
-    \centering
-    \scriptsize
-      \caption{Effectiveness of word2vec vectors harmonization.}
-        \begin{tabular}{ | c | c | c | c | c | c |}
-          \hline
-            \bf Word2vec Type & \bf Precision & \bf Recall & \bf \fscore & \bf TP & \bf FP \\
-          \hline
-           Vanilla & 0.66  & 0.97 & 0.79 & 636 & 325 \\
-           Harmonized & \FOAP  & \FOAR & \FOAF & \FOATP & \FOAFP \\
-          \hline
-        \end{tabular}
-        \label{local:wordvec}
-    \end{table}
+% \begin{table}[h!]
+%     \centering
+%     \scriptsize
+%       \caption{Effectiveness of word2vec vectors harmonization.}
+%         \begin{tabular}{ | c | c | c | c | c | c |}
+%           \hline
+%             \bf Word2vec Type & \bf Precision & \bf Recall & \bf \fscore & \bf TP & \bf FP \\
+%           \hline
+%            Vanilla & 0.66  & 0.97 & 0.79 & 636 & 325 \\
+%            Harmonized & \FOAP  & \FOAR & \FOAF & \FOATP & \FOAFP \\
+%           \hline
+%         \end{tabular}
+%         \label{local:wordvec}
+%     \end{table}
 
 
 %   \begin{table}[h!]
