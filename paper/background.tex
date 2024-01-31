@@ -20,6 +20,8 @@ In this section, we examine existing host intrusion detection systems and unders
 
 \PP{Scalability} Existing systems, such as Flash, have implemented techniques to achieve efficient runtime performance. However, in an enterprise context, the centralized mode of operation faces scalability limitations. It can only accommodate a fixed number of hosts before the central server, running the intrusion detection system, becomes a bottleneck. In high-throughput environments, this leads to the detector suffering from log congestion.
 
+\subsection{Why we cannot apply FL to the existing systems?}
+
 To address the challenges faced by existing systems, we have developed \Sys, which is based on the principles of federated learning~\cite{mcmahan2017communication}. In federated learning, individual client data remains within the system. Each client machine independently trains a local machine learning model on its data. Subsequently, these clients transmit their trained models to a central server, where federated averaging is employed to amalgamate the insights from these models, resulting in a unified global model. However, the design of current systems complicates the implementation of federated learning. 
 
 Our analysis indicates that applying federated learning to existing systems would produce suboptimal results. This is primarily because these systems were not originally designed to function under a federated learning framework.
