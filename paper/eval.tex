@@ -33,10 +33,10 @@
 
   \midrule
 
-  DARPA-E3-CADETS &  - & - & - & - & 0.94 & 0.99 & 0.96 & 12851/ 818/ 1/ 706,148 & 0.8000 & 1.000 & - & 4/ 1/ 0/ 174 \\
-  DARPA-E3-TRACE &  - & - & - & - & 0.95 & 0.99 & 0.97 &  67382/ 3477/ 1/ 2,412,530 & - & - & - & - \\
-  DARPA-E3-THEIA &  - & - & - & - & 0.92 & 0.99 & 0.95 & 25318/ 2282/ 44/ 3,503,044 & 0.667 & 1.000 & - & 10/ 1/ 0/ 216 \\  
-  DARPA-OpTC & - & - & - & - & 0.93 & 0.92 & 0.93 & 600/ 43/ 50/ 1,287,312 & 0.842 & 1.000 & - & 32/ 6/ 0/ 1210 \\
+  DARPA-E3-CADETS &  0.90 & 0.99 & 0.95 & 12846/ 1408/ 6/ 705,558 & 0.94 & 0.99 & 0.96 & 12851/ 818/ 1/ 706,148 & 0.80 & 1.00 & - & 4/ 1/ 0/ 174 \\
+  DARPA-E3-TRACE &  0.95 & 0.99 & 0.97 & 67357/ 3161/ 26/ 2,412,846 & 0.95 & 0.99 & 0.97 &  67382/ 3477/ 1/ 2,412,530 & - & - & - & - \\
+  DARPA-E3-THEIA &  0.89 & 0.99 & 0.94 & 25311/ 3155/ 51/ 3,502,171 & 0.92 & 0.99 & 0.95 & 25318/ 2282/ 44/ 3,503,044 & 0.67 & 1.00 & - & 10/ 1/ 0/ 216 \\  
+  DARPA-OpTC & 0.88 & 0.94 & 0.91 & 610/ 80/ 40/ 1,287,275 & 0.93 & 0.92 & 0.93 & 600/ 43/ 50/ 1,287,312 & 0.84 & 1.00 & - & 32/ 6/ 0/ 1210 \\
   \bottomrule
   \end{tabular}
 \label{summary:benchmarks:large}
@@ -48,20 +48,20 @@
  \subsection*{RQ2. Efficacy of Word2vec harmonization}
  To evaluate the efficacy of our method, we performed experiments comparing the utility server-based harmonized model with a local word2vec model on each client. These experiments utilized the \optc dataset. The findings, detailed in Table~\ref{local:wordvec}, demonstrate that our strategy significantly enhances the performance of \Sys. This improvement is attributed to our approach's ability to minimize noise in disparate word2vec vectors, thereby facilitating a more accurate interpretation of various activity patterns in the provenance graph by the \gnnshort model.
 
-% \begin{table}[h!]
-%     \centering
-%     \scriptsize
-%       \caption{Effectiveness of word2vec vectors harmonization.}
-%         \begin{tabular}{ | c | c | c | c | c | c |}
-%           \hline
-%             \bf Word2vec Type & \bf Precision & \bf Recall & \bf \fscore & \bf TP & \bf FP \\
-%           \hline
-%            Vanilla & 0.66  & 0.97 & 0.79 & 636 & 325 \\
-%            Harmonized & \FOAP  & \FOAR & \FOAF & \FOATP & \FOAFP \\
-%           \hline
-%         \end{tabular}
-%         \label{local:wordvec}
-%     \end{table}
+\begin{table}[h!]
+    \centering
+    \scriptsize
+      \caption{Effectiveness of word2vec vectors harmonization.}
+        \begin{tabular}{ | c | c | c | c | c | c |}
+          \hline
+            \bf Word2vec Type & \bf Precision & \bf Recall & \bf \fscore & \bf TP & \bf FP \\
+          \hline
+           Vanilla & 0.66  & 0.97 & 0.79 & 636 & 325 \\
+           Harmonized & 0.88 & 0.94 & 0.91 & 610 & 80 \\
+          \hline
+        \end{tabular}
+        \label{local:wordvec}
+    \end{table}
 
 
 %   \begin{table}[h!]
@@ -109,21 +109,3 @@
 %           \hline
 %         \end{tabular}
 %     \end{table}
-
-
-%   \PP{False alarms analysis for E3 dataset}
-%   The performance of \Sys on the Darpa E3 dataset is notably poor. A more comprehensive analysis of the distribution of false alarms provides the following insights:\\
-
-%   \textbf{Cadets:} The performance on the Cadets dataset stands out positively compared to other datasets. This can be attributed to the dataset's relative simplicity, characterized by a smaller variety of node types. Notably, the majority of false alarms on Cadets were generated for nodes FILE\_OBJECT\_DIR, FILE\_OBJECT\_CHAR, and FILE\_OBJECT\_LINK, collectively accounting for 92\% of false alarms.\\
-
-%   \textbf{Trace:} On the Trace dataset, \Sys exhibited a rather average performance. Among the node types, MemoryObject and FILE\_OBJECT\_NAMED\_PIPE contributed to 80\% of the false alarms.\\
-
-%   \textbf{Theia:} When applied to the Theia dataset, the most problematic nodes were FILE\_OBJECT\_DIR and FILE\_OBJECT\_CHAR, making up 77\% of the false alarms.\\
-
-%   \textbf{Fivedirections:} In the case of the Fivedirections dataset, the nodes FILE\_OBJECT\_CHAR, PRINCIPAL\_REMOTE, and SRCSINK\_DATABASE accounted for the majority of false alarms, constituting approximately 90\% of them.\\
-
-%   The analysis above reveals a highly skewed distribution of false alarms, primarily attributed to the intricate nature of node-level classification, which becomes even more challenging when combined with Federated Learning. This complexity results in the model's inability to comprehensively understand every node type, leading to gaps in its comprehension.
-
-%   To address this issue, we need a design change in our anomaly detector, shifting from node-level to graph-level classification. By prioritizing the learning of high-level behaviors within provenance graphs rather than focusing on individual nodes, we can improve the model's overall performance.
-
-%   Furthermore, the \threatrace approach to anomaly detection lacks intuitiveness, causing ongoing confusion. To enhance clarity and alignment with established practices, we should advocate for transitioning to a more conventional and widely-accepted unsupervised learning approach following~\cite{yangprographer,shadewatcher,sigl}.
