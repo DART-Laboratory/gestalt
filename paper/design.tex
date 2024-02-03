@@ -123,38 +123,9 @@ where:
 
 This formula averages the parameters of all client models, forming the global model update. The process is repeated for a set number of rounds, determined by a hyperparameter, and concludes when there is no further reduction in training loss. Algorithm~\ref{alg:federated_learning} explains this process in detail.
 
-\begin{algorithm}[h]
-  \scriptsize
-  \DontPrintSemicolon
-  \SetKwInOut{Input}{Inputs}
-  \SetKwInOut{Output}{Output}
-  \Input{Set of client models $\{M_1, M_2, \ldots, M_N\}$;\\}
-  \Output{Global GNN model $G$.}
-  \BlankLine
-  \tcc{Initialize global GNN model with random weights.}
-  $G \leftarrow \text{InitializeRandomWeights}()$\\
-  \tcc{Distribute $G$ to all clients.}
-  \ForEach{client model $M_i$}{
-    Send $G$ to $M_i$\\
-    $G_i \leftarrow \text{TrainOnLocalData}(M_i)$
-  }
-  \BlankLine
-  \tcc{Aggregate trained models from clients.}
-  $AggregatedWeights \leftarrow list([])$\\
-  \ForEach{client model $G_i$}{
-    $AggregatedWeights.append(\text{ExtractWeights}(G_i))$\\
-  }
-  \tcc{Apply federated averaging.}
-  $G \leftarrow \text{FederatedAveraging}(AggregatedWeights)$\\
-  \BlankLine
-  \Return $G$\\
-  \BlankLine
-  \caption{Federated Graph Representation Learning}
-  \label{alg:federated_learning}
-\end{algorithm}
-
 \subsection{Anomaly Detection}
 \Sys employs an advanced methodology akin to systems like Flash and \threatrace, focusing on identifying irregular nodes through the comparison of their expected and observed types. This approach is grounded in a detailed analysis of both the surrounding structures and inherent properties of the nodes, with the aim to define normal pattern baselines for various node types. Typically, entities with malicious intentions display neighborhood configurations and characteristics deviating from these established norms. In operational phases, the detection of anomalies that diverge from the pre-established node distribution patterns often results in their misclassification. The emergence of nodes misclassified in the system's output is indicative of potential security issues. To regulate the frequency of alerts, we have implemented a threshold parameter, denoted as $T$. This parameter sets a limit on the likelihood of a classification being considered valid. A higher value of this parameter implies stronger confidence in the prediction, increasing the probability of identifying anomalies.
+
 
 % \subsection{Provenance Graph Constructor}
 % Our approach starts by converting system logs into provenance graphs through a three-step process. Initially, the system, \Sys, processes system logs like Windows Event Logs or Linux Audit Logs, which are composed of host event details including process activities, file interactions, and network engagements. \Sys works with batches of audit logs, utilizing a sliding window technique to create the provenance graph. This graph consists of two kinds of nodes: process nodes and object nodes. The object nodes represent various system entities such as files, network streams, modules, and other system components. The connections between these nodes are marked with labels indicating the event type, elucidating the cause-and-effect relationship among the connected nodes and the event's timestamp. Additionally, these nodes are equipped with attributes like process identifiers, command lines, file paths, IP addresses, port details, and module paths, offering additional insights and specifics.
