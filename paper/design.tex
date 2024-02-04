@@ -12,15 +12,16 @@ Finally, the \textit{Anomaly Detection Module} utilizes the aggregated global mo
 \begin{figure}[t!]
   \centering
   \includegraphics[width=0.45\textwidth]{fig/arch.pdf}
-  \caption{High Level Architecture of \Sys.}
+  \caption{High Level Architecture of \Sys. \wajih{Please reduce the different number of colors you are using in this diagram. They are distracting. Also, it is not clear from this diagram what is the order of operation. Maybe you need to put numbers on the edges. Or you need to make it from left to right to show which thing will happen first and then second and so on.}}
   \vspace{-3ex}
-  \label{arch}
+  \label{fig:arch}
 \end{figure}
 
 \subsection{Provenance Graph Constructor} 
 \Sys harnesses audit logs to create a system provenance graph. It operates on each client machine, utilizing their local system logs for graph construction. Key operating systems, such as Linux and Windows, are equipped with built-in mechanisms, namely the Linux Audit system and Windows Event Tracing, for log collection. These logs offer comprehensive insights into the interactions among different system entities, documenting activities ranging from process executions and file operations to network connections. Utilizing this information, \Sys assembles a graph where nodes represent system entities like processes, files, and sockets. The edges of this graph correspond to events, predominantly identified by syscalls, that occur between these entities. In addition, \Sys augments each node with detailed attributes, including process names, command lines, file names, and network IP addresses. This enrichment of node attributes significantly bolsters our system's proficiency in differentiating between nodes with analogous graph structures.
 
 \subsection{Semantic Featurization}
+\wajih{use word2vec macro.}
 % This module processes the provenance graph generated from audit logs by transforming node attributes into feature vectors for the graph learning phase. Existing systems like Flash have demonstrated the effectiveness of using semantic node attributes to enhance detection performance. Building on this approach, we employ a word2vec language model to encode these attributes into vector format. Each client independently trains a word2vec model using their local system logs. However, before these models can be utilized to encode text attributes, they must be merged across client machines to form a unified model. This unification is crucial; without it, each client would produce differing feature vectors for identical inputs. Such variability would undermine the consistency of client-based \gnnshort models and diminish the effectiveness of the federated averaging technique.
 
 This module processes the provenance graph generated from audit logs by transforming node attributes into feature vectors for the graph learning phase. Systems like Flash have demonstrated the effectiveness of using semantic node attributes to enhance detection performance. Building on this approach, we employ a word2vec language model to encode these attributes into vector format, \(\mathbf{v}\), where each attribute \(a\) is transformed into a vector \(v_a\). Each client independently trains a word2vec model using their local system logs. The transformation of an attribute \(a\) into a vector by the word2vec model can be represented as:
@@ -125,6 +126,8 @@ This formula averages the parameters of all client models, forming the global mo
 
 \subsection{Anomaly Detection}
 \Sys employs an advanced methodology akin to systems like Flash and \threatrace, focusing on identifying irregular nodes through the comparison of their expected and observed types. This approach is grounded in a detailed analysis of both the surrounding structures and inherent properties of the nodes, with the aim to define normal pattern baselines for various node types. Typically, entities with malicious intentions display neighborhood configurations and characteristics deviating from these established norms. In operational phases, the detection of anomalies that diverge from the pre-established node distribution patterns often results in their misclassification. The emergence of nodes misclassified in the system's output is indicative of potential security issues. To regulate the frequency of alerts, we have implemented a threshold parameter, denoted as $T$. This parameter sets a limit on the likelihood of a classification being considered valid. A higher value of this parameter implies stronger confidence in the prediction, increasing the probability of identifying anomalies.
+
+\wajih{Whrere is the part about local differential privacy? We should have something about that in design section.}
 
 
 % \subsection{Provenance Graph Constructor}
