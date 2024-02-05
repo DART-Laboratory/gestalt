@@ -63,8 +63,6 @@ Beyond detection performance, we also highlight \Sys's qualitative advantages, i
 
  \subsection*{Efficacy of Word2vec harmonization}
 
- In this section, we evaluate the effectiveness of our Word2Vec vector harmonization scheme through two experiments using the \optc dataset. In the first experiment, each client utilized its locally trained Word2Vec model to encode semantic features during the training process. In the second experiment, we synchronized the individually trained models into a central Word2Vec model using the utility server architecture, as explained in Section~\ref{sec:methodology}. Then each client used this centralized model for generating semantic features. Table~\ref{local:wordvec} presents the experimental results. By employing the harmonized models, we achieved significantly better detection outcomes. This improvement is attributable to the inherent randomness of the Word2Vec algorithm, which causes different clients to produce divergent vectors for identical attributes. Such variability leads to heterogeneity in the feature vectors for the \gnnshort model, impairing the model's ability to generalize and converge effectively during the federated learning process, thereby yielding suboptimal results. However, through our novel, privacy-preserving aggregation of these semantic models, we have addressed this issue.
-
  \begin{table}[h!]
   \centering
   \scriptsize
@@ -81,7 +79,22 @@ Beyond detection performance, we also highlight \Sys's qualitative advantages, i
       \label{local:wordvec}
   \end{table}
 
- \subsection*{CPU and Resource Consumption}
+ In this section, we evaluate the effectiveness of our Word2Vec vector harmonization scheme through two experiments using the \optc dataset. In the first experiment, each client utilized its locally trained Word2Vec model to encode semantic features during the training process. In the second experiment, we synchronized the individually trained models into a central Word2Vec model using the utility server architecture, as explained in Section~\ref{sec:methodology}. Then each client used this centralized model for generating semantic features. Table~\ref{local:wordvec} presents the experimental results. By employing the harmonized models, we achieved significantly better detection outcomes. This improvement is attributable to the inherent randomness of the Word2Vec algorithm, which causes different clients to produce divergent vectors for identical attributes. Such variability leads to heterogeneity in the feature vectors for the \gnnshort model, impairing the model's ability to generalize and converge effectively during the federated learning process, thereby yielding suboptimal results. However, through our novel, privacy-preserving aggregation of these semantic models, we have addressed this issue.
+
+ \subsection*{Resource Consumption of \Sys}
+
+ In this section, we analyze the resource consumption of our system. To accomplish this, we processed batches of audit events of varying sizes using our system to model the resource utilization on a client machine comprehensively. The results, as depicted in Figure~\ref{fig:resource}, indicate that the resource consumption of \Sys is moderate. Specifically, \Sys is capable of processing up to 100,000 audit events simultaneously while consuming less than 900 MB of memory and utilizing less than 20\% of CPU resources. This suggests that \Sys does not significantly burden the client machine, particularly given that client machines typically experience low event throughput. Consequently, our system requires execution only a few times per day to process newly accumulated events, implying that resource consumption is not continuous but occurs at specific intervals. Furthermore, our analysis of the host data in the \optc dataset reveals that, on average, each client generates approximately 100,000 audit log events within a three-hour period.
+
+ \begin{figure}[t!]
+  \centering
+  \subfloat[CPU Utilization.]{\includegraphics[width=0.24\textwidth]{fig/cpu.pdf}\label{cpu}}
+  \hfill
+  \subfloat[RAM Utilization]{\includegraphics[width=0.24\textwidth]{fig/ram.pdf}\label{ram}}
+  \hfill
+  \caption{Resource Consumption of \Sys.}
+  \label{fig:resource}
+  \vspace{-2ex}
+\end{figure}
 
  \subsection*{Processing Time Analysis}
 
@@ -95,31 +108,31 @@ Beyond detection performance, we also highlight \Sys's qualitative advantages, i
 
 \begin{figure}[t!]
   \centering
-  \includegraphics[width=0.40\textwidth]{fig/scoresvshosts.pdf}
+  \includegraphics[width=0.3\textwidth]{fig/scoresvshosts.pdf}
   \caption{Effect of number of hosts vs detection metrics.}
   \label{scoresvshosts}
   \vspace{-2ex}
 \end{figure}
 
-\begin{figure}[t!]
-  \centering
-  \includegraphics[width=0.40\textwidth]{fig/cpu.pdf}
-  \caption{CPU Usage}
-  \label{cpu}
-  \vspace{-2ex}
-\end{figure}
+% \begin{figure}[t!]
+%   \centering
+%   \includegraphics[width=0.40\textwidth]{fig/cpu.pdf}
+%   \caption{CPU Usage}
+%   \label{cpu}
+%   \vspace{-2ex}
+% \end{figure}
+
+% \begin{figure}[t!]
+%   \centering
+%   \includegraphics[width=0.40\textwidth]{fig/ram.pdf}
+%   \caption{RAM usage}
+%   \label{ram}
+%   \vspace{-2ex}
+% \end{figure}
 
 \begin{figure}[t!]
   \centering
-  \includegraphics[width=0.40\textwidth]{fig/ram.pdf}
-  \caption{RAM usage}
-  \label{ram}
-  \vspace{-2ex}
-\end{figure}
-
-\begin{figure}[t!]
-  \centering
-  \includegraphics[width=0.40\textwidth]{fig/roundsvsscore.pdf}
+  \includegraphics[width=0.3\textwidth]{fig/roundsvsscore.pdf}
   \caption{Federated Averaging Rounds vs Detection Performance.}
   \label{roundsvsscore}
   \vspace{-2ex}
@@ -127,7 +140,7 @@ Beyond detection performance, we also highlight \Sys's qualitative advantages, i
 
 \begin{figure}[t!]
   \centering
-  \includegraphics[width=0.40\textwidth]{fig/sizevstime.pdf}
+  \includegraphics[width=0.3\textwidth]{fig/sizevstime.pdf}
   \caption{Processing Time for various Audit Event Sizes}
   \label{sizevstime}
   \vspace{-2ex}
@@ -135,7 +148,7 @@ Beyond detection performance, we also highlight \Sys's qualitative advantages, i
 
 \begin{figure}[t!]
   \centering
-  \includegraphics[width=0.40\textwidth]{fig/epsvsscore.pdf}
+  \includegraphics[width=0.3\textwidth]{fig/epsvsscore.pdf}
   \caption{Effect of Different LDP Noise Level on Detection Performance.}
   \label{epsvsscore}
   \vspace{-2ex}
