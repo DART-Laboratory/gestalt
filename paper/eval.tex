@@ -2,13 +2,16 @@
  \label{sec:eval}
 
  In our comprehensive assessment of \Sys, we explore several key research questions. Our testing environment comprised a machine with 8 Intel vCPUs, 80 GB RAM, an NVIDIA RTX2080 GPU, and ran on Ubuntu 18.04.6 LTS.
-\wajih{you need add results related to resource overheads, hyperparameters tuning, ablation study, etc. Almost all the experiments that you have in your Flash paper are also applicable here.}
-
-\wajih{please add all the research questions here even if you are still running the experiments.}
 
 \begin{itemize}[leftmargin=*]
-\item \textbf{RQ1.} What is the comparative detection accuracy of \Sys against current systems?
+\item \textbf{RQ1.} How does \Sys compares to existing systems in terms of detection performance?
 \item \textbf{RQ2.} What is the effectiveness of word2vec harmonization in a utility server setting?
+\item \textbf{RQ3.} What is the resource consumption of \Sys running on a client machine?
+\item \textbf{RQ4.} What is the end to end processing time of \Sys on a client machine?
+\item \textbf{RQ5.} What is the effect of varying differential privacy noise on detection performance?
+\item \textbf{RQ6.} Ablation study of various \Sys components.
+
+
 \end{itemize}
 
 \PP{Implementation} We developed \Sys using Python and incorporated the Torch Geometric library for our \gnnshort model. This model employs Sage Convolutions, a graph convolution layer that aggregates features from adjacent nodes to generate new node features. To enhance generalization, the model integrates dropout and ReLU activation functions across layers. For our \wordvec model, we utilized the Gensim library.
