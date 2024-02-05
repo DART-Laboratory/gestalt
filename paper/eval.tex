@@ -1,24 +1,23 @@
  \section{Evaluation}
  \label{sec:eval}
 
- In our comprehensive assessment of \Sys, we explore several key research questions. Our testing environment comprised a machine with 8 Intel vCPUs, 80 GB RAM, an NVIDIA RTX2080 GPU, and ran on Ubuntu 18.04.6 LTS.
+\Sys is developed in Python and leverages the PyTorch and Torch Geometric libraries to implement the federated graph learning framework. For developing the word2vec and vector harmonization module, we employ the Gensim library. Secure communication between clients and the utility server is ensured through Python's Cryptography module. All other functionalities of Sys are encapsulated in Python functions, designed for easy customization and deployment across different system environments.
+
+We evaluate Sys using the open-source datasets Darpa E3 and OptC, which comprise system audit logs that simulate enterprise environments. These logs are collected from both Windows and Linux operating systems. Our evaluation experiments are conducted on a machine running Ubuntu 18.04.6 LTS, equipped with an 8-core Intel CPU and 100 GB of memory. Additionally, the machine features an NVIDIA RTX2080 GPU, utilized for operating our graph learning framework. Our evaluation aims to address the following research questions.
 
 \begin{itemize}[leftmargin=*]
-\item \textbf{RQ1.} How does \Sys compares to existing systems in terms of detection performance?
-\item \textbf{RQ2.} What is the effectiveness of word2vec harmonization in a utility server setting?
-\item \textbf{RQ3.} What is the resource consumption of \Sys running on a client machine?
-\item \textbf{RQ4.} What is the end to end processing time of \Sys on a client machine?
-\item \textbf{RQ5.} What is the effect of varying differential privacy noise on detection performance?
-\item \textbf{RQ6.} Ablation study of various \Sys components.
-
-
+\item \textbf{Q1.} How does \Sys compares to existing systems in terms of detection performance?
+\item \textbf{Q2.} What is the effectiveness of word2vec harmonization in a utility server setting?
+\item \textbf{Q3.} What is the resource consumption of \Sys running on a client machine?
+\item \textbf{Q4.} What is the end to end processing time of \Sys on a client machine?
+\item \textbf{Q5.} What is the effect of varying differential privacy noise on detection performance?
+\item \textbf{Q6.} Ablation study of various \Sys components.
 \end{itemize}
 
-\PP{Implementation} We developed \Sys using Python and incorporated the Torch Geometric library for our \gnnshort model. This model employs Sage Convolutions, a graph convolution layer that aggregates features from adjacent nodes to generate new node features. To enhance generalization, the model integrates dropout and ReLU activation functions across layers. For our \wordvec model, we utilized the Gensim library.
+\subsection*{Datasets}
+\Sys underwent testing with two open-source datasets: \darpa E3~\cite{darpae3} and \darpa \optc~\cite{darpatc}. The E3 dataset, originating from \darpa's third red-vs-blue team exercise, includes audit logs depicting both normal and malicious activities. The \darpa \optc dataset offers a comprehensive view of benign and malevolent audit records from around 1000 hosts. It features six days of normal activities for training, followed by three days showcasing different types of attacks for evaluation purposes. The first day simulates a PowerShell Empire staging scenario, including the initial breach, lateral movements, and privilege escalations. The second day focuses on data exfiltration events, while the third day involves the deployment of malicious software.
 
-\PP{Datasets} \Sys underwent testing with two open-source datasets: \darpa E3~\cite{darpae3} and \darpa \optc~\cite{darpatc}. The E3 dataset, originating from \darpa's third red-vs-blue team exercise, includes audit logs depicting both normal and malicious activities. The \darpa \optc dataset offers a comprehensive view of benign and malevolent audit records from around 1000 hosts. It features six days of normal activities for training, followed by three days showcasing different types of attacks for evaluation purposes. The first day simulates a PowerShell Empire staging scenario, including the initial breach, lateral movements, and privilege escalations. The second day focuses on data exfiltration events, while the third day involves the deployment of malicious software.
-
-\PP{Detectors for Comparison} For benchmarking \Sys, we employed the \threatrace \cite{wang2022threatrace} system, adopting the same detection metrics for comparison. \threatrace, a provenance-based IDS, leverages a \gnn for node-level anomaly detection. It learns the structural patterns of nodes in benign datasets and detects anomalies based on deviations from these patterns. Unlike \Sys, however, \threatrace does not ensure the privacy of user logs and faces scalability issues.
+\subsection*{Detectors for Comparison}
 
 {\renewcommand{\arraystretch}{1.2}% for the vertical padding
 \begin{table*}[t!]
@@ -48,28 +47,41 @@
 \label{summary:benchmarks:large}
 \end{table*}}
 
- \subsection*{RQ1. Detection Performance}
+ \subsection*{Detection Performance}
  Table~\ref{summary:benchmarks:large} presents a comparative analysis of the detection performance between \Sys and \threatrace. It reveals that \Sys achieves a detection performance comparable to that of \threatrace. The advantage of \Sys lies in its ability to preserve user log privacy via federated learning. Additionally, its scalability is enhanced as each client independently conducts anomaly detection on their logs. This decentralization of learning and detection tasks, enabled by federated learning, significantly enhances the scalability of our system.
 
- \subsection*{RQ2. Efficacy of Word2vec harmonization}
+ \subsection*{Efficacy of Word2vec harmonization}
  To evaluate the efficacy of our method, we performed experiments comparing the utility server-based harmonized model with a local word2vec model on each client. These experiments utilized the \optc dataset. The findings, detailed in Table~\ref{local:wordvec}, demonstrate that our strategy significantly enhances the performance of \Sys. This improvement is attributed to our approach's ability to minimize noise in disparate word2vec vectors, thereby facilitating a more accurate interpretation of various activity patterns in the provenance graph by the \gnnshort model.
 
-\begin{table}[h!]
-    \centering
-    \scriptsize
-      \caption{Effectiveness of word2vec vectors harmonization.}
-        \begin{tabular}{ | c | c | c | c | c | c |}
-          \hline
-            \bf Word2vec Type & \bf Precision & \bf Recall & \bf \fscore & \bf TP & \bf FP \\
-          \hline
-           Vanilla & 0.66  & 0.97 & 0.79 & 636 & 325 \\
-           Harmonized & 0.88 & 0.94 & 0.91 & 610 & 80 \\
-          \hline
-        \end{tabular}
-        \label{local:wordvec}
-    \end{table}
+ \subsection*{CPU and Resource Consumption}
 
-\subsection*{Effect of Hosts vs Detection Performance}
+ \subsection*{Processing Time Analysis}
+
+ \subsection*{Effect of Differential Privacy}
+
+ \subsection*{Ablation Study}
+
+
+
+\PP{Effect of Hosts vs Detection Performance}
+
+\PP{Effect of Federated Learning Rounds}
+
+
+\begin{table}[h!]
+  \centering
+  \scriptsize
+    \caption{Effectiveness of word2vec vectors harmonization.}
+      \begin{tabular}{ | c | c | c | c | c | c |}
+        \hline
+          \bf Word2vec Type & \bf Precision & \bf Recall & \bf \fscore & \bf TP & \bf FP \\
+        \hline
+         Vanilla & 0.66  & 0.97 & 0.79 & 636 & 325 \\
+         Harmonized & 0.88 & 0.94 & 0.91 & 610 & 80 \\
+        \hline
+      \end{tabular}
+      \label{local:wordvec}
+  \end{table}
 
 \begin{figure}[t!]
   \centering
@@ -118,6 +130,4 @@
   \label{epsvsscore}
   \vspace{-2ex}
 \end{figure}
-
-\subsection*{CPU and Resource consumption}
 
