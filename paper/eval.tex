@@ -63,6 +63,24 @@ Beyond detection performance, we also highlight \Sys's qualitative advantages, i
 
  \subsection*{Efficacy of Word2vec harmonization}
 
+ In this section, we evaluate the effectiveness of our Word2Vec vector harmonization scheme through two experiments using the \optc dataset. In the first experiment, each client utilized its locally trained Word2Vec model to encode semantic features during the training process. In the second experiment, we synchronized the individually trained models into a central Word2Vec model using the utility server architecture, as explained in Section~\ref{sec:methodology}. Then each client used this centralized model for generating semantic features. Table~\ref{local:wordvec} presents the experimental results. By employing the harmonized models, we achieved significantly better detection outcomes. This improvement is attributable to the inherent randomness of the Word2Vec algorithm, which causes different clients to produce divergent vectors for identical attributes. Such variability leads to heterogeneity in the feature vectors for the \gnnshort model, impairing the model's ability to generalize and converge effectively during the federated learning process, thereby yielding suboptimal results. However, through our novel, privacy-preserving aggregation of these semantic models, we have addressed this issue.
+
+ \begin{table}[h!]
+  \centering
+  \scriptsize
+    \caption{Effectiveness of word2vec vectors harmonization.}
+      \begin{tabular}{ | c | c | c | c | c | c |}
+        \hline
+          \bf Word2vec Type & \bf Precision & \bf Recall & \bf \fscore & \bf TP & \bf FP \\
+        \hline
+         Local & 0.66  & 0.97 & 0.79 & 636 & 325 \\
+         \hline
+         Harmonized & 0.88 & 0.93 & 0.90 & 605 & 80 \\
+        \hline
+      \end{tabular}
+      \label{local:wordvec}
+  \end{table}
+
  \subsection*{CPU and Resource Consumption}
 
  \subsection*{Processing Time Analysis}
@@ -74,22 +92,6 @@ Beyond detection performance, we also highlight \Sys's qualitative advantages, i
 \PP{Effect of Hosts vs Detection Performance}
 
 \PP{Effect of Federated Learning Rounds}
-
-
-\begin{table}[h!]
-  \centering
-  \scriptsize
-    \caption{Effectiveness of word2vec vectors harmonization.}
-      \begin{tabular}{ | c | c | c | c | c | c |}
-        \hline
-          \bf Word2vec Type & \bf Precision & \bf Recall & \bf \fscore & \bf TP & \bf FP \\
-        \hline
-         Vanilla & 0.66  & 0.97 & 0.79 & 636 & 325 \\
-         Harmonized & 0.88 & 0.94 & 0.91 & 610 & 80 \\
-        \hline
-      \end{tabular}
-      \label{local:wordvec}
-  \end{table}
 
 \begin{figure}[t!]
   \centering
