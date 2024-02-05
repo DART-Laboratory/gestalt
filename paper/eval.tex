@@ -1,6 +1,34 @@
  \section{Evaluation}
  \label{sec:eval}
 
+ {\renewcommand{\arraystretch}{1.2}
+ \begin{table*}[t!]
+   \centering
+   \scriptsize
+   \caption{Comparison of \Sys against FLASH and KAIROS. Prec.: Precision; Rec.: Recall;}
+   \setlength{\tabcolsep}{0.7pt}
+   \begin{tabular}{ccccccccccccc}
+     \toprule
+ 
+   \multirow{2}{*}{\textbf{Datasets}}
+   & \multicolumn{4}{c }{\Norothead{ \bf \Sys}}
+   & \multicolumn{4}{c }{\Norothead{ \bf FlASH}}
+   & \multicolumn{4}{c }{\Norothead{ \bf KAIROS}}
+   \\ \cmidrule(r{\tbspace}){2-5} \cmidrule(r{\tbspace}){6-9} \cmidrule(r{\tbspace}){10-13}
+ 
+     & {\bf Prec.} &  {\bf Rec.} & {\bf \fscore} & {\bf TP}/ {\bf FP}/ {\bf FN}/ {\bf TN} & {\bf Prec.}  & {\bf Rec.} & {\bf \fscore} & {\bf TP}/ {\bf FP}/ {\bf FN}/ {\bf TN} & {\bf Prec.}  & {\bf Rec.} & {\bf \fscore} & {\bf TP}/ {\bf FP}/ {\bf FN}/ {\bf TN} \\
+ 
+   \midrule
+ 
+   E3-CADETS &  0.90 & 0.99 & 0.95 & 12846/ 1408/ 6/ 705,558 & 0.94 & 0.99 & 0.96 & 12851/ 818/ 1/ 706,148 & 0.80 & 1.00 & 0.89 & 4/ 1/ 0/ 174 \\
+   E3-TRACE &  0.94 & 0.99 & 0.96 & 67357/ 3951/ 26/ 2,412,056 & 0.95 & 0.99 & 0.97 &  67382/ 3477/ 1/ 2,412,530 & - & - & - & - \\
+   E3-THEIA &  0.89 & 0.99 & 0.94 & 25311/ 3155/ 51/ 3,502,171 & 0.92 & 0.99 & 0.95 & 25318/ 2282/ 44/ 3,503,044 & 0.91 & 1.00 & 0.95 & 10/ 1/ 0/ 216 \\  
+   OpTC & 0.88 & 0.93 & 0.90 & 605/ 80/ 45/ 1,287,275 & 0.93 & 0.92 & 0.93 & 600/ 43/ 50/ 1,287,312 & 0.84 & 1.00 & 0.91 & 32/ 6/ 0/ 1210 \\
+   \bottomrule
+   \end{tabular}
+ \label{summary:benchmarks:large}
+ \end{table*}}
+
 \Sys is developed in Python and leverages the PyTorch and Torch Geometric libraries to implement the federated graph learning framework. For developing the word2vec and vector harmonization module, we employ the Gensim library. Secure communication between clients and the utility server is ensured through Python's Cryptography module. All other functionalities of Sys are encapsulated in Python functions, designed for easy customization and deployment across different system environments.
 
 We evaluate Sys using the open-source datasets Darpa E3 and OptC, which comprise system audit logs that simulate enterprise environments. These logs are collected from both Windows and Linux operating systems. Our evaluation experiments are conducted on a machine running Ubuntu 18.04.6 LTS, equipped with an 8-core Intel CPU and 100 GB of memory. Additionally, the machine features an NVIDIA RTX2080 GPU, utilized for operating our graph learning framework. Our evaluation aims to address the following research questions.
@@ -25,35 +53,6 @@ Both datasets are accompanied by ground truth documents that help distinguish be
 
 To benchmark our system, we conduct comparisons against existing state-of-the-art Provenance-based Intrusion Detection Systems (PIDS). \threatrace, a node-level system, employs graph representation learning to identify anomalous nodes within a provenance graph. In contrast, FLASH, another node-level system, surpasses \threatrace in detection efficiency and effectiveness by leveraging semantic feature vectors and an embeddings database. Given FLASH's superiority over \threatrace, our comparison focuses primarily on FLASH. Additionally, we consider KAIROS, which utilizes temporal graph networks to capture the evolution of a system's provenance graph over time. KAIROS's detection granularity is limited to specific time windows; it aggregates logs within predetermined intervals, subsequently executing anomaly detection on these collected datasets. Consequently, we extend our comparison to include \Sys versus KAIROS, focusing on their respective detection performance.
 
-
-{\renewcommand{\arraystretch}{1.2}
-\begin{table*}[t!]
-  \centering
-  \scriptsize
-  \caption{Comparison of \Sys against FLASH and KAIROS. Prec.: Precision; Rec.: Recall;}
-  \setlength{\tabcolsep}{0.7pt}
-  \begin{tabular}{ccccccccccccc}
-    \toprule
-
-  \multirow{2}{*}{\textbf{Datasets}}
-  & \multicolumn{4}{c }{\Norothead{ \bf \Sys}}
-  & \multicolumn{4}{c }{\Norothead{ \bf FlASH}}
-  & \multicolumn{4}{c }{\Norothead{ \bf KAIROS}}
-  \\ \cmidrule(r{\tbspace}){2-5} \cmidrule(r{\tbspace}){6-9} \cmidrule(r{\tbspace}){10-13}
-
-    & {\bf Prec.} &  {\bf Rec.} & {\bf \fscore} & {\bf TP}/ {\bf FP}/ {\bf FN}/ {\bf TN} & {\bf Prec.}  & {\bf Rec.} & {\bf \fscore} & {\bf TP}/ {\bf FP}/ {\bf FN}/ {\bf TN} & {\bf Prec.}  & {\bf Rec.} & {\bf \fscore} & {\bf TP}/ {\bf FP}/ {\bf FN}/ {\bf TN} \\
-
-  \midrule
-
-  E3-CADETS &  0.90 & 0.99 & 0.95 & 12846/ 1408/ 6/ 705,558 & 0.94 & 0.99 & 0.96 & 12851/ 818/ 1/ 706,148 & 0.80 & 1.00 & 0.89 & 4/ 1/ 0/ 174 \\
-  E3-TRACE &  0.94 & 0.99 & 0.96 & 67357/ 3951/ 26/ 2,412,056 & 0.95 & 0.99 & 0.97 &  67382/ 3477/ 1/ 2,412,530 & - & - & - & - \\
-  E3-THEIA &  0.89 & 0.99 & 0.94 & 25311/ 3155/ 51/ 3,502,171 & 0.92 & 0.99 & 0.95 & 25318/ 2282/ 44/ 3,503,044 & 0.91 & 1.00 & 0.95 & 10/ 1/ 0/ 216 \\  
-  OpTC & 0.88 & 0.93 & 0.90 & 605/ 80/ 45/ 1,287,275 & 0.93 & 0.92 & 0.93 & 600/ 43/ 50/ 1,287,312 & 0.84 & 1.00 & 0.91 & 32/ 6/ 0/ 1210 \\
-  \bottomrule
-  \end{tabular}
-\label{summary:benchmarks:large}
-\end{table*}}
-
  \subsection*{Detection Performance}
 
 In this section, we discuss how \Sys compares with other systems in terms of detection performance. Initially, we outline our methodology for deploying \Sys on the DARPA E3 and \optc datasets. The E3 dataset comprises various scenarios, including Cadets, Theia, and Trace, each representing logs generated by a single host machine. To adapt \Sys for this structure, we treat each scenario as an individual host. Consequently, in our federated learning approach, we trained local \gnnshort models on each scenario individually. These local models then participated in federated averaging, a process repeated across ten rounds. Upon completing the training, we evaluated the global \gnnshort model against the attack logs from these E3 scenarios. For the \optc dataset, which is naturally divided among various hosts, we sampled three hosts for inclusion in our federated graph learning experiment. Additionally, we conducted experiments with a varying number of randomly selected hosts, the results of which are detailed in our ablation study.
@@ -71,8 +70,6 @@ Beyond detection performance, we also highlight \Sys's qualitative advantages, i
  \subsection*{Effect of Differential Privacy}
 
  \subsection*{Ablation Study}
-
-
 
 \PP{Effect of Hosts vs Detection Performance}
 
