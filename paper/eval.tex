@@ -96,7 +96,7 @@ Beyond detection performance, we also highlight \Sys's qualitative advantages, i
   \vspace{-2ex}
 \end{figure}
 
- \subsection*{Processing Time Analysis}
+ \subsection*{Processing Time Analysis of \Sys}
 
  In this section, we evaluate the processing time required by our system, \Sys, to handle audit events on client machines. We experiment with batches of audit events of various sizes, conducting end-to-end inference with \Sys to measure the time taken to process these events on a client machine. The results, illustrated in Figure~\ref{sizevstime}, demonstrate that \Sys processes events with notable efficiency. For example, it requires approximately 23 seconds to process a batch of 100,000 events. Given our previous analysis of host logs in the \optc dataset, which indicated that each host generates an average of 100,000 events in three hours, \Sys can process 24 hours worth of log data on a client in merely 3 minutes. This level of efficiency ensures that our system is highly effective, preventing any potential log congestion.
 
