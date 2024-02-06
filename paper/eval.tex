@@ -100,19 +100,46 @@ Beyond detection performance, we also highlight \Sys's qualitative advantages, i
 
  In this section, we evaluate the processing time required by our system, \Sys, to handle audit events on client machines. We experiment with batches of audit events of various sizes, conducting end-to-end inference with \Sys to measure the time taken to process these events on a client machine. The results, illustrated in Figure~\ref{sizevstime}, demonstrate that \Sys processes events with notable efficiency. For example, it requires approximately 23 seconds to process a batch of 100,000 events. Given our previous analysis of host logs in the \optc dataset, which indicated that each host generates an average of 100,000 events in three hours, \Sys can process 24 hours worth of log data on a client in merely 3 minutes. This level of efficiency ensures that our system is highly effective, preventing any potential log congestion.
 
- \subsection*{Effect of Differential Privacy}
+ \begin{figure}[t!]
+  \centering
+  \includegraphics[width=0.3\textwidth]{fig/sizevstime.pdf}
+  \caption{Processing Time for various Audit Event Sizes}
+  \label{sizevstime}
+  \vspace{-2ex}
+\end{figure}
+
+ \subsection*{Effect of Local Differential Privacy}
+
+ \begin{figure}[t!]
+  \centering
+  \includegraphics[width=0.3\textwidth]{fig/epsvsscore.pdf}
+  \caption{Effect of Epsilon ($\epsilon$) on Detection Performance.}
+  \label{epsvsscore}
+  \vspace{-2ex}
+\end{figure}
+
+ In this section, we examine the impact of differential privacy noise levels on the detection performance of \Sys. Differential privacy introduces a parameter, $\epsilon$, which dictates the intensity of Gaussian noise added to the local \gnnshort model updates prior to their aggregation at the central server for federated averaging, as detailed in Section~\ref{sec:methodology}. By adjusting $\epsilon$ during the training phase, we assess the detection capabilities of the globally trained model across various $\epsilon$ settings. Figure~\ref{epsvsscore} illustrates the relationship between $\epsilon$ and detection performance. It is important to note that lower $\epsilon$ values correspond to higher noise levels in model updates, thereby strengthening privacy at the expense of model utility. Conversely, increasing $\epsilon$ reduces noise strength, improving detection performance. The optimal $\epsilon$ value is contingent upon the specific requirements and context of the organization employing \Sys, balancing between privacy protection and model utility.
+
 
  \subsection*{Ablation Study}
 
 \PP{Effect of Hosts vs Detection Performance}
-
-\PP{Effect of Federated Learning Rounds}
 
 \begin{figure}[t!]
   \centering
   \includegraphics[width=0.3\textwidth]{fig/scoresvshosts.pdf}
   \caption{Effect of number of hosts vs detection metrics.}
   \label{scoresvshosts}
+  \vspace{-2ex}
+\end{figure}
+
+\PP{Effect of Federated Learning Rounds}
+
+\begin{figure}[t!]
+  \centering
+  \includegraphics[width=0.3\textwidth]{fig/roundsvsscore.pdf}
+  \caption{Federated Averaging Rounds vs Detection Performance.}
+  \label{roundsvsscore}
   \vspace{-2ex}
 \end{figure}
 
@@ -131,28 +158,3 @@ Beyond detection performance, we also highlight \Sys's qualitative advantages, i
 %   \label{ram}
 %   \vspace{-2ex}
 % \end{figure}
-
-\begin{figure}[t!]
-  \centering
-  \includegraphics[width=0.3\textwidth]{fig/roundsvsscore.pdf}
-  \caption{Federated Averaging Rounds vs Detection Performance.}
-  \label{roundsvsscore}
-  \vspace{-2ex}
-\end{figure}
-
-\begin{figure}[t!]
-  \centering
-  \includegraphics[width=0.3\textwidth]{fig/sizevstime.pdf}
-  \caption{Processing Time for various Audit Event Sizes}
-  \label{sizevstime}
-  \vspace{-2ex}
-\end{figure}
-
-\begin{figure}[t!]
-  \centering
-  \includegraphics[width=0.3\textwidth]{fig/epsvsscore.pdf}
-  \caption{Effect of Different LDP Noise Level on Detection Performance.}
-  \label{epsvsscore}
-  \vspace{-2ex}
-\end{figure}
-
