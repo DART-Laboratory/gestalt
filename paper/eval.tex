@@ -125,7 +125,7 @@ Beyond detection performance, we also highlight \Sys's qualitative advantages, i
 
  In this section, we analyze the impact of key parameters within \Sys. Specifically, we focus on two principal parameters: $N$, representing the number of client machines participating in Federated Graph Learning, and $R$, denoting the number of rounds the federated averaging process is executed. The effect of these parameters is discussed below: \\
 
-\PP{Hosts vs Detection Performance} We utilized the \optc dataset for this experiment, randomly selecting a variable number of hosts to participate in training our model through federated learning. The trained global model was then applied to perform threat detection, with the outcomes documented accordingly. Figure~\ref{scoresvshosts} presents these results, illustrating that performance improvement is observed up to a certain number of hosts. This plateau is attributed to the \optc dataset's finite set of benign patterns that can be learned. Beyond this threshold, additional hosts do not contribute new information beneficial to the model, thus halting further performance gains and increasing the risk of overfitting. To mitigate this, client machines can monitor and report the loss of the global model on their local datasets, providing a metric for the server to determine the optimal point to cease the learning process.
+\PP{Hosts vs Detection Performance} We utilized the \optc dataset for this experiment, randomly selecting a variable number of hosts to participate in training our model through federated learning. The trained global model was then applied to perform threat detection, with the outcomes documented accordingly. Figure~\ref{scoresvshosts} presents these results, illustrating that performance improvement is observed up to a certain number of hosts. This plateau is attributed to the \optc dataset's finite set of benign patterns that can be learned. Beyond this threshold, additional hosts do not contribute new information beneficial to the model, thus halting further performance gains and increasing the risk of overfitting. To mitigate this, client machines can monitor and report the loss of the global model on their local datasets, providing a metric for the server to determine the optimal point to cease the learning process. \\
 
 \begin{figure}[t!]
   \centering
@@ -135,7 +135,7 @@ Beyond detection performance, we also highlight \Sys's qualitative advantages, i
   \vspace{-2ex}
 \end{figure}
 
-\PP{Effect of Federated Learning Rounds}
+\PP{Effect of Federated Averaging Rounds} We employed the Darpa E3 dataset to examine the impact of federated averaging rounds on detection performance. Our methodology involved training the model over a range of federated averaging rounds and subsequently evaluating the model's detection capabilities. The outcomes are depicted in Figure~\ref{roundsvsscore}, which shows that detection performance improves up to a certain number of rounds before declining due to overfitting. Notably, this inflection point is also characterized by a minimal decrease in training loss, suggesting that the model has reached its learning capacity. This observation proves to be a valuable metric for determining the optimal moment to stop training, thereby preventing overfitting and ensuring optimal model performance.
 
 \begin{figure}[t!]
   \centering
