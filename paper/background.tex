@@ -69,34 +69,3 @@ Kairos leverages temporal graph neural networks to understand the evolution of a
 
 \subsection{Overview of \Sys}
 These challenges significantly impede the application of the federated learning paradigm to existing systems. We have designed \Sys to address and overcome these issues. \wajih{Add a few more lines here about the high-level workflow and architecture of your system. Like all the steps involved. You should also refer to Figure~\ref{fig:arch} as well.}
-
-\begin{algorithm}[h]
-    \scriptsize
-    \DontPrintSemicolon
-    \SetKwInOut{Input}{Inputs}
-    \SetKwInOut{Output}{Output}
-    \Input{Set of client models $\{M_1, M_2, \ldots, M_N\}$;\\}
-    \Output{Global GNN model $G$.}
-    \BlankLine
-    \tcc{Initialize global GNN model with random weights.}
-    $G \leftarrow \text{InitializeRandomWeights}()$\\
-    \tcc{Distribute $G$ to all clients.}
-    \ForEach{client model $M_i$}{
-      Send $G$ to $M_i$\\
-      $G_i \leftarrow \text{TrainOnLocalData}(M_i)$
-    }
-    \BlankLine
-    \tcc{Aggregate trained models from clients.}
-    $AggregatedWeights \leftarrow list([])$\\
-    \ForEach{client model $G_i$}{
-      $AggregatedWeights.append(\text{ExtractWeights}(G_i))$\\
-    }
-    \tcc{Apply federated averaging.}
-    $G \leftarrow \text{FederatedAveraging}(AggregatedWeights)$\\
-    \BlankLine
-    \Return $G$\\
-    \BlankLine
-    \caption{Federated Graph Representation Learning}
-    \label{alg:federated_learning}
-  \end{algorithm}
-  

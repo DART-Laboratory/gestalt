@@ -1,6 +1,68 @@
 \section{\Sys Design}
 \label{sec:methodology}
 
+% \begin{algorithm}[h]
+%   \scriptsize
+%   \DontPrintSemicolon
+%   \SetKwInOut{Input}{Inputs}
+%   \SetKwInOut{Output}{Output}
+%   \Input{Set of client models $\{M_1, M_2, \ldots, M_N\}$;\\}
+%   \Output{Global GNN model $G$.}
+%   \BlankLine
+%   \tcc{Initialize global GNN model with random weights.}
+%   $G \leftarrow \text{InitializeRandomWeights}()$\\
+%   \tcc{Distribute $G$ to all clients.}
+%   \ForEach{client model $M_i$}{
+%     Send $G$ to $M_i$\\
+%     $G_i \leftarrow \text{TrainOnLocalData}(M_i)$
+%   }
+%   \BlankLine
+%   \tcc{Aggregate trained models from clients.}
+%   $AggregatedWeights \leftarrow list([])$\\
+%   \ForEach{client model $G_i$}{
+%     $AggregatedWeights.append(\text{ExtractWeights}(G_i))$\\
+%   }
+%   \tcc{Apply federated averaging.}
+%   $G \leftarrow \text{FederatedAveraging}(AggregatedWeights)$\\
+%   \BlankLine
+%   \Return $G$\\
+%   \BlankLine
+%   \caption{Federated Graph Representation Learning}
+%   \label{alg:federated_learning}
+% \end{algorithm}
+
+\begin{algorithm}[h]
+  \scriptsize
+  \DontPrintSemicolon
+  \SetKwInOut{Input}{Inputs}
+  \SetKwInOut{Output}{Output}
+  \Input{Set of client models $\{M_1, M_2, \ldots, M_N\}$; Privacy parameter $\epsilon$.}
+  \Output{Global GNN model $G$.}
+  \BlankLine
+  \tcc{Initialize global GNN model with random weights.}
+  $G \leftarrow \text{InitializeRandomWeights}()$\\
+  \tcc{Distribute $G$ to all clients.}
+  \ForEach{client model $M_i$}{
+    Send $G$ to $M_i$\\
+    $G_i \leftarrow \text{TrainOnLocalData}(M_i)$\\
+    $G_i \leftarrow \text{AddGaussianNoise}(\epsilon)$
+  }
+  \BlankLine
+  \tcc{Aggregate privacy-preserving trained models from clients.}
+  $AggregatedWeights \leftarrow list([])$\\
+  \ForEach{client model $G_i$}{
+    $AggregatedWeights.append(\text{ExtractWeights}(G_i))$\\
+  }
+  $G \leftarrow \text{FederatedAveraging}(AggregatedWeights)$\\
+  \BlankLine
+  \Return $G$\\
+  \BlankLine
+  \caption{Federated Graph Representation Learning with Differential Privacy}
+  \label{alg:federated_learning}
+\end{algorithm}
+
+
+
 In this section, we outline the architecture of our system, \Sys, which comprises five principal modules. The first module, the \textit{Provenance Graph Constructor}, operates on each client machine, transforming audit logs into a provenance graph. The second module, \textit{Semantic Featurization}, focuses on encoding semantic attributes from audit logs into feature vectors, which aids in the training of the client-specific \gnnshort models. This process utilizes word2vec models, each individually trained on its respective client's logs.
 
 The third module, \textit{Semantic Vectors Harmonization}, is tasked with merging these individual word2vec models into a unified global model. This is achieved using a trusted utility server and encryption techniques to safeguard sensitive model data. 
@@ -12,7 +74,7 @@ Finally, the \textit{Anomaly Detection Module} utilizes the aggregated global mo
 \begin{figure}[t!]
   \centering
   \includegraphics[width=0.45\textwidth]{fig/arch.pdf}
-  \caption{High Level Architecture of \Sys.}%\wajih{Please reduce the different number of colors you are using in this diagram. They are distracting. Also, it is not clear from this diagram what is the order of operation. Maybe you need to put numbers on the edges. Or you need to make it from left to right to show which thing will happen first and then second and so on.}}
+  \caption{High Level Architecture of \Sys.}
   \vspace{-3ex}
   \label{fig:arch}
 \end{figure}
@@ -21,8 +83,6 @@ Finally, the \textit{Anomaly Detection Module} utilizes the aggregated global mo
 \Sys harnesses audit logs to create a system provenance graph. It operates on each client machine, utilizing their local system logs for graph construction. Key operating systems, such as Linux and Windows, are equipped with built-in mechanisms, namely the Linux Audit system and Windows Event Tracing, for log collection. These logs offer comprehensive insights into the interactions among different system entities, documenting activities ranging from process executions and file operations to network connections. Utilizing this information, \Sys assembles a graph where nodes represent system entities like processes, files, and sockets. The edges of this graph correspond to events, predominantly identified by syscalls, that occur between these entities. In addition, \Sys augments each node with detailed attributes, including process names, command lines, file names, and network IP addresses. This enrichment of node attributes significantly bolsters our system's proficiency in differentiating between nodes with analogous graph structures.
 
 \subsection{Semantic Featurization}
-\wajih{use word2vec macro.}
-% This module processes the provenance graph generated from audit logs by transforming node attributes into feature vectors for the graph learning phase. Existing systems like Flash have demonstrated the effectiveness of using semantic node attributes to enhance detection performance. Building on this approach, we employ a word2vec language model to encode these attributes into vector format. Each client independently trains a word2vec model using their local system logs. However, before these models can be utilized to encode text attributes, they must be merged across client machines to form a unified model. This unification is crucial; without it, each client would produce differing feature vectors for identical inputs. Such variability would undermine the consistency of client-based \gnnshort models and diminish the effectiveness of the federated averaging technique.
 
 This module processes the provenance graph generated from audit logs by transforming node attributes into feature vectors for the graph learning phase. Systems like Flash have demonstrated the effectiveness of using semantic node attributes to enhance detection performance. Building on this approach, we employ a word2vec language model to encode these attributes into vector format, \(\mathbf{v}\), where each attribute \(a\) is transformed into a vector \(v_a\). Each client independently trains a word2vec model using their local system logs. The transformation of an attribute \(a\) into a vector by the word2vec model can be represented as:
 
@@ -110,25 +170,38 @@ This procedure ensures that neither the central server nor the utility server ca
 \end{algorithm}
 
 \subsection{Federated Graph Learning}
-The module performs graph representation learning in a federated manner. It includes a central server responsible for initializing a global \gnnshort model with random weights, which is then sent to all clients. These clients use their local provenance graphs and semantic feature vectors to train the \gnnshort model in an unsupervised way, following a training method similar to Flash. The \gnnshort model's objective is to classify each node entity into its corresponding type. After training their models, the clients send them back to the central server. The server applies the federated averaging algorithm to merge these models into a single global model. The server aggregates parameters from $N$ client models to update the global model as follows:
-\[
-\bar{w} = \frac{1}{N} \sum_{k=1}^{N} w_k
-\]
+% The module performs graph representation learning in a federated manner. It includes a central server responsible for initializing a global \gnnshort model with random weights, which is then sent to all clients. These clients use their local provenance graphs and semantic feature vectors to train the \gnnshort model in an unsupervised way, following a training method similar to Flash. The \gnnshort model's objective is to classify each node entity into its corresponding type. After training their models, the clients send them back to the central server. The server applies the federated averaging algorithm to merge these models into a single global model. The server aggregates parameters from $N$ client models to update the global model as follows:
+% \[
+% \bar{w} = \frac{1}{N} \sum_{k=1}^{N} w_k
+% \]
+
+% where:
+% \begin{itemize}
+%     \item $\bar{w}$ is the aggregated global model parameter.
+%     \item $N$ is the number of client models.
+%     \item $w_k$ is the parameter from the $k$-th client model.
+% \end{itemize}
+
+% This formula averages the parameters of all client models, forming the global model update. The process is repeated for a set number of rounds, determined by a hyperparameter, and concludes when there is no further reduction in training loss. Algorithm~\ref{alg:federated_learning} explains this process in detail.
+
+The module performs graph representation learning in a federated manner. It includes a central server responsible for initializing a global \texttt{GNN} model with random weights, which is then sent to all clients. These clients use their local provenance graphs and semantic feature vectors to train the \texttt{GNN} model in an unsupervised way, following a training method similar to Flash. The \texttt{GNN} model's objective is to classify each node entity into its corresponding type. After training their models, the clients apply local differential privacy (LDP) to their model updates by adding a placeholder for Gaussian noise parameterized by \(\epsilon\). This ensures the privacy of their updates before sending them back to the central server. The server then applies the federated averaging algorithm to merge these privacy-preserving models into a single global model. Specifically, the server aggregates parameters from \(N\) client models, incorporating the Gaussian noise, to update the global model as follows:
+
+\begin{equation}
+\bar{w} = \frac{1}{N} \sum_{k=1}^{N} \left(w_k + \text{G}(\epsilon)\right)
+\end{equation}
 
 where:
 \begin{itemize}
-    \item $\bar{w}$ is the aggregated global model parameter.
-    \item $N$ is the number of client models.
-    \item $w_k$ is the parameter from the $k$-th client model.
+    \item \(\bar{w}\) is the aggregated global model parameter.
+    \item \(N\) is the number of client models.
+    \item \(w_k\) is the parameter from the \(k\)-th client model.
+    \item \(\text{G}(\epsilon)\) is the the Gaussian noise added to each client's model parameters, parameterized by \(\epsilon\).
 \end{itemize}
 
-This formula averages the parameters of all client models, forming the global model update. The process is repeated for a set number of rounds, determined by a hyperparameter, and concludes when there is no further reduction in training loss. Algorithm~\ref{alg:federated_learning} explains this process in detail.
+This approach not only averages the parameters of all client models but also ensures the privacy of each client's data by perturbing the model updates with noise parameterized by \(\epsilon\). The process is repeated for a set number of rounds, determined by a hyperparameter, and concludes when there is no further reduction in training loss. Algorithm~\ref{alg:federated_learning} explains this process in detail, including the application of local differential privacy.
 
 \subsection{Anomaly Detection}
 \Sys employs an advanced methodology akin to systems like Flash and \threatrace, focusing on identifying irregular nodes through the comparison of their expected and observed types. This approach is grounded in a detailed analysis of both the surrounding structures and inherent properties of the nodes, with the aim to define normal pattern baselines for various node types. Typically, entities with malicious intentions display neighborhood configurations and characteristics deviating from these established norms. In operational phases, the detection of anomalies that diverge from the pre-established node distribution patterns often results in their misclassification. The emergence of nodes misclassified in the system's output is indicative of potential security issues. To regulate the frequency of alerts, we have implemented a threshold parameter, denoted as $T$. This parameter sets a limit on the likelihood of a classification being considered valid. A higher value of this parameter implies stronger confidence in the prediction, increasing the probability of identifying anomalies.
-
-\wajih{Whrere is the part about local differential privacy? We should have something about that in design section.}
-
 
 % \subsection{Provenance Graph Constructor}
 % Our approach starts by converting system logs into provenance graphs through a three-step process. Initially, the system, \Sys, processes system logs like Windows Event Logs or Linux Audit Logs, which are composed of host event details including process activities, file interactions, and network engagements. \Sys works with batches of audit logs, utilizing a sliding window technique to create the provenance graph. This graph consists of two kinds of nodes: process nodes and object nodes. The object nodes represent various system entities such as files, network streams, modules, and other system components. The connections between these nodes are marked with labels indicating the event type, elucidating the cause-and-effect relationship among the connected nodes and the event's timestamp. Additionally, these nodes are equipped with attributes like process identifiers, command lines, file paths, IP addresses, port details, and module paths, offering additional insights and specifics.
