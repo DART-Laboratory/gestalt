@@ -31,7 +31,7 @@
 %   \label{alg:federated_learning}
 % \end{algorithm}
 
-\begin{algorithm}[h]
+\begin{algorithm}[!t]
   \scriptsize
   \DontPrintSemicolon
   \SetKwInOut{Input}{Inputs}
@@ -85,7 +85,7 @@ Finally, the \textit{Anomaly Detection Module} utilizes the aggregated global mo
 This module processes the provenance graph generated from audit logs by transforming node attributes into feature vectors for the graph learning phase. Systems like Flash have demonstrated the effectiveness of using semantic node attributes to enhance detection performance. Building on this approach, we employ a word2vec language model to encode these attributes into vector format, \(\mathbf{v}\), where each attribute \(a\) is transformed into a vector \(v_a\). Each client independently trains a word2vec model using their local system logs. The transformation of an attribute \(a\) into a vector by the word2vec model can be represented as:
 
 \[
-v_a = \text{word2vec}(a)
+v_a = \text{Word2Vec}(a)
 \]
 
 However, before these models can be utilized to encode text attributes, they must be merged across client machines to form a unified model. This unification is crucial; without it, each client would produce differing feature vectors, \(v_a^i\), for identical inputs, where \(i\) indicates the client. The variability in feature vectors, \(\{v_a^1, v_a^2, \ldots, v_a^N\}\), for the same attribute \(a\) across \(N\) clients, would undermine the consistency of client-based GNN models. To ensure uniformity, the feature vectors for overlapping attributes must be averaged across clients, forming a single unified vector for each attribute:
@@ -120,7 +120,7 @@ D(v_{k}^{'}) = v_{k}
 
 This procedure ensures that neither the central server nor the utility server can access the actual token information, assuming no collusion between the two servers. The process is explained in detailed in algorithm~\ref{alg:secure_integration_averaging_word2vec}
 
-\begin{algorithm}[h]
+\begin{algorithm}[!t]
   \scriptsize
   \DontPrintSemicolon
   \SetKwInOut{Input}{Inputs}
