@@ -61,8 +61,6 @@
   \label{alg:federated_learning}
 \end{algorithm}
 
-
-
 In this section, we outline the architecture of our system, \Sys, which comprises five principal modules. The first module, the \textit{Provenance Graph Constructor}, operates on each client machine, transforming audit logs into a provenance graph. The second module, \textit{Semantic Featurization}, focuses on encoding semantic attributes from audit logs into feature vectors, which aids in the training of the client-specific \gnnshort models. This process utilizes word2vec models, each individually trained on its respective client's logs.
 
 The third module, \textit{Semantic Vectors Harmonization}, is tasked with merging these individual word2vec models into a unified global model. This is achieved using a trusted utility server and encryption techniques to safeguard sensitive model data. 
