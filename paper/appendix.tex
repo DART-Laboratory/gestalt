@@ -1,5 +1,76 @@
 \section{Appendix}
 \label{sub:hyper}
 
-  
+In  federated learning, where data originates from diverse sources such as user machines running various processes, quantifying this diversity becomes crucial for model development. The Shannon Diversity Index (SDI) is a metric adapted from ecology to measure the heterogeneity of datasets. This report elaborates on the application of SDI in federated learning, focusing on comparing the diversity of sub-models in an ensemble approach to a single model scheme.
+
+\section*{The Shannon Diversity Index (SDI)}
+
+SDI quantifies a dataset's diversity by considering both the variety of items (richness) and the distribution frequency of each item (evenness). It is given by:
+
+\[
+H' = -\sum_{i=1}^{R} p_i \ln(p_i)
+\]
+
+where:
+\begin{itemize}
+    \item $H'$ is the Shannon Diversity Index,
+    \item $R$ denotes the number of unique items,
+    \item $p_i$ represents the proportion of the dataset made up by the $i$th item.
+\end{itemize}
+
+In federated learning, SDI can reveal the heterogeneity within the data, guiding the strategy for model training and data segmentation.
+
+\section*{Application of SDI in Federated Learning}
+
+\subsection*{Scenario Overview}
+
+A federated learning setup involves analyzing process data from user machines. This scenario examines the diversity of processes, considering the significant overlap among users.
+
+\subsection*{Example Dataset}
+
+The dataset features processes like Chrome, Excel, Spotify, and others, from four user machines. Each machine's processes exhibit a 50\% overlap with others, presenting a realistic view of data distribution.
+
+\subsection*{Process Distribution Across Users}
+
+\begin{itemize}
+    \item \textbf{User 1}: \{Chrome, Excel, Spotify, Zoom, Slack\}
+    \item \textbf{User 2}: \{Word, PowerPoint, Teams, Slack, Spotify\}
+    \item \textbf{User 3}: \{Chrome, Zoom, Teams, Excel, Word\}
+    \item \textbf{User 4}: \{PowerPoint, Spotify, Slack, Chrome, Word\}
+\end{itemize}
+
+Processes are then randomly divided into three groups.
+
+\subsection*{Computing SDI for Each Group and single  Scheme}
+
+SDI calculations are based on the occurrence frequencies of processes, assessing diversity within each group and comparing it to a single  model approach where all processes are considered together.
+
+\subsubsection*{SDI Results}
+
+\begin{itemize}
+    \item \textbf{Category 1}: SDI from Chrome, Zoom, and Teams.
+    \item \textbf{Category 2}: SDI from Word, Excel, and PowerPoint.
+    \item \textbf{Category 3}: SDI from Spotify and Slack.
+\end{itemize}
+
+\subsection*{Analysis and Implications}
+
+\begin{itemize}
+    \item \textbf{Category 1 SDI}: $H' = 1.08$
+    \item \textbf{Category 2 SDI}: $H' = 1.10$
+    \item \textbf{Category 3 SDI}: $H' = 0.67$
+    \item The single  model, considering all processes together, yielded an SDI of $H' = 2.06$.
+\end{itemize}
+
+\subsubsection*{Diversity Comparison}
+
+Compared to the single  model's SDI, each sub-model reflects a specific aspect of the overall diversity but with reduced complexity, suggesting that sub-models focus on more homogeneous subsets of data.
+
+\subsubsection*{Influence on Client Fairness}
+
+By dividing the overall task into sub-tasks (sub-models) and assigning them to different subsets of processes (or data features), the influence of clients with large datasets is diversified across multiple models. This can prevent any single client from disproportionately skewing the outcome of the entire federated learning system.
+
+\subsubsection*{Balanced Representation}
+
+Each sub-model specializes in a different aspect of the data, potentially leading to a scenario where clients contribute more evenly across the ensemble. Clients with large datasets still contribute significantly, but their impact is more evenly distributed, enhancing fairness.
 
