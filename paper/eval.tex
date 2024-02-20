@@ -5,7 +5,7 @@
  \begin{table*}[t!]
    \centering
    \footnotesize
-   \caption{Comparison of \Sys against FLASH and KAIROS. Prec.: Precision; Rec.: Recall; \wajih{@mati please use macros instead of numbers in this table.}}
+   \caption{Comparison of \Sys against FLASH and KAIROS. Prec.: Precision; Rec.: Recall;}
    \setlength{\tabcolsep}{0.7pt}
    \begin{tabular}{ccccccccccccc}
      \toprule
@@ -20,10 +20,10 @@
  
    \midrule
  
-   E3-CADETS &  \TCP & \TCR & \TCF & \TCTP/ \TCFP/ \TCFN/ \TCTN & 0.94 & 0.99 & 0.96 & 12851/ 818/ 1/ 706,148 & 0.80 & 1.00 & 0.89 & 4/ 1/ 0/ 174 \\
-   E3-TRACE &  \TTP & \TTR & \TTF & \TTTP/ \TTFP/ \TTFN/ \TTTN & 0.95 & 0.99 & 0.97 &  67382/ 3477/ 1/ 2,412,530 & - & - & - & - \\
-   E3-THEIA &  \TTHP & \TTHR & \TTHF & \TTHTP/ \TTHFP/ \TTHFN/ \TTHTN & 0.92 & 0.99 & 0.95 & 25318/ 2282/ 44/ 3,503,044 & 0.91 & 1.00 & 0.95 & 10/ 1/ 0/ 216 \\  
-   OpTC & \TOP & \TOR & \TOF & \TOTP/ \TOFP/ \TOFN/ \TOTN & 0.93 & 0.92 & 0.93 & 600/ 43/ 50/ 1,287,312 & 0.84 & 1.00 & 0.91 & 32/ 6/ 0/ 1210 \\
+   E3-CADETS &  \TCP & \TCR & \TCF & \TCTP/ \TCFP/ \TCFN/ \TCTN &  \FCP & \FCR & \FCF & \FCTP/ \FCFP/ \FCFN/ \FCTN & \KCP & \KCR & \KCF & \KCTP/ \KCFP/ \KCFN/ \KCTN \\
+   E3-TRACE &  \TTP & \TTR & \TTF & \TTTP/ \TTFP/ \TTFN/ \TTTN \TTP & \FTP & \FTR & \FTF & \FTTP/ \FTFP/ \FTFN/ \FTTN \FTP & - & - & - & - \\
+   E3-THEIA &  \TTHP & \TTHR & \TTHF & \TTHTP/ \TTHFP/ \TTHFN/ \TTHTN & \FTHP & \FTHR & \FTHF & \FTHTP/ \FTHFP/ \FTHFN/ \FTHTN & \KTHP & \KTHR & \KTHF & \KTHTP/ \KTHFP/ \KTHFN/ \KTHTN \\  
+   OpTC & \TOP & \TOR & \TOF & \TOTP/ \TOFP/ \TOFN/ \TOTN & \FOP & \FOR & \FOF & \FOTP/ \FOFP/ \FOFN/ \FOTN & \KOP & \KOR & \KOF & \KOTP/ \KOFP/ \KOFN/ \KOTN \\
    \bottomrule
    \end{tabular}
  \label{summary:benchmarks:large}
@@ -67,12 +67,12 @@ Beyond detection performance, we also highlight \Sys's qualitative advantages, i
   \centering
   \small
   \setlength{\tabcolsep}{3.5pt}
-    \caption{Effectiveness of \wordvec vectors harmonization.\wajih{use macros instead of numbers.}}
+    \caption{Effectiveness of \wordvec vectors harmonization.}
       \begin{tabular}{ | c | c | c | c | c | c |}
         \hline
           \bf Word2vec Type & \bf Precision & \bf Recall & \bf \fscore & \bf TP & \bf FP \\
         \hline
-         Local & 0.66  & 0.97 & 0.79 & 636 & 325 \\
+         Local & \VFOP & \VFOR & \VFOF & \VFOTP & \VFOFP \\
          \hline
          Harmonized & \TOP & \TOR & \TOF & \TOTP & \TOFP \\
         \hline
