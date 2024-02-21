@@ -29,20 +29,20 @@ Moreover, existing systems, such as Flash, have implemented techniques to achiev
 \begin{table}[t!]
     \centering
     \scriptsize
-      \caption{Limitations of existing PIDS.  \wajih{Add Distdet here. also add citations with each paper}}
+      \caption{Limitations of existing PIDS.}
       \setlength{\tabcolsep}{4.8pt}
         \begin{tabular}{ | c | c | c | c | c |}
           \hline
                & \bf Privacy & \bf Network  & \bf Disk  & \bf Scalability \\
                & \bf  Preserving & \bf  Cost & \bf Cost &  \\
           \hline
-          \Sys & YES                & LOW          & LOW       & HIGH        \\
+          \Sys  & YES                & LOW          & LOW       & HIGH        \\
           \hline
-          FLASH      & NO                 & HIGH         & HIGH      & MEDIUM      \\
+          DisDet~\cite{dong2023distdet} & NO                & LOW         & LOW      & HIGH       \\
           \hline
-          KAIROS     & NO                 & HIGH         & HIGH      & LOW         \\
+          FLASH~\cite{flash2024}     & NO            & HIGH         & HIGH      & MEDIUM      \\
           \hline
-          THREATRACE & NO                 & HIGH         & HIGH      & LOW        \\
+          KAIROS~\cite{cheng2023kairos}     & NO            & HIGH         & HIGH      & LOW         \\
           \hline
         \end{tabular}
         \label{limitations}
