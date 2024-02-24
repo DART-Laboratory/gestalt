@@ -73,4 +73,7 @@ Additionally, applying federated learning to existing systems will produce subop
 
 
 \subsection{Overview of \Sys}
-The aforementioned challenges substantially hinder the integration of the federated learning paradigm into existing systems. We have developed \Sys to address these obstacles. By merging federated learning with graph representation learning, \Sys provides a privacy-preserving detection system. In this framework, each client trains a \gnnshort model on their local log data. Subsequently, these models engage in a federated averaging process at a central server. To address the issue of heterogeneous feature vectors across different clients, \Sys incorporates a novel vector harmonization module.
+The challenges outlined above significantly impede the adoption of federated learning in current systems. To overcome these hurdles, we have developed \Sys, which integrates federated learning with \grl to create a privacy-preserving detection mechanism. Our approach introduces a novel framework that personalizes \grl at the system entity level, addressing data imbalance and client heterogeneity effectively.
+
+To tackle feature space heterogeneity, we introduce a two-server architecture and an encryption scheme to privately synchronize individual semantic encoders across clients. Within this framework, each client trains an ensemble of \gnnshort models, with each model specializing in a particular category of system entities consistent across all participants. These models then participate in a federated averaging process coordinated by a central server. By specifying the learning objectives for each sub-model across clients, our method aims to standardize federated averaging, enhancing its robustness against skewed data distributions.
+
