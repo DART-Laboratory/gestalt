@@ -48,7 +48,13 @@ Moreover, existing systems, such as Flash, have implemented techniques to achiev
         \label{limitations}
     \end{table}
 
-\subsection{How can federated learning help to solve above challenges?}
+\subsection{How can Federated Learning help to solve above challenges?}
+
+Federated learning~\cite{mcmahan2017communication} is a machine learning approach that enables a model to be trained across multiple decentralized devices or servers holding local data samples, without exchanging them. This method addresses privacy concerns, bandwidth limitations, and data security issues inherent in centralized machine learning approaches used in existing PIDS~\cite{flash2024,cheng2023kairos,wang2022threatrace}. The mathematical formulation of federated learning involves aggregating locally computed updates to a global model, rather than directly sharing raw data.
+
+In a federated learning setup, consider a global model parameterized by \(\theta\). The goal is to minimize some loss function \(L(\theta)\) that measures the discrepancy between the model's predictions and the actual data across all devices. However, instead of pooling all the data together, each device \(i\) computes an update \(\Delta \theta_i\) based on its local data and a local loss function \(L_i(\theta)\). Mathematically, the update rule on device \(i\) for a learning rate \(\eta\) is given by \(\Delta \theta_i = -\eta \nabla L_i(\theta)\), where \(\nabla L_i(\theta)\) is the gradient of the loss function with respect to the model parameters for the local data. After computing \(\Delta \theta_i\), each device sends this update to a central server.
+
+The central server aggregates these updates from all participating devices to update the global model. The aggregation is an average function: \(\Delta \theta_{global} = \frac{1}{N} \sum_{i=1}^{N} \Delta \theta_i\), where \(N\) is the number of devices. This aggregated update is then used to update the global model parameters: \(\theta_{new} = \theta + \Delta \theta_{global}\). This process iterates, with the updated global model being sent back to the devices for further local updates, until convergence. This iterative process ensures that the global model learns from all devices while keeping the data localized, thus addressing privacy and bandwidth concerns.
 
 
 \subsection{Why is it challenging to apply FL to PIDS?}
