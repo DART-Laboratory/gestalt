@@ -63,8 +63,7 @@ Applying federated learning to PIDS can be challenging due to the heterogeneity 
 
 Additionally, applying federated learning to existing systems will produce suboptimal results. This is primarily because these systems were not originally designed to function under a federated learning framework. These challenges are discussed below:
 
-\PP{Data Imbalance Among Clients} 
-
+\PP{Data Imbalance Among Clients} In federated learning scenarios, data distribution and volume can significantly vary across participating devices or clients. This variability can lead to scenarios where some clients have extensive data representing a wide array of benign patterns, while others possess limited or skewed data sets. Such imbalances challenge the training of a global model that performs uniformly well across all clients, potentially causing the model to become biased towards clients with more comprehensive data collections. This bias may lead to the neglect of unique patterns found in less-represented clients. Existing PIDS lack built-in mechanisms to address this challenge effectively.
 
 \PP{Feature Space Heterogeneity} Flash utilizes a temporally-aware Word2Vec model to encode the semantic attributes of entities within the provenance graph. In a federated learning environment, each client machine independently trains its Word2Vec model on its feature set. However, inherent randomness in the Word2Vec algorithm means that identical tokens may be encoded into different vectors by each client. Consequently, when federated averaging is applied to \gnn models that use these features, the performance is notably poor.
 
