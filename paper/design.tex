@@ -57,17 +57,20 @@
   \BlankLine
   \Return $G$\\
   \BlankLine
-  \caption{Federated Graph Representation Learning with Differential Privacy}
+  \caption{Federated Graph Representation Learning.}
   \label{alg:federated_learning}
 \end{algorithm}
 
-In this section, we outline the architecture of our system, \Sys, which comprises five principal modules. The first module, the \textit{Provenance Graph Constructor}, operates on each client machine, transforming audit logs into a provenance graph. The second module, \textit{Semantic Featurization}, focuses on encoding semantic attributes from audit logs into feature vectors, which aids in the training of the client-specific \gnnshort models. This process utilizes word2vec models, each individually trained on its respective client's logs.
+In this section, we detail the architecture of \Sys, which is composed of six key modules. The architecture begins with the \textit{Provenance Graph Constructor} module on each client machine, transforming audit logs into a provenance graph. Following this, the \textit{Semantic Featurization} module encodes semantic attributes from the audit logs into feature vectors, facilitating the training of client-specific \gnnshort models.
 
-The third module, \textit{Semantic Vectors Harmonization}, is tasked with merging these individual word2vec models into a unified global model. This is achieved using a trusted utility server and encryption techniques to safeguard sensitive model data. 
+The \textit{Semantic Vectors Harmonization} module aims to privately consolidate individual client word2vec models into a cohesive global model, employing a trusted utility server and encryption techniques to ensure the privacy of model data.
 
-Following this, the \textit{Federated Graph Learning Module} undertakes the task of training \gnnshort models on each client machine, utilizing the harmonized semantic features. Once the individual client models are trained, they engage in a federated learning process facilitated by the central server. In this process, each client transmits its model to the server, where the federated averaging algorithm is applied to amalgamate these models into a singular, comprehensive global model. This consolidated model is then dispatched back to the clients for further application and analysis.
+Next, the \textit{System Entity Categorization} module categorizes all system entities across clients into standardized categories, promoting uniformity in the training of \gnnshort models and controlling the patterns each model learns.
 
-Finally, the \textit{Anomaly Detection Module} utilizes the aggregated global model for local anomaly detection on each client machine. Figure \ref{fig:arch} illustrates the overarching architecture of \Sys, with a more comprehensive explanation provided in the following subsections:
+The \textit{Federated Graph Learning Module} proceeds to train \gnnshort models by these categories on each client machine, using the harmonized semantic features. After training, the models are sent to a central server for federated learning, where a federated averaging algorithm integrates the models based on the system entity categories they were trained on.
+
+Lastly, the \textit{Anomaly Detection Module} employs the unified global models for anomaly detection on each client machine. Figure \ref{fig:arch} presents the comprehensive architecture of \Sys, with further details in the subsequent subsections:
+
 
 \begin{figure*}[t!]
   \centering
