@@ -1,11 +1,16 @@
 \section{Introduction}
 \label{s:intro}
 
-Host-based Intrusion Detection System (HIDS) plays a crucial role x
+Intrusion Detection Systems (IDSes) play an essential role in enterprise security strategies to counteract Advanced Persistent Threats (APTs). APTs are notably stealthy and persistent, exemplified by the significant system disruptions seen in attacks such as Solar Winds~\cite{solarwinds} and NotPetya~\cite{notpetya}. The effectiveness of IDSes hinges on their ability to accurately detect these threats, maintain low false positive rates, and operate with minimal resource consumption, ensuring system performance is not compromised.
 
+Recent advancements in cybersecurity have seen the integration of data provenance in IDSes. By analyzing system (audit) logs and converting them into provenance graphs, these systems offer a comprehensive view of system execution. Provenance-based IDSes~\cite{streamspot,provdetector2020,wang2022threatrace,shadewatcher,yangprographer,han2020unicorn} have emerged as a potent solution, utilizing the rich context within system logs to improve detection capabilities. Despite their promise, these systems face significant challenges in the complex landscape of enterprise security:
 
+\begin{itemize} [leftmargin=*]
+    \item[--] \textbf{Lack of Privacy Preservation:} Traditional provenance-based IDSes (PIDS) rely on a centralized infrastructure, necessitating client machines to transmit their log data to a central server. This approach risks user privacy as audit logs encompass detailed records of system execution, including sensitive information and activity patterns.
+    
+    \item[--] \textbf{Excessive Network and Disk Overhead:} Audit logs can amass to gigabytes per day for each client, imposing considerable network costs on both users and organizations. The demand for extensive disk storage to accommodate these logs further complicates matters. Current PIDS models overlook these issues, affecting their viability for practical deployment.
+    
+    \item[--] \textbf{Scalability Challenges:} The centralized model employed by existing PIDS presents scalability issues as the number of hosts within an organization grows. The centralization becomes a bottleneck, hindering effective intrusion detection at scale.
+\end{itemize}
 
-
-% \subsection{Why is it challenging to build a Privacy-aware IDS?}
-
-% \wajih{itemize challenges like need for utility server, etc. here}
+To address these challenges, we introduce \Sys, an innovative IDS that combines provenance graph representation learning with federated learning. This approach enables efficient, accurate detection of APT attacks in a decentralized manner, preserving user privacy. We have developed various novel techniques to overcome the inherent challenges of applying federated learning to PIDS, such as client data heterogeneity and imbalance. Specifically, we introduce a personalized \gnnshort framework tailored to the entity level and a dual-server architecture designed to safeguard user log privacy.
