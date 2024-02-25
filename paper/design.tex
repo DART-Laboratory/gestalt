@@ -36,26 +36,31 @@
   \DontPrintSemicolon
   \SetKwInOut{Input}{Inputs}
   \SetKwInOut{Output}{Output}
-  \Input{Set of client models $\{M_1, M_2, \ldots, M_N\}$; Privacy parameter $\epsilon$.}
-  \Output{Global GNN model $G$.}
+  \Input{Set of client models $\{\{M_{1,1}, M_{1,2}, \ldots, M_{1,n}\},$\\ 
+  $\{M_{2,1}, M_{2,2}, \ldots, M_{2,n}\}, \ldots,$\\
+  $\{M_{N,1}, M_{N,2}, \ldots, M_{N,n}\}\}$;}
+  \Output{Set of global GNN models $\{G_1, G_2, \ldots, G_n\}$.}
   \BlankLine
-  \tcc{Initialize global GNN model with random weights.}
-  $G \leftarrow \text{InitializeRandomWeights}()$\\
-  \tcc{Distribute $G$ to all clients.}
-  \ForEach{client model $M_i$}{
-    Send $G$ to $M_i$\\
-    $G_i \leftarrow \text{TrainOnLocalData}(M_i)$\\
-    $G_i \leftarrow \text{AddGaussianNoise}(\epsilon)$
+  \tcc{Initialize global GNN models with random weights.}
+  $\{G_1, G_2, \ldots, G_n\} \leftarrow \text{InitializeRandomWeightsForEachModel}(n)$\\
+  \BlankLine
+  \tcc{Distribute each $G_k$ to corresponding models of all clients.}
+  \For{$k \leftarrow 1$ \KwTo $n$}{
+    \ForEach{client model set $\{M_{i,1}, M_{i,2}, \ldots, M_{i,n}\}$}{
+      Send $G_k$ to $M_{i,k}$\\
+      $G_{i,k} \leftarrow \text{TrainOnLocalData}(M_{i,k})$\\
+    }
   }
   \BlankLine
-  \tcc{Aggregate privacy-preserving trained models from clients.}
-  $AggregatedWeights \leftarrow list([])$\\
-  \ForEach{client model $G_i$}{
-    $AggregatedWeights.append(\text{ExtractWeights}(G_i))$\\
+  \For{$k \leftarrow 1$ \KwTo $n$}{
+    $AggregatedWeights_k \leftarrow list([])$\\
+    \ForEach{client model $G_{i,k}$}{
+      $AggregatedWeights_k.append(\text{ExtractWeights}(G_{i,k}))$\\
+    }
+    $G_k \leftarrow \text{FederatedAveraging}(AggregatedWeights_k)$\\
   }
-  $G \leftarrow \text{FederatedAveraging}(AggregatedWeights)$\\
   \BlankLine
-  \Return $G$\\
+  \Return $\{G_1, G_2, \ldots, G_n\}$\\
   \BlankLine
   \caption{Federated Graph Representation Learning.}
   \label{alg:federated_learning}
@@ -172,24 +177,11 @@ This approach ensures balanced and uniform segmentation of data across clients, 
 Each sub-model specializes in a different aspect of the data, potentially leading to more even contributions across the ensemble.
 
 \subsection{Federated Graph Learning}
-% The module performs graph representation learning in a federated manner. It includes a central server responsible for initializing a global \gnnshort model with random weights, which is then sent to all clients. These clients use their local provenance graphs and semantic feature vectors to train the \gnnshort model in an unsupervised way, following a training method similar to Flash. The \gnnshort model's objective is to classify each node entity into its corresponding type. After training their models, the clients send them back to the central server. The server applies the federated averaging algorithm to merge these models into a single global model. The server aggregates parameters from $N$ client models to update the global model as follows:
-% \[
-% \bar{w} = \frac{1}{N} \sum_{k=1}^{N} w_k
-% \]
 
-% where:
-% \begin{itemize}
-%     \item $\bar{w}$ is the aggregated global model parameter.
-%     \item $N$ is the number of client models.
-%     \item $w_k$ is the parameter from the $k$-th client model.
-% \end{itemize}
-
-% This formula averages the parameters of all client models, forming the global model update. The process is repeated for a set number of rounds, determined by a hyperparameter, and concludes when there is no further reduction in training loss. Algorithm~\ref{alg:federated_learning} explains this process in detail.
-
-The module performs graph representation learning in a federated manner. It includes a central server responsible for initializing a global \texttt{GNN} model with random weights, which is then sent to all clients. These clients use their local provenance graphs and semantic feature vectors to train the \texttt{GNN} model in an unsupervised way, following a training method similar to Flash. The \texttt{GNN} model's objective is to classify each node entity into its corresponding type. After training their models, the clients apply local differential privacy (LDP) to their model updates by adding a placeholder for Gaussian noise parameterized by \(\epsilon\). This ensures the privacy of their updates before sending them back to the central server. The server then applies the federated averaging algorithm to merge these privacy-preserving models into a single global model. Specifically, the server aggregates parameters from \(N\) client models, incorporating the Gaussian noise, to update the global model as follows:
+The module performs graph representation learning in a federated manner. It includes a central server responsible for initializing the global \gnnshort models with random weights, which are then sent to all clients. These clients use their local process subgraphs and semantic feature vectors to train the \gnnshort models in an unsupervised way, following a training method similar to Flash. The \gnnshort model's objective is to classify each node entity into its corresponding type. The server then applies the federated averaging algorithm to merge the \gnnshort models into a set of global models. The models are then merged according to the system entity categories on which they were trained. This ensures that models with similar distributions are combined together to address the data heterogeneity problem. Specifically, for each submodel, the server aggregates parameters from \(N\) client models, to update the global model as follows:
 
 \begin{equation}
-\bar{w} = \frac{1}{N} \sum_{k=1}^{N} \left(w_k + \text{G}(\epsilon)\right)
+\bar{w} = \frac{1}{N} \sum_{k=1}^{N}w_k
 \end{equation}
 
 where:
@@ -197,10 +189,9 @@ where:
     \item \(\bar{w}\) is the aggregated global model parameter.
     \item \(N\) is the number of client models.
     \item \(w_k\) is the parameter from the \(k\)-th client model.
-    \item \(\text{G}(\epsilon)\) is the the Gaussian noise added to each client's model parameters, parameterized by \(\epsilon\).
 \end{itemize}
 
-This approach not only averages the parameters of all client models but also ensures the privacy of each client's data by perturbing the model updates with noise parameterized by \(\epsilon\). The process is repeated for a set number of rounds, determined by a hyperparameter, and concludes when there is no further reduction in training loss. Algorithm~\ref{alg:federated_learning} explains this process in detail, including the application of local differential privacy.
+The federated averaging process is repeated for a set number of rounds \(R\), and concludes when there is no further reduction in training loss. Algorithm~\ref{alg:federated_learning} explains this process in detail.
 
 \subsection{Anomaly Detection}
 \Sys employs an advanced methodology akin to systems like Flash and \threatrace, focusing on identifying irregular nodes through the comparison of their expected and observed types. This approach is grounded in a detailed analysis of both the surrounding structures and inherent properties of the nodes, with the aim to define normal pattern baselines for various node types. Typically, entities with malicious intentions display neighborhood configurations and characteristics deviating from these established norms. In operational phases, the detection of anomalies that diverge from the pre-established node distribution patterns often results in their misclassification. The emergence of nodes misclassified in the system's output is indicative of potential security issues. To regulate the frequency of alerts, we have implemented a threshold parameter, denoted as $T$. This parameter sets a limit on the likelihood of a classification being considered valid. A higher value of this parameter implies stronger confidence in the prediction, increasing the probability of identifying anomalies.
