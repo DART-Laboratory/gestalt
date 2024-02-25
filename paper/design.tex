@@ -65,12 +65,11 @@ In this section, we detail the architecture of \Sys, which is composed of six ke
 
 The \textit{Semantic Vectors Harmonization} module aims to privately consolidate individual client word2vec models into a cohesive global model, employing a trusted utility server and encryption techniques to ensure the privacy of model data.
 
-Next, the \textit{System Entity Categorization} module categorizes all system entities across clients into standardized categories, promoting uniformity in the training of \gnnshort models and controlling the patterns each model learns.
+Next, the \textit{System Entity Categorization} module categorizes all system entities across clients into standardized categories, promoting uniformity in the training of \gnnshort models.
 
-The \textit{Federated Graph Learning Module} proceeds to train \gnnshort models by these categories on each client machine, using the harmonized semantic features. After training, the models are sent to a central server for federated learning, where a federated averaging algorithm integrates the models based on the system entity categories they were trained on.
+The \textit{Federated Graph Learning Module} proceeds to train \gnnshort models by these categories on each client machine, using the harmonized semantic features. After training, the models are sent to a central server for federated learning, where the federated averaging algorithm integrates the models based on the system entity categories they were trained on.
 
 Lastly, the \textit{Anomaly Detection Module} employs the unified global models for anomaly detection on each client machine. Figure \ref{fig:arch} presents the comprehensive architecture of \Sys, with further details in the subsequent subsections:
-
 
 \begin{figure*}[t!]
   \centering
@@ -82,7 +81,7 @@ Lastly, the \textit{Anomaly Detection Module} employs the unified global models 
 
 
 \subsection{Provenance Graph Constructor} 
-\Sys harnesses audit logs to create a system provenance graph. It operates on each client machine, utilizing their local system logs for graph construction. Key operating systems, such as Linux and Windows, are equipped with built-in mechanisms, namely the Linux Audit system and Windows Event Tracing, for log collection. These logs offer comprehensive insights into the interactions among different system entities, documenting activities ranging from process executions and file operations to network connections. Utilizing this information, \Sys assembles a graph where nodes represent system entities like processes, files, and sockets. The edges of this graph correspond to events, predominantly identified by syscalls, that occur between these entities. In addition, \Sys augments each node with detailed attributes, including process names, command lines, file names, and network IP addresses. This enrichment of node attributes significantly bolsters our system's proficiency in differentiating between nodes with analogous graph structures.
+Sys utilizes audit logs to construct a system provenance graph. It operates on each client machine, using their local system logs to build the graph. Major operating systems, including Linux and Windows, come equipped with built-in mechanisms for log collection—specifically, the Linux Audit system and Windows Event Tracing. These logs provide detailed insights into the interactions among various system entities, capturing activities such as process executions, file operations, and network connections. Using this data, Sys forms a graph where nodes represent system entities including processes, files, and sockets. The edges of this graph denote events, identified by syscalls, that occur between these entities. Moreover, Sys enhances each node with comprehensive attributes, including process names, command lines, file names, and network IP addresses. As demonstrated by prior works~\cite{flash2024,cheng2023kairos}, these contextual attributes enable the model to develop a robust understanding of system behavior.
 
 \subsection{Semantic Featurization}
 
