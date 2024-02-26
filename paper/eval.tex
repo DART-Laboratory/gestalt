@@ -29,17 +29,19 @@
  \label{summary:benchmarks:large}
  \end{table*}}
 
-\Sys is developed in Python and leverages the PyTorch and Torch Geometric libraries to implement the federated graph learning framework. For developing the word2vec and vector harmonization module, we employ the Gensim library. Secure communication between clients and the utility server is ensured through Python's Cryptography module. All other functionalities of Sys are encapsulated in Python functions, designed for easy customization and deployment across different system environments.
+\Sys is developed in Python and leverages the PyTorch and Torch Geometric libraries to implement the federated graph learning framework. For developing the word2vec and vector harmonization module, we employ the Gensim library. Secure communication between clients and the utility server is ensured through Python's Cryptography module. All other functionalities of \Sys are encapsulated in Python functions, designed for easy customization and deployment across different system environments.
 
-We evaluate Sys using the open-source datasets Darpa E3 and OptC, which comprise system audit logs that simulate enterprise environments. These logs are collected from both Windows and Linux operating systems. Our evaluation experiments are conducted on a machine running Ubuntu 18.04.6 LTS, equipped with an 8-core Intel CPU and 100 GB of memory. Additionally, the machine features an NVIDIA RTX2080 GPU, utilized for operating our graph learning framework. Our evaluation aims to address the following research questions (RQs).
+We evaluate \Sys using the open-source datasets Darpa E3 and OptC, which comprise system audit logs that simulate enterprise environments. These logs are collected from both Windows and Linux operating systems. Our evaluation experiments are conducted on a machine running Ubuntu 18.04.6 LTS, equipped with an 8-core Intel CPU and 100 GB of memory. Additionally, the machine features an NVIDIA RTX2080 GPU, utilized for operating our graph learning framework. Our evaluation aims to address the following research questions (RQs).
 
 \begin{itemize}[leftmargin=*]
 \item \textbf{RQ1.} How does \Sys compares to existing systems in terms of detection performance?
 \item \textbf{RQ2.} What is the effectiveness of word2vec harmonization in a utility server setting?
 \item \textbf{RQ3.} What is the resource consumption of \Sys running on a client machine?
 \item \textbf{RQ4.} What is the end to end processing time of \Sys on a client machine?
-\item \textbf{RQ5.} What is the effect of varying differential privacy noise on detection performance?
-\item \textbf{RQ6.} Ablation study of various \Sys components.
+\item \textbf{RQ5.} How does the cost metrics of \Sys compares to centralized systems?
+\item \textbf{RQ6.} How effective is the categorization based \gnnshort ensemble compared to a single \gnnshort?
+%\item \textbf{RQ5.} What is the effect of varying differential privacy noise on detection performance?
+\item \textbf{RQ7.} Ablation study of various \Sys components.
 \end{itemize}
 
 \subsection{Datasets}
@@ -109,17 +111,19 @@ Beyond detection performance, we also highlight \Sys's qualitative advantages, i
   \vspace{-2ex}
 \end{figure}
 
- \subsection{Effect of Local Differential Privacy}
+%  \subsection{Effect of Local Differential Privacy}
 
- \begin{figure}[t!]
-  \centering
-  \includegraphics[width=0.48\textwidth]{fig/epsvsscore.pdf}
-  \caption{Effect of Epsilon ($\epsilon$) on Detection Performance.}
-  \label{epsvsscore}
-  \vspace{-2ex}
-\end{figure}
+%  \begin{figure}[t!]
+%   \centering
+%   \includegraphics[width=0.48\textwidth]{fig/epsvsscore.pdf}
+%   \caption{Effect of Epsilon ($\epsilon$) on Detection Performance.}
+%   \label{epsvsscore}
+%   \vspace{-2ex}
+% \end{figure}
 
- In this section, we examine the impact of differential privacy noise levels on the detection performance of \Sys. Differential privacy introduces a parameter, $\epsilon$, which dictates the intensity of Gaussian noise added to the local \gnnshort model updates prior to their aggregation at the central server for federated averaging, as detailed in Section~\ref{sec:methodology}. By adjusting $\epsilon$ during the training phase, we assess the detection capabilities of the globally trained model across various $\epsilon$ settings. Figure~\ref{epsvsscore} illustrates the relationship between $\epsilon$ and detection performance. It is important to note that lower $\epsilon$ values correspond to higher noise levels in model updates, thereby strengthening privacy at the expense of model utility. Conversely, increasing $\epsilon$ reduces noise strength, improving detection performance. The optimal $\epsilon$ value is contingent upon the specific requirements and context of the organization employing \Sys, balancing between privacy protection and model utility.
+%  In this section, we examine the impact of differential privacy noise levels on the detection performance of \Sys. Differential privacy introduces a parameter, $\epsilon$, which dictates the intensity of Gaussian noise added to the local \gnnshort model updates prior to their aggregation at the central server for federated averaging, as detailed in Section~\ref{sec:methodology}. By adjusting $\epsilon$ during the training phase, we assess the detection capabilities of the globally trained model across various $\epsilon$ settings. Figure~\ref{epsvsscore} illustrates the relationship between $\epsilon$ and detection performance. It is important to note that lower $\epsilon$ values correspond to higher noise levels in model updates, thereby strengthening privacy at the expense of model utility. Conversely, increasing $\epsilon$ reduces noise strength, improving detection performance. The optimal $\epsilon$ value is contingent upon the specific requirements and context of the organization employing \Sys, balancing between privacy protection and model utility.
+
+\subsection{Cost Metric Analysis}
 
 
  \subsection{Ablation Study}
