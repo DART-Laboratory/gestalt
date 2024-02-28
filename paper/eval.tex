@@ -21,7 +21,7 @@
    \midrule
  
    E3-CADETS &  \TCP & \TCR & \TCF & \TCTP/ \TCFP/ \TCFN/ \TCTN &  \FCP & \FCR & \FCF & \FCTP/ \FCFP/ \FCFN/ \FCTN & \KCP & \KCR & \KCF & \KCTP/ \KCFP/ \KCFN/ \KCTN \\
-   E3-TRACE &  \TTP & \TTR & \TTF & \TTTP/ \TTFP/ \TTFN/ \TTTN \TTP & \FTP & \FTR & \FTF & \FTTP/ \FTFP/ \FTFN/ \FTTN \FTP & - & - & - & - \\
+   E3-TRACE &  \TTP & \TTR & \TTF & \TTTP/ \TTFP/ \TTFN/ \TTTN  & \FTP & \FTR & \FTF & \FTTP/ \FTFP/ \FTFN/ \FTTN & - & - & - & - \\
    E3-THEIA &  \TTHP & \TTHR & \TTHF & \TTHTP/ \TTHFP/ \TTHFN/ \TTHTN & \FTHP & \FTHR & \FTHF & \FTHTP/ \FTHFP/ \FTHFN/ \FTHTN & \KTHP & \KTHR & \KTHF & \KTHTP/ \KTHFP/ \KTHFN/ \KTHTN \\  
    OpTC & \TOP & \TOR & \TOF & \TOTP/ \TOFP/ \TOFN/ \TOTN & \FOP & \FOR & \FOF & \FOTP/ \FOFP/ \FOFN/ \FOTN & \KOP & \KOR & \KOF & \KOTP/ \KOFP/ \KOFN/ \KOTN \\
    \bottomrule
@@ -131,6 +131,40 @@ To begin, we estimate these costs for the FLASH system utilizing the \optc datas
 To calculate the daily operational costs of running these systems for a specific organization, we utilized the Google Cloud Platform's (GCP) pricing calculator~\cite{gcp}. The cost to operate FLASH under the previously mentioned workload is estimated at \$135, with computing expenses accounting for \$100 and storage and network costs comprising \$35. Given its longer processing duration, the operational cost for KAIROS would be twice that of FLASH.
 
 Compared to existing systems, \Sys processes client logs in a federated manner, eliminating the need for logs to leave the client's machine. The only network expenses arise from the transmission of \gnnshort and Word2Vec models. Specifically, the \gnnshort model is 13kb, while the average Word2Vec model is 6 MB. For an organization with 1,000 hosts, the communication cost with the central server would be 12.70 MB, and for the utility server, it would be 5.86 GB. Overall, \Sys achieves a 170-fold reduction in communication and storage costs compared to FLASH and Kairos. The central and utility servers conduct a simple mean operation on the models, taking only a few seconds. Therefore, the operational cost of \Sys for 1,000 client machines is approximately \$10 per day, marking a 13-fold reduction compared to FLASH and a 26-fold reduction compared to Kairos.
+
+\subsection{Effectiveness of Categorized Graph Learning}
+
+In this section, we will examine the effectiveness of our process categorization based \gnnshort ensemble technique. To evaluate this, we conducted experiments comparing our ensemble approach against a single model approach. Specifically, for the ensemble method, we designated the number of categories to be 10. This approach standardizes all processes across various hosts into 10 distinct categories, ensuring that the \gnnshort models learn similar distributions regardless of the host. Such standardization is crucial for mitigating the impact of heterogeneous distributions during the federated averaging process. Table~\ref{categorized_gnn} presents the experimental outcomes on the Darpa E3 and \optc datasets. The results indicate that utilizing categorized ensemble models yields superior performance. This improvement is attributed to each sub-model's enhanced ability to concentrate on different patterns of system activity, thereby reducing the likelihood of these patterns becoming conflated during the federated averaging process.
+
+\begin{table}[h!]
+  \centering
+  \small
+  \setlength{\tabcolsep}{10pt}
+  \caption{Effectiveness of categorized \gnnshort learning.}
+  \begin{tabular}{ | c | c | c | c | c |}
+    \hline
+    \bf Dataset & \bf Type & \bf Prec. & \bf Rec. & \bf \fscore \\
+    \hline
+    \multirow{2}{*}{Cadets} & Single & \STCP & \STCR & \STCF \\ 
+    \cline{2-5} 
+    & Ensemble & \TCP & \TCR & \TCF \\
+    \hline
+    \multirow{2}{*}{Trace} & Single & \STTP & \STTR & \STTF \\
+    \cline{2-5} 
+    & Ensemble & \TTP & \TTR & \TTF \\
+    \hline
+    \multirow{2}{*}{Theia} & Single & \STTHP & \STTHR & \STTHF \\
+    \cline{2-5} 
+    & Ensemble & \TTHP & \TTHR & \TTHF \\
+    \hline
+    \multirow{2}{*}{OpTC} & Single & \STOP & \STOR & \STOF \\
+    \cline{2-5} 
+    & Ensemble & \TOP & \TOR & \TOF \\
+    \hline
+  \end{tabular}
+  \label{categorized_gnn}
+\end{table}
+
 
  \subsection{Ablation Study}
 
