@@ -56,7 +56,7 @@ In a federated learning setup, consider a global model parameterized by \(\theta
 The central server aggregates these updates from all participating devices to update the global model. The aggregation is an average function: \(\Delta \theta_{global} = \frac{1}{N} \sum_{i=1}^{N} \Delta \theta_i\), where \(N\) is the number of devices. This aggregated update is then used to update the global model parameters: \(\theta_{new} = \theta + \Delta \theta_{global}\). This process iterates, with the updated global model being sent back to the devices for further local updates, until convergence. This iterative process ensures that the global model learns from all devices while keeping the data localized, thus addressing privacy and bandwidth concerns.
 
 
-\subsection{Why is it challenging to apply FL to PIDS?}
+\subsection{Why is it challenging to apply FL to IDS?}
 
 Applying federated learning to PIDS can be challenging due to the heterogeneity of data across devices, which can lead to skewed model updates and performance variances. This is often referred to as non-IID~\cite{zhao2018federated} data, where the local data on each device may not represent the overall distribution of data across the organization.
 
