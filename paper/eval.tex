@@ -190,6 +190,17 @@ In this section, we will examine the effectiveness of our process categorization
   \vspace{-2ex}
 \end{figure}
 
+\PP{Effect number of categories vs Detection} In this section, we examine the impact of varying the number of categories ($K$) on the performance of detection. Within our entity-level personalized \gnnshort learning framework, $K$ dictates the creation of distinct standardized bins. These bins categorize processes across client machines. Subsequently, we employ an ensemble approach, deploying a separate GNN model for each bin. Thus, the total number of GNN models corresponds to the number of categories. The results depicted in Figure~\ref{catgvsscore} indicate that an increase in $K$ enhances precision while maintaining recall levels. This outcome arises because a single model suffices for achieving high recall by effectively distinguishing between benign and malicious patterns. Nevertheless, a solitary model falls short in fully generalizing across the diverse benign patterns unique to each client due to the potential blending of individual patterns during the process of federated averaging. Employing a specialized GNN strategy across various categories addresses this challenge by minimizing false alarms.
+
+\begin{figure}[t!]
+  \centering
+  \includegraphics[width=0.48\textwidth]{fig/kvsscore.pdf}
+  \caption{Number of Categories vs Detection Performance.}
+  \label{catgvsscore}
+  \vspace{-2ex}
+\end{figure}
+
+
 % \begin{figure}[t!]
 %   \centering
 %   \includegraphics[width=0.40\textwidth]{fig/cpu.pdf}
