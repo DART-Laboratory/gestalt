@@ -48,6 +48,7 @@ We evaluate \Sys using the open-source datasets Darpa E3 and OptC, which compris
 \end{itemize}
 
 \subsection{Datasets}
+\wajih{Update it with E5}
 We have employed the Darpa E3 and \optc datasets for our evaluation. The E3 dataset originates from Darpa's third engagement exercise involving red and blue teams. In this exercise, the red team aimed to exploit vulnerabilities in an enterprise's services while masking their attacks with benign system activities. The logs captured from these exercises were documented under various scenario names, including Cadets, Trace, and Theia.
 
 \optc is another open-source dataset from Darpa, encompasses a vast collection of audit logs from an enterprise environment with 1000 hosts. This dataset includes six days of benign system logs, which serve as training data for our system to understand normal behavior. Following the benign logs, there are attack logs covering three days of system activities, featuring red team tactics such as initial compromises, privilege escalations, malicious software installation, and data exfiltration.
@@ -55,6 +56,8 @@ We have employed the Darpa E3 and \optc datasets for our evaluation. The E3 data
 Both datasets are accompanied by ground truth documents that help distinguish between benign and malicious events. We utilize attack labels from existing systems, such as \threatrace and FLASH, for our evaluation, cross-referencing these labels with the ground truth to ensure accuracy.
 
 \subsection{Detectors for Comparison}
+\wajih{Add citations. Say a few lines about the PIDS that we do not compare against. Read Kairos evaluation section -- they have very good sentences about why they don't compare against several existing PIDS. Make sure that you do not miss any PIDS system. Make sure to cite this paper: https://www.usenix.org/system/files/sec23winter-prepub-490-jia.pdf}
+
 
 To benchmark our system, we conduct comparisons against existing state-of-the-art Provenance-based Intrusion Detection Systems (PIDS). \threatrace, a node-level system, employs graph representation learning to identify anomalous nodes within a provenance graph. In contrast, FLASH, another node-level system, surpasses \threatrace in detection efficiency and effectiveness by leveraging semantic feature vectors and an embeddings database. Given FLASH's superiority over \threatrace, our comparison focuses primarily on FLASH. Additionally, we consider KAIROS, which utilizes temporal graph networks to capture the evolution of a system's provenance graph over time. KAIROS's detection granularity is limited to specific time windows; it aggregates logs within predetermined intervals, subsequently executing anomaly detection on these collected datasets. Consequently, we extend our comparison to include \Sys versus KAIROS, focusing on their respective detection performance.
 
