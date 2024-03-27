@@ -36,7 +36,15 @@ To tackle these challenges, we introduce \Sys, a novel Provenance-based Intrusio
 
 We have conducted thorough evaluations of our system's effectiveness using open-source datasets from DARPA, specifically E3, E5, and \optc. These datasets cover a wide range of attack scenarios and system behaviors. Our findings demonstrate that \Sys achieves detection performance comparable to state-of-the-art centralized systems like FLASH and KAIROS, while also offering significant advantages in terms of scalability, efficiency, and privacy preservation. However, employing Federated Learning (FL) exposes our system to certain types of adversarial attacks, such as model poisoning, inference, and gradient attacks. We provide a comprehensive analysis of our system's resilience against these attacks in the discussion section~\ref{sec:discussion}.
 
-\wajih{Add list of main contributions}
+%\wajih{Add list of main contributions}
 
+The main contributions of our work are as follows:
+
+\begin{itemize}[topsep=.1ex,itemsep=-.1ex,leftmargin=*]
+    \item We are the first to introduce a Federated Graph Learning-based IDS, \Sys, which is privacy-preserving, highly scalable, and offers impressive detection performance.
+    \item We have introduced a novel multi-server architecture and an encryption scheme to prevent the central server from leaking user privacy.
+    \item We offer a novel multi-\gnnshort framework personalized at the system entity level to deal with heterogeneous and imbalanced clients.
+    \item We conduct a comprehensive evaluation of our technique on real-world datasets. The results highlight \Sys's effectiveness in identifying malicious activities and its high scalability compared to existing systems.
+\end{itemize}
 
 \PP{Open Source Commitment} To advance threat detection research and ensure reproducibility, we plan to release the source code of \Sys publicly upon the publication of this paper.
