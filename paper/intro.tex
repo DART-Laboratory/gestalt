@@ -30,10 +30,11 @@ However, integrating Federated Learning (FL) into existing Provenance-based Intr
 
 To tackle these challenges, we introduce \Sys, a novel Provenance-based Intrusion Detection System (PIDS) that merges provenance graph representation learning with Federated Learning (FL). This hybrid approach facilitates efficient and precise detection of Advanced Persistent Threat (APT) attacks in a decentralized fashion, ensuring the preservation of user privacy. We have devised several innovative techniques to navigate the challenges inherent in applying FL to PIDS. In particular, we present a personalized \gnnshort Learning framework that is customized at the system entity level to deal with heterogeneous and imbalanced clients, alongside a multi-server architecture designed explicitly to protect user log privacy.
 
-\wajih{make sure to say two or three lines about adversarial attacks and say that more details are present in the discussion section.}
+%\wajih{make sure to say two or three lines about adversarial attacks and say that more details are present in the discussion section.}
 
-\wajih{Add one paragraph related to evaluation results.}
+%\wajih{Add one paragraph related to evaluation results.}
 
+We have conducted thorough evaluations of our system's effectiveness using open-source datasets from DARPA, specifically E3, E5, and \optc. These datasets cover a wide range of attack scenarios and system behaviors. Our findings demonstrate that \Sys achieves detection performance comparable to state-of-the-art centralized systems like FLASH and KAIROS, while also offering significant advantages in terms of scalability, efficiency, and privacy preservation. However, employing Federated Learning (FL) exposes our system to certain types of adversarial attacks, such as model poisoning, inference, and gradient attacks. We provide a comprehensive analysis of our system's resilience against these attacks in the discussion section~\ref{sec:discussion}.
 
 \wajih{Add list of main contributions}
 
