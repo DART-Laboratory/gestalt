@@ -13,7 +13,11 @@
 %\wajih{make a macro for Provenance-based IDS which is PIDS and use PIDS everywhere where you say intrusion detection. It saves space and also narrows the scope of our paper to PIDS. Use macros for words like word2vec, etc. because of letter capitalization. Also convert the words like Graph Neural Network into GNN to save space.}
 
 \subsection{Audit logs \& Provenance Graphs}
-\wajih{Add one or two paragraphs explaining provenance graphs. Give information about what is present in audit logs. Provide information about how to convert audit logs into provenance graphs. }
+%\wajih{Add one or two paragraphs explaining provenance graphs. Give information about what is present in audit logs. Provide information about how to convert audit logs into provenance graphs. }
+
+Audit logs play a crucial role in recording the activities within a system, detailing interactions among various system entities such as processes, files, and sockets. Various operating systems come equipped with built-in mechanisms to gather these logs, including Windows Event Tracing for Windows (ETW), the Linux Audit system, and DTrace for FreeBSD. Each entry in an audit log characterizes a system event, identifying a subject and an object entity within the system. Moreover, these records include additional contextual attributes, including process names, file names, and socket IP addresses.
+
+Data provenance employs the concept of modeling the causal links among different system entities. Fundamentally, it utilizes system logs to construct a dependency graph that captures the relationships between events. Within this graph, nodes symbolize system entities such as processes, files, and sockets, while the edges represent various system syscalls. This provenance graph is instrumental in analyzing the activities of different system entities and plays a vital role in identifying anomalous or malicious entities.
 
 
 \subsection{Provenance-based IDS (PIDS)}
