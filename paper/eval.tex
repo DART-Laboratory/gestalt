@@ -80,7 +80,7 @@ Beyond detection performance, we also highlight \Sys's qualitative advantages, i
 
 In this section, we will examine the effectiveness of our process categorization based \gnnshort ensemble technique. To evaluate this, we conducted experiments comparing our ensemble approach against a single model approach. Specifically, for the ensemble method, we designated the number of categories to be 10. This approach standardizes all processes across various hosts into 10 distinct categories, ensuring that the \gnnshort models learn similar distributions regardless of the host. Such standardization is crucial for mitigating the impact of heterogeneous distributions during the federated averaging process. Table~\ref{categorized_gnn} presents the experimental outcomes on the Darpa E3 and \optc datasets. The results indicate that utilizing categorized ensemble models yields superior performance. This improvement is attributed to each sub-model's enhanced ability to concentrate on different patterns of system activity, thereby reducing the likelihood of these patterns becoming conflated during the federated averaging process.
 
-\begin{table}[h!]
+\begin{table}[t!]
   \centering
   \small
   \setlength{\tabcolsep}{10pt}
@@ -111,6 +111,7 @@ In this section, we will examine the effectiveness of our process categorization
 
  \subsection{Efficacy of Word2vec harmonization}
 
+ \wajih{never use !h instead use !t in the table layout. Same rule goes for figures. Exception to this rule is Appendix.}
  \begin{table}[h!]
   \centering
   \small
