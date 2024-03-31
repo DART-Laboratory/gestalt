@@ -72,7 +72,8 @@ The \textit{Semantic Vectors Harmonization} module aims to privately consolidate
 
 \subsection{Problem Formulation}
 
-\wajih{Look at Nature's paper page 7 to have a similar problem formulation here as well.}
+%\wajih{Look at Nature's paper page 7 to have a similar problem formulation here as well.}
+Let \( C = \{u_1, u_2, \ldots, u_P\} \) denote the set of client machines, where each machine \( u_i \), for \( i = 1, 2, \ldots, P \), locally maintains its audit logs to preserve privacy, ensuring that raw data does not leave the device. Our objective is to detect anomalous nodes within the provenance graphs, \( \{G_{u_1}, G_{u_2}, \ldots, G_{u_P}\} \), generated from these logs. To this end, we propose training a unified Graph Neural Network (GNN) model, denoted by \( \mathcal{M}_{\text{GNN}} \), to model the benign behavior exhibited across all client logs without centralizing the log data. Additionally, we aim to develop a global semantic encoder, \( \mathcal{E}_{\text{semantic}} \), capable of converting contextual attributes into a vector space, thereby generating feature vectors for training our GNN models.
 
 \begin{figure*}[t!]
   \centering
