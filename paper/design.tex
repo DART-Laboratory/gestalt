@@ -75,17 +75,19 @@ The \textit{Semantic Vectors Harmonization} module aims to privately consolidate
 %\wajih{Look at Nature's paper page 7 to have a similar problem formulation here as well.}
 Let \( C = \{u_1, u_2, \ldots, u_P\} \) denote the set of client machines, where each machine \( u_i \), for \( i = 1, 2, \ldots, P \), locally maintains its audit logs to preserve privacy, ensuring that raw data does not leave the device. Our objective is to detect anomalous nodes within the provenance graphs, \( \{G_{u_1}, G_{u_2}, \ldots, G_{u_P}\} \), generated from these logs. To this end, we propose training a unified Graph Neural Network (GNN) model, denoted by \( \mathcal{M}_{\text{GNN}} \), to model the benign behavior exhibited across all client logs without centralizing the log data. Additionally, we aim to develop a global semantic encoder, \( \mathcal{E}_{\text{semantic}} \), capable of converting contextual attributes into a vector space, thereby generating feature vectors for training our GNN models.
 
+%\wajih{Give two or three sentences about the overall workflow. Think about what are the inputs, how the inputs are processed, and what are the outputs.} \wajih{Annotate "Audit Logs" in the Figure. Also use the word "Word2Vec" instead of Word2vec.}
+
 \begin{figure*}[t!]
   \centering
   \includegraphics[width=\textwidth]{fig/archv2.pdf}
-  \caption{High Level Architecture of \Sys. \wajih{Give two or three sentences about the overall workflow. Think about what are the inputs, how the inputs are processed, and what are the outputs.} \wajih{Annotate "Audit Logs" in the Figure. Also use the word "Word2Vec" instead of Word2vec.}}
+  \caption{High-Level Architecture of \Sys. In the training phase, our system builds local provenance graphs for each client and trains an ensemble of \gnnshort models. Prior to this, we aggregate semantic models contextually for feature encoding. The local \gnnshort models participate in federated learning to develop a global \gnnshort model, which is then utilized for anomaly detection.}
   \vspace{-3ex}
   \label{fig:arch}
 \end{figure*}
 
 \subsection{Provenance Graph Constructor} 
-\wajih{why are you using Sys instead of \\Sys in the following paragraph? }
-\Sys utilizes audit logs to construct a system provenance graph. It operates on each client machine, using their local system logs to build the graph. Major operating systems, including Linux and Windows, come equipped with built-in mechanisms for log collection -- specifically, the Linux Audit system \wajih{citation?} and Windows Event Tracing \wajih{citation}. These logs provide detailed insights into the interactions among various system entities, capturing activities such as process executions, file operations, and network connections. Using this data, Sys forms a graph where nodes represent system entities including processes, files, and sockets. The edges of this graph denote events, identified by syscalls, that occur between these entities. Moreover, Sys enhances each node with comprehensive attributes, including process names, command lines, file names, and network IP addresses. As demonstrated by prior works~\cite{flash2024,cheng2023kairos}, these contextual attributes enable the model to develop a robust understanding of system behavior.
+%\wajih{why are you using Sys instead of \\Sys in the following paragraph? }
+\Sys utilizes audit logs to construct a system provenance graph. It operates on each client machine, using their local system logs to build the graph. Major operating systems, including Linux and Windows, come equipped with built-in mechanisms for log collection -- specifically, the Linux Audit system~\cite{linuxaudit} and Windows Event Tracing~\cite{windowsaudit}. These logs provide detailed insights into the interactions among various system entities, capturing activities such as process executions, file operations, and network connections. Using this data, \Sys forms a graph where nodes represent system entities including processes, files, and sockets. The edges of this graph denote events, identified by syscalls, that occur between these entities. Moreover, \Sys enhances each node with comprehensive attributes, including process names, command lines, file names, and network IP addresses. As demonstrated by prior works~\cite{flash2024,cheng2023kairos}, these contextual attributes enable the model to develop a robust understanding of system behavior.
 
 \subsection{Semantic Featurization}
 
