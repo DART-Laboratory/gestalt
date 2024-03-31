@@ -13,6 +13,7 @@
 %\wajih{make a macro for Provenance-based IDS which is PIDS and use PIDS everywhere where you say intrusion detection. It saves space and also narrows the scope of our paper to PIDS. Use macros for words like word2vec, etc. because of letter capitalization. Also convert the words like Graph Neural Network into GNN to save space.}
 
 \subsection{Audit logs \& Provenance Graphs}
+\wajih{citations are missing in this subsection.}
 %\wajih{Add one or two paragraphs explaining provenance graphs. Give information about what is present in audit logs. Provide information about how to convert audit logs into provenance graphs. }
 
 Audit logs play a crucial role in recording the activities within a system, detailing interactions among various system entities such as processes, files, and sockets. Various operating systems come equipped with built-in mechanisms to gather these logs, including Windows Event Tracing for Windows (ETW), the Linux Audit system, and DTrace for FreeBSD. Each entry in an audit log characterizes a system event, identifying a subject and an object entity within the system. Moreover, these records include additional contextual attributes, including process names, file names, and socket IP addresses.
@@ -25,6 +26,7 @@ Data provenance employs the concept of modeling the causal links among different
 
 %\wajih{Througout the paper you are using either FLASH or Flash. Could you please make a macro and use that macro to be consistent? This applies to other system names as well.}
 
+\wajih{citations are missing.}
 Provenance-based Intrusion Detection Systems (PIDS) can be broadly classified into two main types: rule-based and learning-based approaches. The rule-based approaches leverage knowledge of known attack behaviors to identify attack activities in the provenance graph. However, developing these rules demands significant effort from analysts, and attacks with unseen patterns could go undetected. Conversely, learning-based approaches focus on detecting zero-day attacks without requiring prior knowledge of past attacks or specific rules. These anomaly-based methods establish a baseline of benign system activities and identify any significant deviations from this baseline behavior as anomalies.
 
 \subsection{Limitations of Existing PIDS}
@@ -45,7 +47,7 @@ Moreover, existing systems, such as \flash, have implemented techniques to achie
     \centering
     \scriptsize
       %\caption{Limitations of existing PIDS. \wajih{Add in caption that which PIDS are not specified in the table and why.}}
-      \caption{Existing PIDS Limitations: FLASH and Kairos outperform Streamspot~\cite{streamspot}, Unicorn~\cite{han2020unicorn}, and Threatrace~\cite{wang2022threatrace}. Prographer~\cite{yangprographer} and ShadeWatcher~\cite{shadewatcher} are excluded due to their closed-source nature.}
+      \caption{Existing PIDS Limitations: \flash and Kairos outperform other existing PIDS systems ~\cite{wang2022threatrace,han2020unicorn,streamspot,yangprographer,shadewatcher,provdetector2020}. Therefore, we have excluded these PIDS from the table.}
       \setlength{\tabcolsep}{4.8pt}
         \begin{tabular}{ | c | c | c | c | c |}
           \hline
