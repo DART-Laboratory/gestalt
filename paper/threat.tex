@@ -9,6 +9,8 @@ Our threat model assumes that the central server operates with integrity, conduc
 
 For individual clients (endpoints), we expect that attackers could disguise their harmful activities within benign data, making it difficult to distinguish between legitimate and harmful actions. Our model also considers the threat posed by zero-day vulnerabilities. Despite these challenges, we assume that the activities of attackers will be detectable in the system's records (audit logs). In line with prior studies on data provenance~\cite{nodoze2019, priotracker2018, mzx2016, bates2017transparent,omegalog,rapsheet2020,provthings2018,dossier,inam2023sok,poirot2019}, our approach relies on the provenance collection system's ability to accurately record all system activities and changes. Additionally, we ensure the integrity of audit logs is maintained through the use of established tamper-resistant storage solutions, such as those described by Paccagnella et al.\cite{paccagnella2020custos} and the Hardlog system\cite{hardlog}.
 
+\wajih{In the threat model, I would like to know about how do you deal with membership inference, poisoning, gradient attacks or not deal with. In general, it should specify the limitations of privacy of our privacy-preserving techniques. }
+
 % \wajih{Reading Nature's paper they have the following limitations:
 % "However, FedPerGNN has the following limitations. First,
 % FedPerGNN relies on the assumption that third-party server is
