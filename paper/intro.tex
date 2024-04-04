@@ -26,13 +26,14 @@ To tackle these challenges, we introduce \Sys, a novel Provenance-based Intrusio
 
 %\wajih{I will describe FL and associated challenges after introducing your methodology because it is your idea. Just like we discussed in our last lab meeting.}
 
+\wajih{The transition of this paragraph is not great. You already talked about solving changes above and then you again talk about solving challenges below. }
 Federated learning~\cite{mcmahan2017communication} is a promising solution to deal with the challenges outlined earlier. This is a machine learning approach that enables a model to be trained across multiple decentralized devices holding local data samples, without exchanging them. This method addresses privacy concerns, bandwidth limitations, and data security issues inherent in centralized machine learning approaches
 
 %\wajih{Add one paragraph here explaining that why is it challenging to directly apply FL to PIDS.}
 
 However, integrating Federated Learning (FL) into existing Provenance-based Intrusion Detection Systems (PIDS) presents significant challenges. FL requires addressing key issues, such as managing data imbalance among clients and coping with heterogeneous and non-Independent and Identically Distributed (Non-IID) data~\cite{zhao2018federated}. The current designs of these systems lack built-in mechanisms to tackle these problems. Furthermore, as detailed in Section~\ref{sec:motivation}, the architectural foundations of these systems do not naturally accommodate the application of FL.
 
-We have devised several innovative techniques to navigate the challenges inherent in applying FL to PIDS. In particular, we present a personalized \gnnshort Learning framework that is customized at the system entity level to deal with heterogeneous and imbalanced clients, alongside a multi-server architecture designed explicitly to protect user log privacy.
+We have devised several innovative \wajih{stop using the word "innovative" as this is usually given by LLM.} techniques to navigate the challenges inherent in applying FL to PIDS. In particular, we present a personalized \gnnshort Learning framework that is customized at the system entity level to deal with heterogeneous and imbalanced clients, alongside a multi-server architecture designed explicitly to protect user log privacy.
 
 %\wajih{Add one paragraph how you solve that above mentioned challenge. This will highlight the novelty of your system.}
 
