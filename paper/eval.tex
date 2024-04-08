@@ -60,12 +60,12 @@ We evaluate \Sys using the open-source datasets Darpa E3 and OptC, which compris
 
 
 \subsection{Datasets}
-\wajih{Update it with E5}
-We have employed the Darpa E3 and \optc datasets for our evaluation. The E3 dataset originates from Darpa's third engagement exercise involving red and blue teams. In this exercise, the red team aimed to exploit vulnerabilities in an enterprise's services while masking their attacks with benign system activities. The logs captured from these exercises were documented under various scenario names, including Cadets, Trace, and Theia.
+%\wajih{Update it with E5}
+We have utilized the DARPA E3~\cite{darpae3}, E5~\cite{darpae5}, and \optc~\cite{darpaoptc} datasets for our evaluation. The E3 and E5 datasets consist of several adversarial engagements that simulate real-world Advanced Persistent Threats on enterprise networks. In these exercises, the red team aim to exploit vulnerabilities in the enterprise's services while hiding their attacks behind benign system activities. The logs captured from these exercises are documented under various scenario names, including Cadets, Trace, and Theia.
 
-\optc is another open-source dataset from \darpa, encompasses a vast collection of audit logs from an enterprise environment with 1000 hosts. This dataset includes six days of benign system logs, which serve as training data for our system to understand normal behavior. Following the benign logs, there are attack logs covering three days of system activities, featuring red team tactics such as initial compromises, privilege escalations, malicious software installation, and data exfiltration.
+The \optc dataset, another open-source resource from DARPA, encompasses a comprehensive collection of audit logs from an enterprise environment with 1,000 hosts. This dataset includes six days of benign system logs, serving as training data for our system to learn normal behavior patterns. Subsequently, attack logs span three days of system activities, featuring red team tactics such as initial compromises, privilege escalations, malicious software installations, and data exfiltration.
 
-Both datasets are accompanied by ground truth documents that help distinguish between benign and malicious events. We utilize attack labels from existing systems, such as \threatrace and FLASH, for our evaluation, cross-referencing these labels with the ground truth to ensure accuracy.
+Each of these datasets is accompanied by ground truth documents that facilitate the distinction between benign and malicious events. For our evaluation, we employ attack labels from existing systems, such as \threatrace, Kairos and FLASH for our evaluation.
 
 
 \subsection{Detectors for Comparison}
