@@ -5,12 +5,7 @@
 
 \wajih{Be consistent with the terminology that you used in the abstract/intro.}
 
-\wajih{Move adversarial attacks in a separate section.}
-
-
-\PP{Adversarial attacks} \Sys may face vulnerabilities to various types of adversarial attacks, including gradient-based attacks, model poisoning, and inference attacks. Gradient-based adversarial attacks~\cite{chakraborty2021survey}, typically necessitate white-box access to the target machine learning model and its parameters. This requirement often renders them impractical for application in real-world scenarios. Conversely, black-box attacks, which employ iterative, query-based techniques, are more detectable and complicated to implement due to their lack of stealthiness. During the training phase, poisoning attacks can be executed by malicious actors who introduce corrupt weights to compromise the global model~\cite{jagielski2018manipulating}. To enhance \Sys's resilience against these threats, various defensive mechanisms can be adopted. Strategies such as adversarial training~\cite{tramer2019adversarial} and gradient masking~\cite{madry2017towards} respectively, are effective against gradient-based attacks. 
-
-In addition, to counteract poisoning during model updates, the Multi-Krum~\cite{munoz2019byzantine} model aggregation method can be used. Moreover, the central server's capability to conduct model inference attacks on client-contributed weights can be mitigated through the application of existing methodologies such as masked model updates and multi-party computation techniques~\cite{kanagavelu2020two}.
+%\wajih{Move adversarial attacks in a separate section.}
 
 \PP{Concept drift} Concept drift, where the data distribution of the underlying system evolves over time, is a potential issue. For instance, with the emergence of new system activities, the patterns learned by \Sys during training might not remain valid. This drift could lead to misclassifications, as new benign behaviors might be mistakenly identified as anomalies. One mitigation strategy for this involves periodic retraining with more recent data to update both the model and the embedding database. Due to its selective traversal, \Sys’s training is efficient, enabling users to periodically retrain their models. However, this approach presents the challenge of preserving the model’s ability to recognize older but still relevant attacks. Unfortunately, no public datasets currently exist to evaluate this strategy’s efficacy. As such, the effective handling of concept drift within \Sys remains a challenge that warrants future research.
 
