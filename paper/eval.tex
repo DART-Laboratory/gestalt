@@ -9,7 +9,7 @@
  \wajih{Captions need to be lowercase}
 
  {\renewcommand{\arraystretch}{1.2}
- \begin{table*}[t!]
+ \begin{table*}[!t]
    \centering
    \footnotesize
    \caption{Comparison of \Sys against FLASH and KAIROS. Prec.: Precision; Rec.: Recall; \wajih{add what we discussed here.}}
@@ -86,7 +86,7 @@ To benchmark our system, we conduct comparisons against existing state-of-the-ar
 
 To examine the effectiveness of our process categorization based \gnnshort ensemble technique, we conducted experiments comparing our ensemble approach against a single model approach. Specifically, for the ensemble method, we designated the number of categories to be 10. This approach standardizes all processes across various hosts into 10 distinct categories, ensuring that the \gnnshort models learn similar distributions regardless of the host. Such standardization is crucial for mitigating the impact of heterogeneous distributions during the federated averaging process. Table~\ref{categorized_gnn} presents the experimental outcomes on the \darpa E3 and \optc datasets. The results indicate that utilizing categorized ensemble models yields superior performance. This improvement is attributed to each sub-model's enhanced ability to concentrate on different patterns of system activity, thereby reducing the likelihood of these patterns becoming conflated during the federated averaging process.
 
-\begin{table}[t!]
+\begin{table}[!t]
   \centering
   \small
   \setlength{\tabcolsep}{10pt}
@@ -117,8 +117,8 @@ To examine the effectiveness of our process categorization based \gnnshort ensem
 
  \subsection{Efficacy of Word2vec harmonization}
 
- \wajih{never use !h instead use !t in the table layout. Same rule goes for figures. Exception to this rule is Appendix.}
- \begin{table}[h!]
+ %\wajih{never use !h instead use !t in the table layout. Same rule goes for figures. Exception to this rule is Appendix.}
+ \begin{table}[!t]
   \centering
   \small
   \setlength{\tabcolsep}{3.5pt}
@@ -141,7 +141,7 @@ To examine the effectiveness of our process categorization based \gnnshort ensem
 
  We used different batches of audit events of varying sizes to model the resource utilization on a client machine comprehensively. The results, as depicted in Figure~\ref{fig:resource}, indicate that the resource consumption of \Sys is moderate. Specifically, \Sys is capable of processing up to 100,000 audit events simultaneously while consuming less than 900 MB of memory and utilizing less than 20\% of CPU resources. This suggests that \Sys does not significantly burden the client machine, particularly given that client machines typically experience low event throughput. Consequently, our system requires execution only a few times per day to process newly accumulated events, implying that resource consumption is not continuous but occurs at specific intervals. Furthermore, our analysis of the host data in the \optc dataset reveals that, on average, each client generates approximately 100,000 audit log events within a three-hour period.
 
- \begin{figure}[t!]
+ \begin{figure}[!t]
   \centering
   \subfloat[CPU utilization.]{\includegraphics[width=0.24\textwidth]{fig/cpu.pdf}\label{cpu}}
   \hfill
@@ -156,7 +156,7 @@ To examine the effectiveness of our process categorization based \gnnshort ensem
 
  We conducted experiments to study the end-to-end processing time of our system. For this, we used batches of audit events of various sizes, conducting end-to-end inference with \Sys to measure the time taken to process these events on a client machine. The results, illustrated in Figure~\ref{sizevstime}, demonstrate that \Sys processes events with notable efficiency. For example, it requires approximately 23 seconds to process a batch of 100,000 events. Given our previous analysis of host logs in the \optc dataset, which indicated that each host generates an average of 100,000 events in three hours, \Sys can process 24 hours worth of log data on a client in merely 3 minutes. This level of efficiency ensures that our system is highly effective, preventing any potential log congestion.
 
- \begin{figure}[t!]
+ \begin{figure}[!t]
   \centering
   \includegraphics[width=0.4\textwidth]{fig/sizevstime.pdf}
   \caption{Processing time for various audit event sizes evaluated using \optc dataset.}
@@ -192,30 +192,30 @@ Compared to existing systems, \Sys processes client logs in a federated manner, 
 
 \PP{Hosts vs Detection Performance} We utilized the \optc dataset for this experiment, randomly selecting a variable number of hosts to participate in training our model through federated learning. The trained global model was then applied to perform threat detection, with the outcomes documented accordingly. Figure~\ref{scoresvshosts} presents these results, illustrating that performance improvement is observed up to a certain number of hosts. This plateau is attributed to the \optc dataset's finite set of benign patterns that can be learned. Beyond this threshold, additional hosts do not contribute new information beneficial to the model, thus halting further performance gains and increasing the risk of overfitting. To mitigate this, client machines can monitor and report the loss of the global model on their local datasets, providing a metric for the server to determine the optimal point to cease the learning process. \\
 
-\begin{figure}[t!]
+\begin{figure}[!t]
   \centering
   \includegraphics[width=0.4\textwidth]{fig/scoresvshosts.pdf}
-  \caption{Effect of number of hosts vs detection metrics.}
+  \caption{Effect of number of hosts vs detection metrics using \optc dataset.}
   \label{scoresvshosts}
   \vspace{-2ex}
 \end{figure}
 
 \PP{Effect of Federated Averaging Rounds} We employed the \darpa E3 dataset to examine the impact of federated averaging rounds on detection performance. Our methodology involved training the model over a range of federated averaging rounds and subsequently evaluating the model's detection capabilities. The outcomes are depicted in Figure~\ref{roundsvsscore}, which shows that detection performance improves up to a certain number of rounds before declining due to overfitting. Notably, this inflection point is also characterized by a minimal decrease in training loss, suggesting that the model has reached its learning capacity. This observation proves to be a valuable metric for determining the optimal moment to stop training, thereby preventing overfitting and ensuring optimal model performance.
 
-\begin{figure}[t!]
+\begin{figure}[!t]
   \centering
   \includegraphics[width=0.4\textwidth]{fig/roundsvsscore.pdf}
-  \caption{Federated averaging rounds vs detection performance. \wajih{there is no need to capitalize every word in the caption. It applies to other figures as well.}}
+  \caption{Federated averaging rounds vs detection performance using E3 dataset. }
   \label{roundsvsscore}
   \vspace{-2ex}
 \end{figure}
 
 \PP{Effect number of categories vs Detection} We studied the impact of varying the number of categories ($K$) on the performance of detection. Within our entity-level personalized \gnnshort learning framework, $K$ dictates the creation of distinct standardized bins. These bins categorize processes across client machines. Subsequently, we employ an ensemble approach, deploying a separate GNN model for each bin. Thus, the total number of GNN models corresponds to the number of categories. The results depicted in Figure~\ref{catgvsscore} indicate that an increase in $K$ enhances precision while maintaining recall levels. This outcome arises because a single model suffices for achieving high recall by effectively distinguishing between benign and malicious patterns. Nevertheless, a solitary model falls short in fully generalizing across the diverse benign patterns unique to each client due to the potential blending of individual patterns during the process of federated averaging. Employing a specialized GNN strategy across various categories addresses this challenge by minimizing false alarms.
 
-\begin{figure}[t!]
+\begin{figure}[!t]
   \centering
   \includegraphics[width=0.4\textwidth]{fig/kvsscore.pdf}
-  \caption{Number of categories vs detection performance.}
+  \caption{Effect of number of categories vs detection performance using E3 dataset.}
   \label{catgvsscore}
   \vspace{-2ex}
 \end{figure}
