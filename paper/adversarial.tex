@@ -1,7 +1,7 @@
 \section{Adversarial Attacks Analysis}
 \label{sec:adversarial}
 
-\Sys may face vulnerabilities to various types of adversarial attacks, including gradient-based attacks model poisoning, and inference attacks. Inference attacks are already discussed in section~\ref{privacy}
+\Sys may be vulnerable to various types of adversarial attacks, including gradient-based attacks, model poisoning, and inference attacks. Inference attacks are already discussed in Section~\ref{privacy}.
 
 Gradient-based adversarial attacks~\cite{chakraborty2021survey} typically require white-box access to the target machine learning model, including its parameters. This necessity often renders them impractical for real-world applications. In contrast, black-box attacks, which utilize iterative, query-based techniques, tend to be more detectable and complex to implement due to their conspicuous nature. Such attacks are feasible if an attacker manages to compromise a client machine. However, during the operational phase, a compromised client cannot affect other clients unless the attacker achieves lateral movement within an organization. Several defenses can be employed during model training to enhance the system's resilience against these attacks. Adversarial training~\cite{tramer2019adversarial} is one effective strategy, wherein the model is trained with perturbed input data to increase its robustness to such attacks.
 
