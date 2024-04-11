@@ -226,10 +226,8 @@ Compared to existing systems, \Sys processes client logs in a federated manner, 
 
 \subsection{Effect of number of clients on scalability}
 
-\Sys works in a decentralized manner so after deployment the scalability of our system is independent of the number of client machines. Each client will be running \Sys locally after the \fpgl phase is over. However, the number of clients can effect the scalability during the training phase. This can effect the central and utility server. The main task of central server is to perform federated averaging on model weights from clients. This is a simple matrix mean operation and doesnt require much resources even when we have thousands of matrices. The same is the case with utility server. Its task is to sum and average the vectors for overlapping semantic attributes and modern machines are well optimized to perform this task for large number of samples. Moreover, these operations just occur during the training phase and have no impact on scalability once trained system is deployed.
+\Sys operates in a decentralized manner, ensuring that its scalability post-deployment is independent of the client machine count. After the \fpgl phase concludes, each client runs \Sys locally. However, the number of clients may affect scalability during the training phase, potentially impacting the central and utility servers. The primary function of the central server is to conduct federated averaging on model weights from clients—a straightforward matrix mean operation that requires minimal resources, even with thousands of matrices. Similarly, the utility server's role is to sum and average vectors for overlapping semantic attributes, a task that modern machines are optimized to perform for a large number of samples. Importantly, these operations occur solely during the training phase and do not impact the scalability of the deployed system.
 %\wajih{How \Sys's performance and resource consumption scale with the size of the deployed environment?  Evaluating the system's scalability by incrementally increasing the number of nodes}
-
-During Dep;
 
 % \begin{figure}[t!]
 %   \centering
