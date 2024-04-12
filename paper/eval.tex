@@ -118,21 +118,50 @@ To examine the effectiveness of our process categorization based \gnnshort ensem
  \subsection{Efficacy of word2vec harmonization}
 
  %\wajih{never use !h instead use !t in the table layout. Same rule goes for figures. Exception to this rule is Appendix.}
- \begin{table}[!t]
-  \centering
-  \small
-  \setlength{\tabcolsep}{3.5pt}
-    \caption{Effectiveness of \wordvec vectors harmonization. }
-      \begin{tabular}{ | c | c | c | c | c | c |}
-        \hline
-          \bf Word2vec Type & \bf Precision & \bf Recall & \bf \fscore & \bf TP & \bf FP \\
-        \hline
-         Local & \VFOP & \VFOR & \VFOF & \VFOTP & \VFOFP \\
-         \hline
-         Harmonized & \TOP & \TOR & \TOF & \TOTP & \TOFP \\
-        \hline
-      \end{tabular}
-      \label{local:wordvec}
+%  \begin{table}[!t]
+%   \centering
+%   \small
+%   \setlength{\tabcolsep}{3.5pt}
+%     \caption{Effectiveness of \wordvec vectors harmonization. }
+%       \begin{tabular}{ | c | c | c | c | c | c |}
+%         \hline
+%           \bf Word2vec Type & \bf Precision & \bf Recall & \bf \fscore & \bf TP & \bf FP \\
+%         \hline
+%          Local & \VFOP & \VFOR & \VFOF & \VFOTP & \VFOFP \\
+%          \hline
+%          Harmonized & \TOP & \TOR & \TOF & \TOTP & \TOFP \\
+%         \hline
+%       \end{tabular}
+%       \label{local:wordvec}
+%   \end{table}
+
+  \begin{table}[!t]
+    \centering
+    \small
+    \setlength{\tabcolsep}{7.5pt}
+    \caption{Effectiveness of \wordvec vectors harmonization.}
+    \begin{tabular}{ | c | c | c | c | c |}
+      \hline
+      \bf Dataset & \bf Type & \bf Prec. & \bf Rec. & \bf \fscore \\
+      \hline
+      \multirow{2}{*}{\optc} & Local & \VFOP & \VFOR & \VFOF \\ 
+      \cline{2-5} 
+      & Harmonized & \TOP & \TOR & \TOF \\
+      \hline
+      \multirow{2}{*}{E5-Cadets} & Local & - & - & - \\
+      \cline{2-5} 
+      & Harmonized & \ETCP & \ETCR & \ETCF \\
+      \hline
+      \multirow{2}{*}{E5-Theia} & Local & - & - & - \\
+      \cline{2-5} 
+      & Harmonized & \ETTHP & \ETTHR & \ETTHF \\
+      \hline
+      \multirow{2}{*}{E5-ClearScope} & Local & - & - & - \\
+      \cline{2-5} 
+      & Harmonized & \ETClP & \ETClR & \ETClF \\
+      \hline
+    \end{tabular}
+    \label{local:wordvec}
   \end{table}
 
  We evaluated the effectiveness of our Word2Vec vector harmonization scheme through two experiments using the \optc dataset. In the first experiment, each client utilized its locally trained Word2Vec model to encode semantic features during the training process. In the second experiment, we synchronized the individually trained models into a central Word2Vec model using the utility server architecture, as explained in Section~\ref{sec:methodology}. Then each client used this centralized model for generating semantic features. Table~\ref{local:wordvec} presents the experimental results. By employing the harmonized models, we achieved significantly better detection outcomes. This improvement is attributable to the inherent randomness of the Word2Vec algorithm, which causes different clients to produce divergent vectors for identical attributes. Such variability leads to heterogeneity in the feature vectors for the \gnnshort model, impairing the model's ability to generalize and converge effectively during the federated learning process, thereby yielding suboptimal results. However, through our novel, privacy-preserving aggregation of these semantic models, we have addressed this issue.
