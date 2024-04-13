@@ -47,11 +47,11 @@ To evaluate \Sys, we address the following research questions. Our evaluation ex
 
 \begin{itemize}[leftmargin=*]
 \item \textbf{RQ1.} How does \Sys compares to existing systems in terms of detection performance?
-\item \textbf{RQ2.} What is the effectiveness of word2vec harmonization in a utility server setting?
-\item \textbf{RQ3.} What is the resource consumption of various components of \Sys?
+\item \textbf{RQ2.} How effective is the categorization based \gnnshort ensemble compared to a single \gnnshort? 
+\item \textbf{RQ3.} What is the effectiveness of word2vec harmonization in a utility server setting?
 \item \textbf{RQ4.} What is the end to end processing time of \Sys on a client machine?
 \item \textbf{RQ5.} How does the operational cost metrics of \Sys compares to centralized systems?
-\item \textbf{RQ6.} How effective is the categorization based \gnnshort ensemble compared to a single \gnnshort?
+\item \textbf{RQ6.} What is the resource consumption of various components of \Sys?
 \item \textbf{RQ7.} Ablation study of various \Sys components.
 \end{itemize}
 
@@ -84,7 +84,7 @@ To benchmark our system, we conduct comparisons against existing state-of-the-ar
 
 \subsection{Effectiveness of categorized graph learning}
 
-To examine the effectiveness of our process categorization based \gnnshort ensemble technique, we conducted experiments comparing our ensemble approach against a single model approach. Specifically, for the ensemble method, we designated the number of categories to be 10. This approach standardizes all processes across various hosts into 10 distinct categories, ensuring that the \gnnshort models learn similar distributions regardless of the host. Such standardization is crucial for mitigating the impact of heterogeneous distributions during the federated averaging process. Table~\ref{categorized_gnn} presents the experimental outcomes on the \darpa E3 and \optc datasets. The results indicate that utilizing categorized ensemble models yields superior performance. This improvement is attributed to each sub-model's enhanced ability to concentrate on different patterns of system activity, thereby reducing the likelihood of these patterns becoming conflated during the federated averaging process.
+To examine the effectiveness of our process categorization based \gnnshort ensemble technique, we conducted experiments comparing our ensemble technique against a single model approach in a federated setting. Specifically, for the ensemble method, we designated the number of categories to be 10. This approach standardizes all processes across various hosts into 10 distinct categories, ensuring that the \gnnshort models learn similar distributions regardless of the host. Such standardization is crucial for mitigating the impact of heterogeneous distributions and data imbalance during the federated averaging process. Table~\ref{categorized_gnn} presents the experimental outcomes on the \darpa E3 and \optc datasets. The results indicate that utilizing categorized ensemble models yields superior performance. This improvement is attributed to each sub-model's enhanced ability to concentrate on different patterns of system activity from different clients, thereby reducing the likelihood of these patterns becoming conflated during the federated averaging process.
 
 \begin{table}[!t]
   \centering
@@ -117,54 +117,36 @@ To examine the effectiveness of our process categorization based \gnnshort ensem
 
  \subsection{Efficacy of word2vec harmonization}
 
- %\wajih{never use !h instead use !t in the table layout. Same rule goes for figures. Exception to this rule is Appendix.}
-%  \begin{table}[!t]
-%   \centering
-%   \small
-%   \setlength{\tabcolsep}{3.5pt}
-%     \caption{Effectiveness of \wordvec vectors harmonization. }
-%       \begin{tabular}{ | c | c | c | c | c | c |}
-%         \hline
-%           \bf Word2vec Type & \bf Precision & \bf Recall & \bf \fscore & \bf TP & \bf FP \\
-%         \hline
-%          Local & \VFOP & \VFOR & \VFOF & \VFOTP & \VFOFP \\
-%          \hline
-%          Harmonized & \TOP & \TOR & \TOF & \TOTP & \TOFP \\
-%         \hline
-%       \end{tabular}
-%       \label{local:wordvec}
-%   \end{table}
+ We evaluated the effectiveness of our \wordvec vector harmonization scheme through two experiments using the \optc and E3 datasets. In the first experiment, each client utilized its locally trained \wordvec model to encode semantic features during the training process. In the second experiment, we harmonized the individually trained models into a central \wordvec model using the utility server architecture, as explained in Section~\ref{sec:methodology}. Then each client used this centralized model for generating semantic features. Table~\ref{local:wordvec} presents the experimental results. By employing the harmonized models, we achieved significantly better detection outcomes. This is because these local models encode different information for identical tokens across hosts. Such variability leads to heterogeneity in the feature space for the \gnnshort model, impairing the model's ability to generalize and converge effectively during the federated learning process, thereby yielding suboptimal results. However, through our novel, privacy-preserving aggregation of these semantic models, we have addressed this issue by merging the information in these models together to give the \gnnshort more generalized input vectors.
 
-  \begin{table}[!t]
-    \centering
-    \small
-    \setlength{\tabcolsep}{9pt}
-    \caption{Effectiveness of \wordvec vectors harmonization.}
-    \begin{tabular}{ | c | c | c | c | c |}
-      \hline
-      \bf Dataset & \bf Type & \bf Prec. & \bf Rec. & \bf \fscore \\
-      \hline
-      \multirow{2}{*}{E3-Cadets} & Local & \ETLWCP & \ETLWCR & \ETLWCF \\
-      \cline{2-5} 
-      & Harmonized & \TCP & \TCR & \TCF \\
-      \hline
-      \multirow{2}{*}{E3-Trace} & Local & \ETLWTHP & \ETLWTHR & \ETLWTHF \\
-      \cline{2-5} 
-      & Harmonized & \TTP & \TTR & \TTF \\
-      \hline
-      \multirow{2}{*}{E3-Theia} & Local & \ETLWClP & \ETLWClR & \ETLWClF \\
-      \cline{2-5} 
-      & Harmonized &  \TTHP & \TTHR & \TTHF \\
-      \hline
-      \multirow{2}{*}{\optc} & Local & \VFOP & \VFOR & \VFOF \\ 
-      \cline{2-5} 
-      & Harmonized & \TOP & \TOR & \TOF \\
-      \hline
-    \end{tabular}
-    \label{local:wordvec}
-  \end{table}
-
- We evaluated the effectiveness of our Word2Vec vector harmonization scheme through two experiments using the \optc dataset. In the first experiment, each client utilized its locally trained Word2Vec model to encode semantic features during the training process. In the second experiment, we synchronized the individually trained models into a central Word2Vec model using the utility server architecture, as explained in Section~\ref{sec:methodology}. Then each client used this centralized model for generating semantic features. Table~\ref{local:wordvec} presents the experimental results. By employing the harmonized models, we achieved significantly better detection outcomes. This improvement is attributable to the inherent randomness of the Word2Vec algorithm, which causes different clients to produce divergent vectors for identical attributes. Such variability leads to heterogeneity in the feature vectors for the \gnnshort model, impairing the model's ability to generalize and converge effectively during the federated learning process, thereby yielding suboptimal results. However, through our novel, privacy-preserving aggregation of these semantic models, we have addressed this issue.
+ \begin{table}[!t]
+  \centering
+  \small
+  \setlength{\tabcolsep}{9pt}
+  \caption{Effectiveness of \wordvec vectors harmonization.}
+  \begin{tabular}{ | c | c | c | c | c |}
+    \hline
+    \bf Dataset & \bf Type & \bf Prec. & \bf Rec. & \bf \fscore \\
+    \hline
+    \multirow{2}{*}{E3-Cadets} & Local & \ETLWCP & \ETLWCR & \ETLWCF \\
+    \cline{2-5} 
+    & Harmonized & \TCP & \TCR & \TCF \\
+    \hline
+    \multirow{2}{*}{E3-Trace} & Local & \ETLWTHP & \ETLWTHR & \ETLWTHF \\
+    \cline{2-5} 
+    & Harmonized & \TTP & \TTR & \TTF \\
+    \hline
+    \multirow{2}{*}{E3-Theia} & Local & \ETLWClP & \ETLWClR & \ETLWClF \\
+    \cline{2-5} 
+    & Harmonized &  \TTHP & \TTHR & \TTHF \\
+    \hline
+    \multirow{2}{*}{\optc} & Local & \VFOP & \VFOR & \VFOF \\ 
+    \cline{2-5} 
+    & Harmonized & \TOP & \TOR & \TOF \\
+    \hline
+  \end{tabular}
+  \label{local:wordvec}
+\end{table}
 
  \subsection{Resource consumption}
 
