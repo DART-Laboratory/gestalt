@@ -49,9 +49,9 @@ To evaluate \Sys, we address the following research questions. Our evaluation ex
 \item \textbf{RQ1.} How does \Sys compares to existing systems in terms of detection performance?
 \item \textbf{RQ2.} How effective is the categorization based \gnnshort ensemble compared to a single \gnnshort? 
 \item \textbf{RQ3.} What is the effectiveness of word2vec harmonization in a utility server setting?
-\item \textbf{RQ4.} What is the end to end processing time of \Sys on a client machine?
-\item \textbf{RQ5.} How does the operational cost metrics of \Sys compares to centralized systems?
-\item \textbf{RQ6.} What is the resource consumption of various components of \Sys?
+\item \textbf{RQ4.} What is the resource consumption of various components of \Sys? 
+\item \textbf{RQ5.} What is the end to end processing time of \Sys on a client machine? 
+\item \textbf{RQ6.} How does the operational cost metrics of \Sys compares to centralized systems?
 \item \textbf{RQ7.} Ablation study of various \Sys components.
 \end{itemize}
 
@@ -172,7 +172,7 @@ To examine the effectiveness of our process categorization based \gnnshort ensem
 
  \subsection{Processing time analysis}
 
- We conducted experiments to study the end-to-end processing time of our system. For this, we used batches of audit events of various sizes, conducting end-to-end inference with \Sys to measure the time taken to process these events on a client machine. The results, illustrated in Figure~\ref{sizevstime}, demonstrate that \Sys processes events with notable efficiency. For example, it requires approximately 23 seconds to process a batch of 100,000 events. Given our previous analysis of host logs in the \optc dataset, which indicated that each host generates an average of 100,000 events in three hours, \Sys can process 24 hours worth of log data on a client in merely 3 minutes. This level of efficiency ensures that our system is highly effective, preventing any potential log congestion.
+ We conducted experiments to study the end-to-end processing time of our system for a client machine. For this, we used batches of audit events of various sizes, conducting end-to-end inference with \Sys to measure the time taken to process these events on a client machine. The results, illustrated in Figure~\ref{sizevstime}, demonstrate that \Sys processes events with notable efficiency. For example, it requires approximately 23 seconds to process a batch of 100,000 events. Given our previous analysis of host logs in the \optc dataset, which indicated that each host generates an average of 100,000 events in three hours, \Sys can process 24 hours worth of log data on a client in merely 3 minutes. This level of efficiency ensures that our system is highly effective, preventing any potential log congestion.
 
  \begin{figure}[!t]
   \centering
@@ -182,18 +182,6 @@ To examine the effectiveness of our process categorization based \gnnshort ensem
   \vspace{-2ex}
 \end{figure}
 
-%  \subsection{Effect of Local Differential Privacy}
-
-%  \begin{figure}[t!]
-%   \centering
-%   \includegraphics[width=0.48\textwidth]{fig/epsvsscore.pdf}
-%   \caption{Effect of Epsilon ($\epsilon$) on Detection Performance.}
-%   \label{epsvsscore}
-%   \vspace{-2ex}
-% \end{figure}
-
-%  In this section, we examine the impact of differential privacy noise levels on the detection performance of \Sys. Differential privacy introduces a parameter, $\epsilon$, which dictates the intensity of Gaussian noise added to the local \gnnshort model updates prior to their aggregation at the central server for federated averaging, as detailed in Section~\ref{sec:methodology}. By adjusting $\epsilon$ during the training phase, we assess the detection capabilities of the globally trained model across various $\epsilon$ settings. Figure~\ref{epsvsscore} illustrates the relationship between $\epsilon$ and detection performance. It is important to note that lower $\epsilon$ values correspond to higher noise levels in model updates, thereby strengthening privacy at the expense of model utility. Conversely, increasing $\epsilon$ reduces noise strength, improving detection performance. The optimal $\epsilon$ value is contingent upon the specific requirements and context of the organization employing \Sys, balancing between privacy protection and model utility.
-
 \subsection{Cost metric analysis}
 \label{cost_metric}
 We examined the operational costs of deploying \Sys in comparison to centralized solutions like \flash and \kairos for organizational use. Our evaluation concentrates on three primary cost components: network expenses (\(C_{N}\)), the cost of storing raw data (\(C_{S}\)), and processing costs (\(C_{P}\)).
@@ -202,7 +190,7 @@ To begin, we estimate these costs for the \flash system utilizing the \optc data
 
 To calculate the daily operational costs of running these systems for a specific organization, we utilized the Google Cloud Platform's (GCP) pricing calculator~\cite{gcp}. The cost to operate \flash under the previously mentioned workload is estimated at \$135, with computing expenses accounting for \$100 and storage and network costs comprising \$35. Given its longer processing duration, the operational cost for \kairos would be twice that of \flash.
 
-Compared to existing systems, \Sys processes client logs in a federated manner, eliminating the need for logs to leave the client's machine. The only network expenses arise from the transmission of \gnnshort and Word2Vec models. Specifically, the \gnnshort model is 13kb, while the average Word2Vec model is 6 MB. For an organization with 1,000 hosts, the communication cost with the central server would be 12.70 MB, and for the utility server, it would be 5.86 GB. Overall, \Sys achieves a 170-fold reduction in communication and storage costs compared to \flash and \kairos. The central and utility servers conduct a simple mean operation on the models, taking only a few seconds. Therefore, the operational cost of \Sys for 1,000 client machines is approximately \$10 per day, marking a 13-fold reduction compared to \flash and a 26-fold reduction compared to \kairos.
+Compared to existing systems, \Sys processes client logs in a federated manner, eliminating the need for logs to leave the client's machine. The only network expenses arise from the transmission of \gnnshort and Word2Vec models. Specifically, the \gnnshort model is 13kb, while the average Word2Vec model is 6 MB. For an organization with 1,000 hosts, the communication cost with the central server would be 12.70 MB, and for the utility server, it would be 5.86 GB. Overall, \Sys achieves a 170-fold reduction in communication and centralized storage costs compared to \flash and \kairos. The central and utility servers conduct a simple mean operation on the models, taking only a few seconds. Therefore, the operational cost of \Sys for 1,000 client machines is approximately \$10 per day, marking a 13-fold reduction compared to \flash and a 26-fold reduction compared to \kairos.
 
  \subsection{Ablation study}
 
