@@ -41,16 +41,17 @@
 
 
 
-We evaluate \Sys using the open-source datasets \darpa E3 and \optc, which comprise system audit logs that simulate enterprise environments. These logs are collected from both Windows and Linux operating systems. Our evaluation experiments are conducted on a machine running Ubuntu 18.04.6 LTS, equipped with an 8-core Intel CPU and 100 GB of memory. Additionally, the machine features an NVIDIA RTX2080 GPU, utilized for operating our graph learning framework. Our evaluation aims to address the following research questions (RQs).
+%We evaluate \Sys using the open-source datasets \darpa E3 and \optc, which comprise system audit logs that simulate enterprise environments. These logs are collected from both Windows and Linux operating systems.
+
+To evaluate \Sys, we address the following research questions. Our evaluation experiments are conducted on a machine running Ubuntu 18.04.6 LTS, equipped with a 10-core Intel CPU, NVIDIA RTX 2080 GPU, and 120 GB of memory. In our experiments, we set the federated learning rounds and the number of categorized \gnnshort to 10 per host. Each model is trained for 20 epochs per round. We use regularization and dropout layers in our models to avoid overfitting.
 
 \begin{itemize}[leftmargin=*]
 \item \textbf{RQ1.} How does \Sys compares to existing systems in terms of detection performance?
 \item \textbf{RQ2.} What is the effectiveness of word2vec harmonization in a utility server setting?
-\item \textbf{RQ3.} What is the resource consumption of \Sys running on a client machine?
+\item \textbf{RQ3.} What is the resource consumption of various components of \Sys?
 \item \textbf{RQ4.} What is the end to end processing time of \Sys on a client machine?
-\item \textbf{RQ5.} How does the cost metrics of \Sys compares to centralized systems?
+\item \textbf{RQ5.} How does the operational cost metrics of \Sys compares to centralized systems?
 \item \textbf{RQ6.} How effective is the categorization based \gnnshort ensemble compared to a single \gnnshort?
-%\item \textbf{RQ5.} What is the effect of varying differential privacy noise on detection performance?
 \item \textbf{RQ7.} Ablation study of various \Sys components.
 \end{itemize}
 
