@@ -79,7 +79,7 @@ The \textit{Semantic Vectors Harmonization}~\ref{semanticharmonization} module a
 \subsection{Problem Formulation}
 
 %\wajih{Look at Nature's paper page 7 to have a similar problem formulation here as well.}
-Let \( C = \{u_1, u_2, \ldots, u_P\} \) denote the set of client machines, where each machine \( u_i \), for \( i = 1, 2, \ldots, P \), locally maintains its \logs logs to preserve privacy, ensuring that raw data does not leave the device. Our objective is to detect anomalous nodes within the provenance graphs, \( \{G_{u_1}, G_{u_2}, \ldots, G_{u_P}\} \), generated from these logs. To this end, we propose training a unified Graph Neural Network (GNN) model, denoted by \( \mathcal{M}_{\text{GNN}} \), to model the benign behavior exhibited across all client logs without centralizing the log data. Additionally, we aim to develop a global semantic encoder, \( \mathcal{E}_{\text{semantic}} \), capable of converting contextual attributes into a vector space, thereby generating feature vectors for training our GNN models.
+Let \( C = \{u_1, u_2, \ldots, u_P\} \) denote the set of client machines, where each machine \( u_i \), for \( i = 1, 2, \ldots, P \), locally maintains its \logs logs to preserve privacy, ensuring that raw data does not leave the device. Our objective is to detect anomalous nodes within the provenance graphs, \( \{G_{u_1}, G_{u_2}, \ldots, G_{u_P}\} \), generated from these logs. To this end, we propose training a set of unified Graph Neural Network models to model the benign behavior exhibited across all client logs without centralizing the log data. Additionally, we aim to develop a global semantic encoder, \( \mathcal{E}_{\text{semantic}} \), capable of converting contextual attributes into vector space, thereby generating feature vectors for training our GNN models.
 
 %\wajih{Give two or three sentences about the overall workflow. Think about what are the inputs, how the inputs are processed, and what are the outputs.} \wajih{Annotate "Audit Logs" in the Figure. Also use the word "Word2Vec" instead of Word2vec.}
 
@@ -103,7 +103,7 @@ Let \( C = \{u_1, u_2, \ldots, u_P\} \) denote the set of client machines, where
 
 This module processes the provenance graph generated from \logs logs by transforming node attributes into feature vectors for the graph learning phase. Existing systems like Flash~\cite{flash2024} have demonstrated the effectiveness of utilizing semantic attributes of nodes to enhance detection performance. Building on this approach, we employ a Word2Vec language model to encode these attributes into a vector format, \(\mathbf{v}\), where each attribute \(a\) is transformed into a vector \(v_a\). Each client independently trains a Word2Vec model using their local system logs.
 
-Before these models can be utilized to encode text attributes effectively, it is essential to contextually merge them across client machines to form a unified model, thereby reducing heterogeneity. This unification is crucial; without it, each client would produce a different encoding, \(v_a^i\), for identical inputs, where \(i\) denotes the client. The variability in feature vectors, \(\{v_a^1, v_a^2, \ldots, v_a^N\}\), for the same attribute \(a\) across \(N\) clients, would compromise the consistency of client-based Graph Neural Network (GNN) models. To ensure uniformity, the feature vectors for overlapping attributes must be averaged across clients, resulting in a single unified vector for each attribute:
+Before these models can be utilized to encode text attributes effectively, it is essential to contextually merge them across client machines to form a unified model, thereby reducing heterogeneity. This unification is crucial; without it, each client would produce a different encoding, \(v_a^i\), for identical inputs, where \(i\) denotes the client. The variability in feature vectors, \(\{v_a^1, v_a^2, \ldots, v_a^N\}\), for the same attribute \(a\) across \(N\) clients, would compromise the consistency of client-based \gnnshort models. To ensure uniformity, the feature vectors for overlapping attributes must be averaged across clients, resulting in a single unified vector for each attribute:
 
 \[
 \bar{v}_a = \frac{1}{N} \sum_{i=1}^{N} v_a^i
@@ -128,7 +128,7 @@ However, transferring tokens—containing sensitive data like process names, fil
 E(v_{k}) = v_{k}^{'}
 \]
 
-and send them to the utility server. This server merges the encrypted models and dispatches the unified model back to the clients, who decrypt it using the decryption key:
+and send them to the utility server. This server merges the encrypted models and dispatches the unified semantic vectors back to the respective clients, who decrypt it using the decryption key:
 
 \[
 D(v_{k}^{'}) = v_{k}
