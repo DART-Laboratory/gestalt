@@ -25,7 +25,7 @@
 %   \vspace{-2ex}
 % \end{figure}
 
-Audit logs play a crucial role in recording the activities within a system, detailing interactions among various system entities such as processes, files, and sockets. Various operating systems come equipped with built-in mechanisms to gather these logs, including Windows Event Tracing for Windows (ETW)~\cite{windowsaudit}, the Linux Audit system~\cite{linuxaudit}, and DTrace~\cite{dtrace} for FreeBSD. Each entry in an audit log characterizes a system event, identifying a subject and an object entity within the system. Moreover, these records include additional contextual attributes, including process names, file names, and socket IP addresses.
+Audit logs play a crucial role in recording the activities within a system, detailing interactions among various system entities such as processes, files, and sockets. Various operating systems come equipped with built-in mechanisms to gather these logs, including Event Tracing for Windows (ETW)~\cite{windowsaudit}, the Linux Audit system~\cite{linuxaudit}, and DTrace~\cite{dtrace} for FreeBSD. Each entry in an audit log characterizes a system event, identifying a subject and an object entity within the system. Moreover, these records include additional contextual attributes, including process names, file names, and socket IP addresses.
 
 Data provenance employs the concept of modeling the causal links among different system entities. Fundamentally, it utilizes system logs to construct a dependency graph that captures the relationships between events. Within this graph, nodes symbolize system entities such as processes, files, and sockets, while the edges represent various system syscalls. This provenance graph is instrumental in analyzing the activities of different system entities and plays a vital role in identifying anomalous or malicious entities. 
 
@@ -38,46 +38,68 @@ Data provenance employs the concept of modeling the causal links among different
 %\wajih{Througout the paper you are using either FLASH or Flash. Could you please make a macro and use that macro to be consistent? This applies to other system names as well.}
 
 %\wajih{citations are missing.}
-Provenance-based Intrusion Detection Systems (PIDS) can be broadly classified into two main types: rule-based and learning-based approaches. The rule-based approaches~\cite{holmes2019,rapsheet2020,poirot2019} leverage knowledge of known attack behaviors to identify attack activities in the provenance graph. However, developing these rules demands significant effort from analysts, and attacks with unseen patterns could go undetected. Conversely, learning-based approaches~\cite{wang2022threatrace,flash2024,cheng2023kairos,yangprographer,shadewatcher} focus on detecting zero-day attacks without requiring prior knowledge of past attacks or specific rules. These anomaly-based methods establish a baseline of benign system activities and identify any significant deviations from this baseline behavior as anomalies.
+Provenance-based Intrusion Detection Systems can be broadly classified into two main types: rule-based and learning-based approaches. The rule-based approaches~\cite{holmes2019,rapsheet2020,poirot2019} leverage knowledge of known attack behaviors to identify attack activities in the provenance graph. However, developing these rules demands significant effort from analysts, and attacks with unseen patterns could go undetected. Conversely, learning-based approaches~\cite{wang2022threatrace,flash2024,cheng2023kairos,yangprographer,shadewatcher} focus on detecting zero-day attacks without requiring prior knowledge of past attacks or specific rules. These anomaly-based methods establish a baseline of benign system activities and identify any significant deviations from this baseline behavior as anomalies.
 
 \subsection{Limitations of Existing PIDS}
-In this section, we examine existing host PIDS and underscore their design flaws, particularly regarding the preservation of user log privacy. \flash~\cite{flash2024}, a node-level anomaly detection system, utilizes a \gnn to learn standard system behavior from provenance graphs. This system adopts an advanced featurization method, using a temporal ordering-aware word2vec model to capture both structural and semantic characteristics in audit logs. Moreover, \flash enhances inference speed via an \gnnshort embedding store. In contrast, \threatrace~\cite{wang2022threatrace}, another node-level detection system, also employs a \gnn for anomaly detection. However, it stands apart from \flash due to its scalability issues and reliance on basic features, which limits its effectiveness in fully leveraging the information contained in provenance graphs. \kairos~\cite{cheng2023kairos}, an anomaly-based detector, segments logs into time window queues and uses temporal graph neural networks for anomaly detection. Despite the progress made by existing PIDS, they fail to provide any privacy safeguards for sensitive information that may be contained in the audit logs they utilize. This deficiency can impede the deployment of these systems in domains where privacy is paramount. We expand upon these points in the following discussion: 
+In this section, we examine existing PIDS and underscore their design flaws, particularly regarding the preservation of user log privacy and scalability. \flash~\cite{flash2024}, a node-level anomaly detection system, utilizes Graph Neural Networks to learn standard system behavior from provenance graphs. This system adopts an advanced featurization method, using a temporal ordering-aware word2vec model to capture both structural and semantic characteristics in audit logs. Moreover, \flash enhances inference speed via a \gnnshort embedding store. In contrast, \threatrace~\cite{wang2022threatrace}, another node-level detection system, also employs Graph Neural Networks for anomaly detection. However, it stands apart from \flash due to its scalability issues and reliance on basic features, which limits its effectiveness in fully leveraging the information contained in provenance graphs. \kairos~\cite{cheng2023kairos}, an anomaly-based detector, segments logs into time window queues and uses temporal graph neural networks for anomaly detection. Despite the progress made by existing PIDS, they fail to provide any privacy safeguards for sensitive information that may be contained in the audit logs they utilize. This deficiency can impede the deployment of these systems in real world settings. We expand upon these points in the following discussion: 
 
-\PP{Data Privacy} The existing PIDS that have been discussed above predominantly rely on system audit log data to identify malicious entities within a system. These systems employ advanced deep learning techniques, such as \gnn, to achieve impressive detection results. However, a notable downside of these models is their substantial requirement for data to accurately learn benign system behavior. This volume of data is impracticable to generate from a single user's machine. Consequently, in an enterprise environment, it becomes essential to collect data from a multitude of machines in order to compile a sufficiently large dataset for training these detection systems.  We conducted experiments with the \flash system by training it on data from a single host from \optc and compared the results with those reported in their paper, which were generated using data from multiple hosts. We observed a significant decrease in detection performance when using data from a single host, with the F-score experiencing a 40\% reduction.
+\PP{Data Privacy} The existing PIDSes that have been discussed above predominantly rely on system audit log data to identify malicious entities within a system. These systems employ advanced deep learning techniques, such as \gnn, to achieve impressive detection results. However, a notable downside of these models is their substantial requirement for data to accurately learn benign system behavior. This volume of data is impracticable to generate from a single user's machine. Consequently, in an enterprise environment, it becomes essential to collect data from a multitude of machines in order to compile a sufficiently large dataset for training these detection systems.  We conducted experiments with the \flash system by training it on data from a single host from \optc and compared the results with those reported in their paper, which were generated using data from multiple hosts. We observed a significant decrease in detection performance when using data from a single host, with the F-score experiencing a 40\% reduction.
 
-
-The centralized approach introduces a significant risk to user privacy. When a central entity analyzes these logs, it gains insights into the users' system activities. This can range from identifying the applications they use, to the websites they browse, and even potentially inferring their location from network IPs. These privacy concerns have been underscored in a report by Datadog~\cite{datadog}, a prominent provider of system monitoring services. Thus, while existing PIDS are effective in identifying system threats, they simultaneously pose a potential compromise to user privacy.
+The centralized approach introduces a significant risk to user privacy. When a central entity analyzes these logs, it gains insights into the users system activities. This can range from identifying the applications they use, to the websites they browse, and even potentially inferring their location from network IPs. Thus, while existing PIDS are effective in identifying system threats, they simultaneously pose a potential compromise to user privacy.
 
 %\wajih{are you sure this is not compressed. I was under the impression that it was more than this}.
 
-\PP{High Network and Disk Overhead} The current systems function under the premise of a centralized infrastructure designed for aggregating user logs to train models. In this setup, user machines periodically transmit their logs to a central server, which then consolidates them in a centralized database. However, the volume of these log data can reach gigabytes, resulting in significant network expenses for both users and the organization. Additionally, it demands substantial disk storage to accommodate all the centralized logs. Such extensive network costs disproportionately affect users with limited bandwidth, as they may be unable to contribute their data for model training. This exclusion hampers the model's ability to learn a comprehensive representation of benign behavior, potentially leading to a higher rate of false alarms for those not participating. Moreover, the necessity for extensive disk storage can restrict organizations from incorporating data from all users, which might introduce data bias and degrade the model's performance in practical scenarios. Our analysis of the \optc dataset reveals that each host generates approximately 1 GB of log data daily. In a real-world enterprise with hundreds of users, this translates to several hundred gigabytes of data being transmitted to the server each day for threat detection. Such volumes pose significant infrastructure and scalability challenges for centralized detection systems.
+\PP{High Network Overhead} The current systems function under the premise of a centralized infrastructure designed for aggregating user logs to train models. In this setup, user machines periodically transmit their logs to a central server, which then consolidates them in a centralized database. However, the volume of these log data can reach gigabytes, resulting in significant network expenses for both users and the organization. Such extensive network costs disproportionately affect users with limited bandwidth, as they may be unable to contribute their data for model training. This exclusion hampers the model's ability to learn a comprehensive representation of benign behavior, potentially leading to a higher rate of false alarms for those not participating. Our analysis of the \optc dataset reveals that each host generates approximately 1 GB of log data daily. In a real-world enterprise with hundreds of users, this translates to several hundred gigabytes of data being transmitted to the server each day for threat detection. Such volumes pose significant infrastructure and scalability challenges for centralized detection systems.
 
-\PP{Centralized Learning \& Scalability} The existing systems train their deep neural models using logs stored centrally. This approach significantly prolongs the training time of the models. The challenge escalates when frequent retraining is required to address the issue of concept drift\Fix{~\cite{}}. Additionally, these systems lack inherent mechanisms for parallelizing the training process, leading to an excessively lengthy sequential training period\Fix{~\cite{}}. Furthermore, managing all the data in a single location poses challenges in efficiently utilizing system resources, such as CPU and memory.
+\PP{Scalability} The existing systems train their deep neural models using logs stored centrally. This approach significantly prolongs the training time of the models. The challenge escalates when frequent retraining is required to address the issue of concept drift~\cite{lu2018learning}. Additionally, these systems lack inherent mechanisms for parallelizing the training process. Moreover, since all logs need to be aggregated in a centralized storage, the disk overhead costs for the organization increase. The necessity for extensive disk storage can restrict organizations from incorporating data from all users, which might introduce data bias and degrade the model's performance in practical scenarios for these clients.
 
-Moreover, existing systems, such as \flash, have implemented techniques to achieve efficient runtime performance. However, in an enterprise context, the centralized mode of operation faces scalability limitations. It can only accommodate a fixed number of hosts before the central server, running the intrusion detection system, becomes a bottleneck. In high-throughput environments, this leads to the detector suffering from log congestion.
+Moreover, existing systems, such as \flash, have implemented techniques to achieve efficient runtime performance. However, in an enterprise context, the centralized mode of operation faces scalability limitations. It can only accommodate a fixed number of hosts before the central server, running the intrusion detection system, becomes a bottleneck leading to log congestion. In high-throughput environments, this leads to the detector suffering from log congestion.
+
+% \begin{table}[t!]
+%     \centering
+%     \scriptsize
+%       %\caption{Limitations of existing PIDS. \wajih{Add in caption that which PIDS are not specified in the table and why.}}
+%       \caption{Existing PIDS limitations: \flash and \kairos outperform other existing PIDS systems ~\cite{wang2022threatrace,han2020unicorn,streamspot,yangprographer,shadewatcher,provdetector2020}. Therefore, we have excluded these PIDS from the table.}
+%       \setlength{\tabcolsep}{4.8pt}
+%         \begin{tabular}{ | c | c | c | c | c |}
+%           \hline
+%                & \bf Privacy & \bf Network  & \bf Disk  & \bf Scalability \\
+%                & \bf  Preserving & \bf  Cost & \bf Cost &  \\
+%           \hline
+%           \Sys  & YES                & LOW          & LOW       & HIGH        \\
+%           \hline
+%           \disdet~\cite{dong2023distdet} & NO                & LOW         & LOW      & HIGH       \\
+%           \hline
+%           \flash~\cite{flash2024}     & NO            & HIGH         & HIGH      & MEDIUM      \\
+%           \hline
+%           \kairos~\cite{cheng2023kairos}     & NO            & HIGH         & HIGH      & LOW         \\
+%           \hline
+%         \end{tabular}
+%         \label{limitations}
+%     \end{table}
 
 \begin{table}[t!]
-    \centering
-    \scriptsize
-      %\caption{Limitations of existing PIDS. \wajih{Add in caption that which PIDS are not specified in the table and why.}}
-      \caption{Existing PIDS limitations: \flash and \kairos outperform other existing PIDS systems ~\cite{wang2022threatrace,han2020unicorn,streamspot,yangprographer,shadewatcher,provdetector2020}. Therefore, we have excluded these PIDS from the table.}
-      \setlength{\tabcolsep}{4.8pt}
-        \begin{tabular}{ | c | c | c | c | c |}
-          \hline
-               & \bf Privacy & \bf Network  & \bf Disk  & \bf Scalability \\
-               & \bf  Preserving & \bf  Cost & \bf Cost &  \\
-          \hline
-          \Sys  & YES                & LOW          & LOW       & HIGH        \\
-          \hline
-          \disdet~\cite{dong2023distdet} & NO                & LOW         & LOW      & HIGH       \\
-          \hline
-          \flash~\cite{flash2024}     & NO            & HIGH         & HIGH      & MEDIUM      \\
-          \hline
-          \kairos~\cite{cheng2023kairos}     & NO            & HIGH         & HIGH      & LOW         \\
-          \hline
-        \end{tabular}
-        \label{limitations}
-    \end{table}
+  \centering
+  \scriptsize
+    %\caption{Limitations of existing PIDS. \wajih{Add in caption that which PIDS are not specified in the table and why.}}
+    \caption{Existing PIDS limitations: \flash and \kairos outperform other existing PIDS systems ~\cite{wang2022threatrace,han2020unicorn,streamspot,yangprographer,shadewatcher,provdetector2020}. Therefore, we have excluded these PIDS from the table.}
+    \setlength{\tabcolsep}{10pt}
+      \begin{tabular}{ | c | c | c | c |}
+        \hline
+             & \bf Privacy & \bf Network  & \bf Scalability \\
+             & \bf  Preserving & \bf  Cost &  \\
+        \hline
+        \Sys  & YES                & LOW               & HIGH        \\
+        \hline
+        \disdet~\cite{dong2023distdet} & NO                       & LOW      & HIGH       \\
+        \hline
+        \flash~\cite{flash2024}     & NO            & HIGH             & MEDIUM      \\
+        \hline
+        \kairos~\cite{cheng2023kairos}     & NO            & HIGH             & LOW         \\
+        \hline
+      \end{tabular}
+      \label{limitations}
+  \end{table}
 
 \subsection{How can Federated Learning help to solve above challenges?}
 
