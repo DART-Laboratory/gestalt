@@ -52,9 +52,11 @@ Our evaluation experiments are conducted on a machine running Ubuntu 18.04.6 LTS
 \item \textbf{RQ4.} What is the resource consumption of various components of \Sys? 
 \item \textbf{RQ5.} What is the end to end processing time of \Sys on a client machine? 
 \item \textbf{RQ6.} How does the operational cost metrics of \Sys compares to centralized systems?
-\item \textbf{RQ7.} Ablation study of various \Sys components.
+
 \end{itemize}
 
+\wajih {Say here that we have an ablation study on
+ metrics: Effect of Federated Averaging Round, blah blah in Appendix.}
 \subsection{Implementation}
 
 \Sys is developed in Python with 7000 lines of code. It leverages the PyTorch and Torch Geometric libraries to implement the federated graph learning framework. For developing the semantic attribute encoder, we employ the Gensim library. Secure communication between clients and the utility server is ensured through Python's Cryptography module. The federated averaging, semantic vector harmonization, and entity categorization modules are implemented as individual Python functions on the central and utility servers.
@@ -192,55 +194,7 @@ To calculate the daily operational costs of running these systems for a specific
 
 Compared to existing systems, \Sys processes client logs in a federated manner, eliminating the need for logs to leave the client's machine. The only network expenses arise from the transmission of \gnnshort and Word2Vec models. Specifically, the \gnnshort model is 13kb, while the average Word2Vec model is 6 MB. For an organization with 1,000 hosts, the communication cost with the central server would be 12.70 MB, and for the utility server, it would be 5.86 GB. Overall, \Sys achieves a 170-fold reduction in communication and centralized storage costs compared to \flash and \kairos. The central and utility servers conduct a simple mean operation on the models, taking only a few seconds. Therefore, the operational cost of \Sys for 1,000 client machines is approximately \$10 per day, marking a 13-fold reduction compared to \flash and a 26-fold reduction compared to \kairos.
 
-\subsection{Ablation study}
 
-In this ablation study, we analyze the impact of key parameters within \Sys. Specifically, we examine the effects of the number of client machines, the number of federated averaging rounds, the number of \gnnshort categorized models, and the anomaly threshold. The effects of these parameters are discussed below:
-
-\PP{Hosts vs Detection Performance} We utilized the \optc dataset for this experiment, randomly selecting a variable number of hosts to participate in training our models through federated learning. The trained global models were then applied to perform threat detection. Figure~\ref{scoresvshosts} presents these results, illustrating that performance improvement is observed up to a certain number of hosts. This plateau is attributed to the \optc dataset's finite set of benign patterns that can be learned. Beyond this threshold, additional hosts do not contribute new information beneficial to the model, thus halting further performance gains and increasing the risk of overfitting. To mitigate this, client machines can monitor the loss of the global model on their local datasets to determine the optimal point to opt out from the learning process.
-
-\begin{figure}[!t]
-  \centering
-  \includegraphics[width=0.3\textwidth]{fig/scoresvshosts.pdf}
-  \caption{Effect of number of hosts vs detection metrics using \optc dataset.}
-  \label{scoresvshosts}
-  \vspace{-2ex}
-\end{figure}
-
-\PP{Effect of Federated Averaging Rounds} We employed the \darpa E3 dataset to examine the impact of federated averaging rounds on detection performance. Our methodology involved training the model over a range of federated averaging rounds and subsequently evaluating the model's detection capabilities. The outcomes are depicted in Figure~\ref{roundsvsscore}, which shows that detection performance improves up to a certain number of rounds before declining due to overfitting. Notably, this inflection point is also characterized by a minimal decrease in training loss, suggesting that the model has reached its learning capacity. This observation proves to be a valuable metric for determining the optimal moment to stop training, thereby preventing overfitting and ensuring optimal model performance.
-
-\begin{figure}[!t]
-  \centering
-  \includegraphics[width=0.3\textwidth]{fig/roundsvsscore.pdf}
-  \caption{Federated averaging rounds vs detection performance using E3 dataset. }
-  \label{roundsvsscore}
-  \vspace{-2ex}
-\end{figure}
-
-\PP{Effect number of categories vs Detection} We studied the impact of varying the number of categories ($C$) on the detection performance. Within our system entity-level personalized \gnnshort learning framework, $C$ controls the creation of distinct standardized bins. These bins categorize processes across client machines. Subsequently, we employ an ensemble approach, deploying a separate \gnnshort model for each bin. Thus, the total number of \gnnshort models corresponds to the number of categories. The results depicted in Figure~\ref{catgvsscore} indicate that an increase in $C$ enhances precision while maintaining recall levels. This outcome arises because a single model suffices for achieving high recall by effectively distinguishing between benign and malicious patterns. Nevertheless, a single model falls short in fully generalizing across the diverse benign patterns unique to each client due to the potential blending of individual patterns during the process of federated averaging. Employing a specialized \gnnshort strategy across various categories addresses this challenge by minimizing false alarms.
-
-\begin{figure}[!t]
-  \centering
-  \includegraphics[width=0.3\textwidth]{fig/kvsscore.pdf}
-  \caption{Effect of number of categories vs detection performance using E3 dataset.}
-  \label{catgvsscore}
-  \vspace{-2ex}
-\end{figure}
-
-%\subsection{Detection Performance Under Different Methods}
-
-%\wajih{In the Nature's paper they apply different federated learning and GNN approaches to show that the one they propose is best. I remember you tried different FL approaches as well. Also tried if you can replace GNN with something else. In our Flash paper we have something similar where we switched ML methods to show the performance. I would like to see similar experimentation here as well. The idea is to prove that the method that we chose is the best.}
-
-% \PP{Effect of number of clients on scalability} \Sys operates in a decentralized manner, ensuring that its scalability post-deployment is independent of the client machines count. After the \fpgl phase concludes, each client runs \Sys locally. However, the number of clients may affect scalability during the training phase, potentially impacting the central and utility servers. The primary function of the central server is to conduct federated averaging on model weights from clients—a straightforward matrix mean operation that requires minimal resources, even with thousands of matrices. Similarly, the utility server's role is to sum and average vectors for overlapping semantic attributes, a task that modern machines are optimized to perform for a large number of samples. Importantly, these operations occur solely during the training phase and do not impact the scalability of the deployed system.
-
-\PP{Anomaly Threshold} This hyperparameter controls the number of alerts generated by \Sys. It determines the trade-off between precision and recall. We use the E5 dataset to investigate the effects of different anomaly thresholds. Figure~\ref{thresh} illustrates the results.
-
-\begin{figure}[!t]
-  \centering
-  \includegraphics[width=0.3\textwidth]{fig/thresh.pdf}
-  \caption{Anomaly threshold effect.}
-  \label{thresh}
-  \vspace{-2ex}
-\end{figure}
 
 %\wajih{How \Sys's performance and resource consumption scale with the size of the deployed environment?  Evaluating the system's scalability by incrementally increasing the number of nodes}
 
