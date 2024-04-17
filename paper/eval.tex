@@ -55,8 +55,10 @@ Our evaluation experiments are conducted on a machine running Ubuntu 18.04.6 LTS
 
 \end{itemize}
 
-\wajih {Say here that we have an ablation study on
- metrics: Effect of Federated Averaging Round, blah blah in Appendix.}
+%\wajih {Say here that we have an ablation study on metrics: Effect of Federated Averaging Round, blah blah in Appendix.}
+
+We also present a detailed ablation study in the appendix~\ref{appendix} on metrics such as the effect of the number of hosts, number of \gnnshort submodels, number of federated averaging rounds, and the anomaly threshold on the detection performance.
+
 \subsection{Implementation}
 
 \Sys is developed in Python with 7000 lines of code. It leverages the PyTorch and Torch Geometric libraries to implement the federated graph learning framework. For developing the semantic attribute encoder, we employ the Gensim library. Secure communication between clients and the utility server is ensured through Python's Cryptography module. The federated averaging, semantic vector harmonization, and entity categorization modules are implemented as individual Python functions on the central and utility servers.
@@ -194,22 +196,16 @@ To calculate the daily operational costs of running these systems for a specific
 
 Compared to existing systems, \Sys processes client logs in a federated manner, eliminating the need for logs to leave the client's machine. The only network expenses arise from the transmission of \gnnshort and Word2Vec models. Specifically, the \gnnshort model is 13kb, while the average Word2Vec model is 6 MB. For an organization with 1,000 hosts, the communication cost with the central server would be 12.70 MB, and for the utility server, it would be 5.86 GB. Overall, \Sys achieves a 170-fold reduction in communication and centralized storage costs compared to \flash and \kairos. The central and utility servers conduct a simple mean operation on the models, taking only a few seconds. Therefore, the operational cost of \Sys for 1,000 client machines is approximately \$10 per day, marking a 13-fold reduction compared to \flash and a 26-fold reduction compared to \kairos.
 
-
-
-%\wajih{How \Sys's performance and resource consumption scale with the size of the deployed environment?  Evaluating the system's scalability by incrementally increasing the number of nodes}
-
-% \begin{figure}[t!]
+% \begin{figure*}[!t]
 %   \centering
-%   \includegraphics[width=0.40\textwidth]{fig/cpu.pdf}
-%   \caption{CPU Usage}
-%   \label{cpu}
+%   \subfloat[Anomaly threshold effect.]{\includegraphics[width=0.24\textwidth]{fig/thresh.pdf}\label{thresh}}
+%   \hfill
+%   \subfloat[Effect of number of categories vs detection performance using E3 dataset.]{\includegraphics[width=0.24\textwidth]{fig/kvsscore.pdf}\label{catgvsscore}}
+%   \hfill
+%   \subfloat[Federated averaging rounds vs detection performance using E3 dataset.]{\includegraphics[width=0.24\textwidth]{fig/roundsvsscore.pdf}\label{roundsvsscore}}
+%   \hfill
+%   \subfloat[Effect of number of hosts vs detection metrics using \optc dataset]{\includegraphics[width=0.24\textwidth]{fig/scoresvshosts.pdf}\label{rscoresvshosts}}
+%   \caption{Ablation Study of various \Sys components.}
+%   \label{ablation}
 %   \vspace{-2ex}
-% \end{figure}
-
-% \begin{figure}[t!]
-%   \centering
-%   \includegraphics[width=0.40\textwidth]{fig/ram.pdf}
-%   \caption{RAM usage}
-%   \label{ram}
-%   \vspace{-2ex}
-% \end{figure}
+% \end{figure*}
