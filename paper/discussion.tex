@@ -1,3 +1,4 @@
+\section{Discussion \& Limitations}
 \label{sec:discussion}
 
 %\wajih{Use macros for common words in this whole section.}
@@ -8,7 +9,9 @@
 
 \PP{Concept drift} This is a problem where the data distribution of the underlying system evolves over time. For instance, with the emergence of new system activities, the patterns learned by \Sys during training might not remain valid. This drift could lead to misclassifications, as new benign behaviors might be mistakenly identified as anomalies. One mitigation strategy for this involves periodic retraining with more recent data to update the models. Techniques mentioned in recent works~\cite{lu2018learning, barbero2022transcending,jordaney2017transcend} can be leveraged to deal with the problem of concept drift. %\wajih{we need some citations here. Read Kairos and prographer paper. Maybe there have more information about this.}
 
-\PP{Alert investigation} \Sys performs anomaly detection on the local provenance graph of each client. However, similar to existing IDSes~\cite{flash2024,cheng2023kairos,wang2022threatrace}, our system is also susceptible to generating false alarms. As a result, it becomes essential to analyze these false alarms. Currently, the task of analyzing these alarms falls upon individual users. \Sys notify users about detected alerts, enabling them to manually review the activities associated with these alert nodes to ascertain whether they are a real threat or a false positive. We identify privacy-preserving alert verification as a promising research direction. We leave it to future work to develop methods for privately sharing alert data with a central server, enabling security analysts to perform more in-depth attack analysis.
+\PP{Alert investigation} \Sys performs anomaly detection on the local provenance graph of each client. However, similar to existing IDSes~\cite{flash2024,cheng2023kairos,wang2022threatrace}, our system is also susceptible to generating false alarms. As a result, it becomes essential to analyze these false alarms. Currently, the task of analyzing these alarms falls upon individual users. \Sys notifies users about detected alerts, enabling them to manually review the activities associated with these alert nodes to ascertain whether they are a real threat or a false positive. We identify privacy-preserving alert verification as a promising research direction. We leave it to future work to develop methods for privately sharing alert data with a central server, enabling security analysts to perform more in-depth attack analysis.
+
+\PP{Retraining Frequency} \wajih{Discuss here how often we need to retrain models on client machines. You can say that it depends on enterprise settings, in our experiments we found that XXX times per day gave us good results.}
 
 %\wajih{Investigation using \Sys. We need to add one paragraph saying something about how to do an investigation using \Sys after detection. It does not have to be detailed. We just need to show that we thought about this problem. At the end of the paragraph say that we leave this for future work.}
 
