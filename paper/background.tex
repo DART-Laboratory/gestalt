@@ -19,7 +19,7 @@
 \begin{figure}[t!]
   \centering
   \includegraphics[width=0.4\textwidth]{fig/provexp.pdf}
-  \caption{The figure shows the example of a provenance graph. The nodes represent the system entities and edges represent different syscalls.}
+  \caption{The figure shows the example of a provenance graph. \wajih{I meant this: "Diamonds, rectangles, and ovals depict sockets, blah, blah, respectively." }}
 
   \label{provexp}
   \vspace{-2ex}
@@ -43,11 +43,16 @@ Data provenance employs the concept of modeling the causal links among different
 Provenance-based Intrusion Detection Systems can be broadly classified into two main types: rule-based and learning-based approaches. The rule-based approaches~\cite{holmes2019,rapsheet2020,poirot2019} leverage knowledge of known attack behaviors to identify attack activities in the provenance graph. However, developing these rules demands significant effort from analysts, and attacks with unseen patterns could go undetected. Conversely, learning-based approaches~\cite{wang2022threatrace,flash2024,cheng2023kairos,yangprographer,shadewatcher} focus on detecting zero-day attacks without requiring prior knowledge of past attacks or specific rules. These anomaly-based methods establish a baseline of benign system activities and identify any significant deviations from this baseline behavior as anomalies.
 
 \subsection{Limitations of Existing PIDS}
-Here we examine existing PIDS and underscore their design flaws, particularly regarding the preservation of user log privacy and scalability. \flash~\cite{flash2024}, a node-level anomaly detection system, utilizes Graph Neural Networks to learn standard system behavior from provenance graphs. This system adopts an advanced featurization method, using a temporal ordering-aware \wordvec model to capture both structural and semantic characteristics in \logs. Moreover, \flash enhances inference speed via a \gnnshort embedding store. In contrast, \threatrace~\cite{wang2022threatrace}, another node-level detection system, also employs Graph Neural Networks for anomaly detection. However, it stands apart from \flash due to its scalability issues and reliance on basic features, which limits its effectiveness in fully leveraging the information contained in provenance graphs. \kairos~\cite{cheng2023kairos}, an anomaly-based detector, segments logs into time window queues and uses temporal graph neural networks for anomaly detection. Despite the progress made by existing PIDS, they fail to provide any privacy safeguards for sensitive information that may be contained in the \logs they utilize. This deficiency can impede the deployment of these systems in real world settings. We expand upon these points in the following discussion:
+Here we examine existing PIDS and underscore their design flaws, particularly regarding the preservation of user log privacy and scalability. \flash~\cite{flash2024}, a node-level anomaly detection system, utilizes Graph Neural Networks to learn standard system behavior from provenance graphs. This system adopts an advanced featurization method, using a temporal ordering-aware \wordvec model to capture both structural and semantic characteristics in \logs. Moreover, \flash enhances inference speed via a \gnnshort embedding store. In contrast, \threatrace~\cite{wang2022threatrace}, another node-level detection system, also employs Graph Neural Networks for anomaly detection. However, it stands apart from \flash due to its scalability issues and reliance on basic features, which limits its effectiveness in fully leveraging the information contained in provenance graphs. \kairos~\cite{cheng2023kairos}, an anomaly-based detector, segments logs into time window queues and uses temporal graph neural networks for anomaly detection. Despite the progress made by existing PIDS, they fail to provide any privacy safeguards for sensitive information that may be contained in the \logs they utilize. This deficiency can impede the deployment of these systems in real world settings.
+
+We provide three limitations of existing systems in detail in Section~\ref{s:intro}, namely: lack of privacy preservation, excessive network overhead, and limited scalability. Table~\ref{tab:limitations} provides an overview of the limitations of existing systems.
 
 %\wajih{make the headings negative words like Data Privacy Leakage, etc. Ensure that you update the intro accordingly as well.}
 
 %\wajih{Please use consistent headings with the Introduction section. Also, I feel some of the information is redundant here as we have already explained it in great detail in the introduction section. If you could make these paragraphs shorter that would be great as it could save us a lot of space.}
+
+\wajih{Let's remove these limitations from here. I feel like we have already discussed them in quite detail in the intro section. IMPORTANT: If there is an information here and that information (numbers, experiments, etc.) is not in the intro section, please move that information from here to the intro section.}
+
 
 \PP{Lack of Privacy Preservation} The existing PIDSes that have been discussed above predominantly rely on system log data to identify malicious entities within a system. These systems employ advanced deep learning techniques, such as \gnn, to achieve impressive detection results. However, a notable downside of these models is their substantial requirement for data to accurately learn benign system behavior. This volume of data is impracticable to generate from a single user's machine. Consequently, in an enterprise environment, it becomes essential to collect data from a multitude of machines in order to compile a sufficiently large dataset for training these detection systems.  We conducted experiments with the \flash system by training it on data from a single host from \optc and compared the results with those reported in their paper, which were generated using data from multiple hosts. We observed a significant decrease in detection performance when using data from a single host, with the F-score experiencing a 40\% reduction.
 
@@ -104,7 +109,7 @@ Although existing systems, such as \flash, have implemented techniques to achiev
         \kairos~\cite{cheng2023kairos}     & NO            & HIGH             & LOW         \\
         \hline
       \end{tabular}
-      \label{limitations}
+      \label{tab:limitations}
   \end{table}
 
 \subsection{How can Federated Learning help to solve above challenges?}
