@@ -81,29 +81,6 @@ Provenance-based Intrusion Detection Systems can be broadly classified into two 
 %         \label{limitations}
 %     \end{table}
 
-\begin{table}[t!]
-  \centering
-  \scriptsize
-    %\caption{Limitations of existing PIDS. \wajih{Add in caption that which PIDS are not specified in the table and why.}}
-    \caption{Existing PIDS limitations: \flash and \kairos outperform other existing PIDS systems ~\cite{wang2022threatrace,han2020unicorn,streamspot,yangprographer,shadewatcher,provdetector2020}. Therefore, we have excluded these PIDSes from the table.}
-    \setlength{\tabcolsep}{10pt}
-      \begin{tabular}{ | c | c | c | c |}
-        \hline
-             & \bf Data & \bf Network  & \bf Scalability \\
-             & \bf  Privacy & \bf  Overhead &  \\
-        \hline
-        \Sys  & YES                & LOW               & HIGH        \\
-        \hline
-        \disdet~\cite{dong2023distdet} & NO                       & LOW      & HIGH       \\
-        \hline
-        \flash~\cite{flash2024}     & NO            & HIGH             & MEDIUM      \\
-        \hline
-        \kairos~\cite{cheng2023kairos}     & NO            & HIGH             & LOW         \\
-        \hline
-      \end{tabular}
-      \label{tab:limitations}
-  \end{table}
-
 \subsection{Federated Learning}
 
 Federated learning (FL)~\cite{mcmahan2017communication} is a machine learning approach that enables a model to be trained across multiple decentralized devices or servers holding local data samples, without exchanging them. This method addresses privacy concerns, bandwidth limitations, and data security issues inherent in centralized machine learning approaches used in existing PIDS~\cite{flash2024,cheng2023kairos,wang2022threatrace}. The mathematical formulation of FL involves aggregating locally computed updates to a global model, rather than directly sharing raw data.
