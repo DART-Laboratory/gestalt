@@ -7,9 +7,15 @@
 
 %\wajih{Give the workflow of MSSP and cite that organizations outsource their security. If you find any numbers on how many comapnies use MSSP and outsource their security operations that would be great. If you find any realworld attack examples on MSSP where the data was leaked that would be great as well. }
 
-Intrusion Detection Systems (\ids) play an essential role in enterprise security strategies to counteract Advanced Persistent Threats (APTs). APTs are notably stealthy and persistent, exemplified by the significant system disruptions seen in attacks such as Solar Winds~\cite{solarwinds} and NotPetya~\cite{notpetya}. To defend against these attacks, many organizations outsource their security operations to different MSSPs. A study~\cite{msspsurvey}  of more than 5,000 IT professionals found that nearly three in every four companies are turning to MSSPs The MSSP integrates their security tools with the client's systems to collect \logs. This involves configuring the client’s systems to send \logs to the cloud for threat detection. Figure~\ref{mssp} shows the architecture for MSSP operations.
+Intrusion Detection Systems (\ids) are crucial for countering Advanced Persistent Threats (APTs) in enterprises, as evidenced by major attacks, such as Solar Winds~\cite{solarwinds} and NotPetya~\cite{notpetya}. Given their stealth and persistence, many enterprises rely on Managed Security Service Providers (MSSPs) to improve their defenses. A survey~\cite{msspsurvey} involving over 5,000 IT professionals reported that about 75\% of companies use MSSPs. These providers integrate their security systems with clients' systems to manage \logs, typically configuring the clients' systems to transmit \logs to the cloud for analysis. Figure~\ref{mssp} illustrates this MSSP operational architecture.
 
-Data Provenance techniques have been increasingly used in IDSes to detect system intrusions. By analyzing system logs and converting them into provenance graphs, these systems offer a comprehensive view of system execution. Provenance-based IDSes~\cite{streamspot,provdetector2020,wang2022threatrace,shadewatcher,yangprographer,han2020unicorn} have emerged as a potent solution, utilizing the rich context within \logs to improve detection capabilities. The MSSP can leverage these recent advancements for automated threat detection without requiring attack signatures.
+
+Recently, Provenance-based IDS (PIDS)~\cite{streamspot,provdetector2020,wang2022threatrace,shadewatcher,yangprographer,han2020unicorn} have emerged as a highly effective means of enhancing intrusion detection. These systems leverage the extensive contextual information provided by \logs to bolster their detection capabilities. PIDS operate by converting \logs into provenance graphs, which are then analyzed using machine learning techniques, such as Graph Neural Networks (\gnnshort), to identify and learn patterns of benign activity. By continuously monitoring these patterns, PIDS can detect deviations that may indicate potential security threats. Upon detecting such anomalous graph patterns, the PIDS generate alerts to prompt further investigation.
+
+
+Despite PIDS potential, the current operational mode of MSSPs and the state-of-the-art techniques for intrusion detection face significant challenges in the complex landscape of enterprise security. Table~\ref{tab:limitations} provides an overview of the limitations of the existing systems, with further discussion below.
+
+
 
 %\wajih{Please put the MSSP figure we talk about here.}
 
@@ -17,11 +23,11 @@ Data Provenance techniques have been increasingly used in IDSes to detect system
 
 %\wajih{please use consistent font size which means only two sizes one of headings and one for the body. Could you show that logs go to centralized storage. Also, we talked that we will say "Plain-Text Audit Logs" instead of "Logs". You need to start taking notes while we are discussing things.}
 
-Despite their potential, the current operational mode of MSSPs and the state-of-the-art techniques for intrusion detection face significant challenges in the complex landscape of enterprise security. Table~\ref{tab:limitations} provides an overview of the limitations of the existing systems, with further discussion below:
+
 
 \smallskip
 \noindent
-\textbf{C1: Lack of Privacy Preservation:} The current mode of operation of MSSPs and traditional provenance-based IDSes (PIDS)~\cite{flash2024,cheng2023kairos,wang2022threatrace} rely on a centralized infrastructure, necessitating client machines to transmit their log data to a central server. \flash~\cite{flash2024} and \kairos~\cite{cheng2023kairos} are some recent state-of-the-art PIDS that operate in a centralized manner, assuming the \logs from different machines will be present in a centralized location where these systems are operational. The need to aggregate data from multiple machines is critical because modern IDSes leverage deep neural networks to model benign behaviors. A major limitation of these models is their requirement for large datasets to accurately learn normal system behaviors; relying on data from a single user's machine is insufficient. Our experiments with the \flash, trained using data from a single host at OPTC, demonstrated a significant reduction in performance—a 40\% decrease in the F-score—compared to results obtained from multi-host data training. However, the centralized mode of operation risks user privacy as \logs encompass detailed records of system execution, including sensitive information and activity patterns. This information can include specific urls visited, ip addresses and the applications user is using. These privacy concerns have been underscored in a report by Datadog~\cite{datadog}, a prominent provider of system monitoring services. 
+\textbf{C1: Lack of Privacy Preservation:} The current operational mode of MSSPs and PIDS involves a centralized infrastructure that requires client machines to transmit their \logs to a central server. Notable state-of-the-art systems, such as \flash\cite{flash2024} and \kairos~\cite{cheng2023kairos} function under the assumption that \logs from various machines will be available at a centralized location for processing. This central aggregation of data is essential, as \pids employ advanced deep learning techniques to model and understand benign behaviors effectively. These models necessitate large datasets to learn normal system behaviors accurately, and data from a single user's machine proves to be inadequate. Our experiments with \flash, which was trained using data from just a single host in the DARPA OPTC dataset~\cite{darpaoptc}, exhibited a significant performance drop -- a 40\% decrease in the F-score -- when compared to training with multi-host data. However, this centralized approach to data handling introduces substantial privacy risks. \logs contain detailed records of system activities, potentially including sensitive data, such as specific URLs visited, IP addresses, and user application usage. These privacy issues are not merely theoretical; they have been highlighted in a recent report by Datadog~\cite{datadog}, a leading provider of system monitoring services. Note that decentralized PIDS, such as DistDet~\cite{dong2023distdet} also transmit logs in plain text for processing \wajih{fix this last sentence. make sure that it is technically correct. the goal is to say that disdet has privacy problems.}
 
 
 \begin{figure}[t!]
@@ -34,64 +40,57 @@ Despite their potential, the current operational mode of MSSPs and the state-of-
     
 \smallskip
 \noindent
-\textbf{C2: Excessive Network Overhead:} In MSSP setting, \logs need to be send over network for threat detection. The logs from modern systems can accumulate to gigabytes per day, resulting in significant network costs for both users and organizations. Our analysis of \flash and \kairos, utilizing the \optc dataset as detailed in Section~\ref{cost_metric}, illustrates this point. For an organization similar to the one represented in the \optc dataset, with a comparable number of hosts, the total volume of logs transmitted daily would reach 1000 GB. This volume of data could lead to substantial network expenses daily. Moreover, it poses a challenge for users with limited network bandwidth to upload this volume of data efficiently.
-    
-    % \item[--] \textbf{C2: Excessive Network Overhead:} In MSSP setting, \logs logs need to be send over network for threat detection. The logs from modern systems can accumulate to gigabytes per day, resulting in significant network costs for both users and organizations. Additionally, the need for extensive disk storage to house these logs adds complexity. Current PIDS models fail to address these challenges, undermining their practical applicability. Our analysis of \flash and \kairos, utilizing the \optc dataset as detailed in Section~\ref{cost_metric}, illustrates this point. For an organization similar to the one represented in the \optc dataset, with a comparable number of hosts, the total volume of logs transmitted daily would reach 1000 GB. This volume of data could lead to substantial network and storage expenses daily. Moreover, it poses a significant challenge for users with limited network bandwidth to upload this volume of data efficiently.
-    %\wajih{Could you give specific numbers about network overhead and disk overhead that would be great.} \wajih{Again cite existing PIDS with names that would suffer from this issue.}
+\textbf{C2: Excessive Network Overhead:} In the context of MSSPs and centralized PIDS, the requirement to transmit \logs over the network for threat detection can result in substantial network overhead. Modern systems often generate logs amounting to gigabytes per day, imposing significant network costs on both users and organizations~\cite{inam2023sok,hossain+depend}. Our analysis of systems, such as \flash and \kairos, using the \optc dataset as detailed in Section~\ref{cost_metric}, highlights this issue. For an organization of a similar scale to that represented in the \optc dataset, with an equivalent number of hosts, the daily volume of logs transmitted could easily reach 1000 GB. This immense volume of data not only incurs considerable network expenses daily but also presents a significant challenge for users with limited network bandwidth, who may struggle to upload such large amounts of data efficiently. \wajih{is it possible to say something about DistDet here? I am worried that the reviewers are just going to say that you are building an extension of DisDet}
 
 \smallskip
 \noindent
 \textbf{C3: Limited Scalability:} The centralized approach employed by current PIDS poses scalability challenges as the number of hosts within an organization grows. Such centralization serves as a bottleneck, leading to log congestion and thereby impeding efficient intrusion detection at scale. Additionally, for large organizations, the centralized accumulation of logs can lead to significant disk storage overhead. To accommodate an increasing number of hosts, organizations must continually allocate more resources. Consequently, the existing approach to threat detection lacks inherent scalability. Our evaluations of \flash and \kairos demonstrate that these systems would face log congestion in organizations of a size comparable to that represented by the \optc dataset. As detailed in Section~\ref{sec:eval}, \flash would require 27.7 hours, and \kairos 56.6 hours, to process a single day's worth of logs from the \optc dataset.
+
     
     %\wajih{Again you need to add more details here about scalability issues. Having specific numbers for existing PIDS is important. Also cite those existing PIDS }
 
 
 %\wajih{I added C1, C2, C3 with each challenge above. You need to refer to each of the challenge below and tell how you solve that challenge. Something like: "To address C1, we do blah blah"}
 
-
-To address these challenges, we introduce \Sys, that combines provenance graph representation learning with federated learning (FL). In \Sys, client logs remain local, preserving user privacy (C1). Each client independently trains \gnnshort models, which are subsequently aggregated with models from other clients on a central server, capturing activity patterns across organizations.
-
-In \Sys, network overhead is minimal, as logs are not transmitted to the cloud. The only network costs arise from transmitting model updates to the server. These updates, merely a few kilobytes per client, do not significantly burden the client or the organization's network (C2). The primary computation for \Sys, both during training and inference, occurs locally on client machines. Clients utilize their local compute resources to train models on provenance graphs constructed from their logs. For threat detection post-training, clients run \Sys locally to generate alerts. This design allows our system to scale naturally with the addition of more hosts, as each client leverages its own computing power and disk storage, addressing challenge (C3).
-
-% To tackle these challenges, we introduce \Sys, a novel PIDS that merges provenance graph representation learning with FL. This hybrid approach facilitates efficient and precise detection of Advanced Persistent Threat (APT) attacks in a decentralized fashion. The client local logs data do not need to be transmitted over the network and stored at a centralized storage (C2). In \Sys, each client uses its local compute power to run the \Sys anomaly detection module. Thus, our system is naturally scalable (C3) with the number of host machines added to the network.
-
-%\wajih{I will describe FL and associated challenges after introducing your methodology because it is your idea. Just like we discussed in our last lab meeting.}
-
-%\wajih{The transition of this paragraph is not great. You already talked about solving changes above and then you again talk about solving challenges below. }
-
-The application of FL to develop a privacy-preserving PIDS presents several challenges. In a federated setting, separate models are trained on each client and then aggregated to form a unified model. These clients often have divergent data distributions due to running different application sets. Merging these models with heterogeneous distributions into a single global model through a mean aggregation operation leads to the conflation of distinct patterns, resulting in suboptimal performance. Additionally, variations in the amount of \logs across clients cause data imbalances within the organization. In such cases, contributions from clients with less data are often overshadowed by those with more data.
+To address these challenges, we introduce \Sys, a novel privacy-preserving PIDS that integrates provenance graph representation learning with Federated Learning (FL). In \Sys, client logs remain local, which significantly enhances user privacy by ensuring sensitive data does not leave the client's environment (C1). Each client independently trains \gnnshort models, and these models are aggregated on a central server with those from other clients, capturing diverse activity patterns across organizations without transmitting actual logs, thus minimizing network overhead. Instead, the only data transmitted are model updates, which are mere kilobytes per client, significantly reducing the network burden (C2). All major computations, including the training and operational phases of \Sys, take place locally on client machines, using their computing resources to process provenance graphs derived from their logs for real-time threat detection. This approach allows \Sys to scale effectively with the addition of more hosts, each utilizing its own computing power and storage, addressing scalability and efficiency comprehensively (C3).
 
 
 \begin{table}[t!]
-    \centering
-    \scriptsize
-      %\caption{Limitations of existing PIDS. \wajih{Add in caption that which PIDS are not specified in the table and why.}}
-      \caption{Existing PIDS limitations: \flash and \kairos outperform other existing PIDS systems ~\cite{wang2022threatrace,han2020unicorn,streamspot,yangprographer,shadewatcher,provdetector2020}. Therefore, we have excluded these PIDSes from the table.}
-      \setlength{\tabcolsep}{10pt}
-        \begin{tabular}{ | c | c | c | c |}
+  \centering
+  \scriptsize
+    %\caption{Limitations of existing PIDS. \wajih{Add in caption that which PIDS are not specified in the table and why.}}
+    \caption{Existing PIDS limitations: \flash and \kairos outperform other existing PIDS systems ~\cite{wang2022threatrace,han2020unicorn,streamspot,yangprographer,shadewatcher,provdetector2020}. Therefore, we have excluded these PIDSes from the table. }
+    \setlength{\tabcolsep}{10pt}
+      \begin{tabular}{ | c | c | c | c |}
 
-          \hline
-               & \bf Data & \bf Network  & \bf Scalability \\
-               & \bf  Privacy & \bf  Overhead &  \\
-          \hline
-          \hline
-          \disdet~\cite{dong2023distdet} & NO                       & LOW      & HIGH       \\
-          \hline
-          \flash~\cite{flash2024}     & NO            & HIGH             & MEDIUM      \\
-          \hline
-          \kairos~\cite{cheng2023kairos}     & NO            & HIGH             & LOW         \\
-          \hline
-          {\bf\Sys}  & YES                & LOW               & HIGH        \\
-          \hline
-        \end{tabular}
-        \label{tab:limitations}
-    \end{table}
+        \hline
+             & \bf Data & \bf Network  & \bf Scalability \\
+             & \bf  Privacy & \bf  Overhead &  \\
+        \hline
+        \hline
+        \disdet~\cite{dong2023distdet} & NO                       & LOW      & HIGH       \\
+        \hline
+        \flash~\cite{flash2024}     & NO            & HIGH             & MEDIUM      \\
+        \hline
+        \kairos~\cite{cheng2023kairos}     & NO            & HIGH             & LOW         \\
+        \hline
+        {\bf\Sys}  & YES                & LOW               & HIGH        \\
+        \hline
+      \end{tabular}
+      \label{tab:limitations}
+  \end{table}
 
-To address heterogeneity and data imbalance, we have developed a novel \gnnshort ensemble learning framework where each submodel specializes in learning system activities of specific process entities standardized across all clients. This standardization of process entities across all clients is achieved through a sophisticated categorization scheme using our dual-server architecture. Here, system processes across all clients are standardized into \textit{K} bins in a privacy-preserving fashion. Each client then organizes its process nodes according to these bins, constructs a provenance subgraph for each bin, and trains a \gnnshort model. Subsequently, the \textit{K} model pairs from all clients are aggregated to form a global ensemble model set. This approach ensures that models with similar distributions are merged, preserving unique activity patterns across all clients.
 
-%\wajih{Add the notion of novel techniques that we introduce: Word2Vec Harmonization and Process Categorization. I am not sure where you can describe that by I would like to see two three sentences for each of the concepts in the introduction section.}
+\subsection{Our Approach and Main Contributions}
 
-Recent works such as \flash have demonstrated the effectiveness of using semantic attributes from \logs to generate context-rich feature vectors for model training. In a federated setting, when each client trains their own semantic encoder, such as \wordvec, to produce semantic input features, the global \gnnshort models tend to underperform. This issue arises because different models encode varying information for the same tokens, necessitating aggregation to achieve unified vector representations. However, encoders like \wordvec may contain sensitive data, including process names, IP addresses, and file names. To maintain privacy, these models cannot be sent to a central server. To solve this challenge, we employ a \wordvec harmonization scheme using a two-server architecture where the central server issues encryption keys for the clients to encode \wordvec tokens, and a utility server processes the encrypted tokens to merge them in a privacy preserving manner.
+The implementation of FL for a privacy-preserving PIDS introduces multiple challenges. Firstly, model aggregation in a federated setting becomes complex due to heterogeneous data distributions from clients running different applications, leading to suboptimal unified model performance. Additionally, data imbalances across clients, where smaller data contributors have less impact on the federated model, skew the learning outcomes. Another significant hurdle is the inconsistent semantic information produced by independently trained \wordvec models on different client machines. This inconsistency across semantic encoders complicates the effectiveness of the global models, resulting in inaccurate system behavior representations due to varied feature vector qualities.
+
+
+
+To effectively address the challenges of heterogeneity and data imbalance, we have designed an innovative \gnnshort ensemble learning framework \wajih{Is this word GNN ensemble learning framework word consistent with the rest of the paper? If no, replace it}. In this framework, each submodel is finely tuned to specialize in learning system activities associated with specific process entities, which are standardized across all clients. This standardization is facilitated by a sophisticated categorization scheme enabled by our dual-server architecture. Through this system, process entities from all clients are organized into \textit{K} privacy-preserving bins. Each client then aligns its process nodes with these bins, constructs a provenance subgraph for each bin, and trains a \gnnshort model on these graphs. The models from all clients are then aggregated into \textit{K} model pairs, forming a comprehensive global ensemble model set. This strategic approach ensures that models with similar data distributions are merged effectively, thereby maintaining the integrity of unique activity patterns across diverse client environments.
+
+To address semantic inconsistencies in \wordvec models, we implement a \wordvec harmonization scheme utilizing a dual-server architecture. In this setup, a central server issues encryption keys to clients, allowing them to securely encode \wordvec tokens. Subsequently, a utility server processes these encrypted tokens to achieve a unified, privacy-preserving vector representation. This method ensures that sensitive data remains protected while facilitating accurate and consistent semantic encoding across different clients.
+
 
 %\wajih{Add one paragraph how you solve that above mentioned challenge. This will highlight the novelty of your system.}
 
@@ -103,7 +102,7 @@ We have conducted extensive evaluations of our system's effectiveness using open
 
 %\wajih{Add list of main contributions}
 The main contributions of our work are as follows:
-
+\wajih{Update the following items as we discussed in our meeting.}
 \begin{itemize}[topsep=.1ex,itemsep=-.1ex,leftmargin=*]
     \item We are the first to introduce a Federated Graph Learning-based PIDS, \Sys, which is privacy-preserving, highly scalable, and offers impressive detection performance.
     \item We have introduced a novel multi-server architecture and an encryption scheme to prevent the central server from leaking user privacy.
