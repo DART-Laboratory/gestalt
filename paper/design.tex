@@ -1,6 +1,6 @@
 \section{\Sys Design}
 \label{sec:methodology}
-
+\wajih{Let's use the word process entity categorization instead of system entity categorization in the whole paper. Do CTRL F on the whole paper. making "process" as macro can help in the future. }
 % \wajih{Use macros for common words in this whole section.}
 
 % \wajih{Be consistent with the terminology that you used in the abstract/intro.}
@@ -48,7 +48,10 @@ The \textit{Semantic Vectors Harmonization}~\ref{semanticharmonization} module a
 \subsection{Problem Formulation}
 
 %\wajih{Look at Nature's paper page 7 to have a similar problem formulation here as well.}
-Let \( C = \{u_1, u_2, \ldots, u_P\} \) denote the set of client machines, where each machine \( u_i \), for \( i = 1, 2, \ldots, P \), locally maintains its \logs to preserve privacy, ensuring that raw data does not leave the device. Our objective is to detect anomalous nodes within the provenance graphs, \( \{G_{u_1}, G_{u_2}, \ldots, G_{u_P}\} \), generated from these logs. To this end, we propose training a set of unified Graph Neural Network models to model the benign behavior exhibited across all client logs without centralizing the log data. Additionally, we aim to develop a global semantic encoder, \( \mathcal{E}_{\text{semantic}} \), capable of converting contextual attributes into vector space, thereby generating feature vectors for training our GNN models.
+
+\wajih{The mathematical notations in this paragraph does not match with the Arch diagram. For example, in the figure you have Client i, Client j while you have u1 and u2 here. Make sure other notations also match the figures.}
+
+Let \( C = \{u_1, u_2, \ldots, u_P\} \) denote the set of client machines, where each machine \( u_i \), for \( i = 1, 2, \ldots, P \), locally maintains its \logs to preserve privacy, ensuring that raw logs do not leave the machine. Our objective is to detect anomalous nodes within the provenance graphs, \( \{G_{u_1}, G_{u_2}, \ldots, G_{u_P}\} \), generated from these logs. To this end, we propose training a set of unified \gnnshort models to model the benign behavior exhibited across all client logs without centralizing the log data. Additionally, we aim to develop a global semantic encoder, \( \mathcal{E}_{\text{semantic}} \), capable of converting contextual attributes into vector space, thereby generating feature vectors for training our GNN models. \wajih{You need to talk about threat detection and alert generation.}
 
 %\wajih{Give two or three sentences about the overall workflow. Think about what are the inputs, how the inputs are processed, and what are the outputs.} \wajih{Annotate "Audit Logs" in the Figure. Also use the word "Word2Vec" instead of Word2vec.}
 
@@ -65,25 +68,28 @@ Let \( C = \{u_1, u_2, \ldots, u_P\} \) denote the set of client machines, where
 \subsection{Provenance Graph Constructor} 
 \label{provconstruct}
 %\wajih{why are you using Sys instead of \\Sys in the following paragraph? }
-\Sys utilizes \logs to construct a system provenance graph. It operates on each client machine, using their local system logs to build the graph. Major operating systems, including Linux and Windows, come equipped with built-in mechanisms for log collection -- specifically, the Linux Audit system~\cite{linuxaudit} and Windows Event Tracing~\cite{windowsaudit}. These logs provide detailed insights into the interactions among various system entities, capturing activities such as process executions, file operations, and network connections. Using this data, \Sys forms a graph where nodes represent system entities including processes, files, and sockets. The edges of this graph denote events, identified by syscalls, that occur between these entities. Moreover, \Sys enhances each node with comprehensive attributes, including process names, command lines, file names, and network IP addresses. As demonstrated by prior works~\cite{flash2024,cheng2023kairos}, these contextual attributes enable the model to develop a robust understanding of system behavior.
+
+\Sys utilizes \logs to construct a system provenance graph. It operates on each client machine, using their local system logs to build the graph. Major operating systems, including Linux and Windows, come equipped with built-in mechanisms for log collection -- specifically, the Linux Audit system~\cite{linuxaudit} and Windows Event Tracing~\cite{windowsaudit}. These logs provide detailed insights into the interactions among various system entities, capturing activities, such as process executions, file operations, and network connections. Using this data, \Sys forms a graph where nodes represent system entities including processes, files, and sockets. The edges of this graph denote events, identified by syscalls, that occur between these entities. Moreover, \Sys enhances each node with comprehensive attributes, including process names, command lines, file names, and network IP addresses. As demonstrated by prior works~\cite{flash2024,cheng2023kairos}, these contextual attributes enable the model to develop a robust understanding of system behavior.
 
 \subsection{Semantic Featurization}
 \label{semanfeat}
 
-This module processes the provenance graph generated from \logs by transforming node attributes into feature vectors for the graph learning phase. Existing systems like Flash~\cite{flash2024} have demonstrated the effectiveness of utilizing semantic attributes of nodes to enhance detection performance. Building on this approach, we employ a Word2Vec language model to encode these attributes into a vector format, \(\mathbf{v}\), where each attribute \(a\) is transformed into a vector \(v_a\). Each client independently trains a Word2Vec model using their local system logs.
+This module processes the provenance graph generated from \logs by transforming node attributes into feature vectors for the graph learning phase. Existing systems, such as Flash~\cite{flash2024} have demonstrated the effectiveness of utilizing semantic attributes of nodes to enhance detection performance. Building on this approach, we employ a \wordvec language model to encode these attributes into a vector format, \(\mathbf{v}\), where each attribute \(a\) is transformed into a vector \(v_a\). Each client independently trains a \wordvec model using their local \logs.
 
-Before these models can be utilized to encode text attributes effectively, it is essential to contextually merge them across client machines to form a unified model, thereby reducing heterogeneity. This unification is crucial; without it, each client would produce a different encoding, \(v_a^i\), for identical inputs, where \(i\) denotes the client. The variability in feature vectors, \(\{v_a^1, v_a^2, \ldots, v_a^N\}\), for the same attribute \(a\) across \(N\) clients, would compromise the consistency of client-based \gnnshort models. To ensure uniformity, the feature vectors for overlapping attributes must be averaged across clients, resulting in a single unified vector for each attribute:
+Before these models can be utilized to encode text attributes effectively, it is essential to contextually merge them across client machines to form a unified model, reducing heterogeneity. This unification is crucial; without it, each client would produce a different encoding, \(v_a^i\), for identical inputs, where \(i\) denotes the client. The variability in feature vectors, \(\{v_a^1, v_a^2, \ldots, v_a^N\}\), for the same attribute \(a\) across \(N\) clients, would compromise the consistency of client-based \gnnshort models. To ensure uniformity, the feature vectors for overlapping attributes must be averaged across clients, resulting in a single unified vector for each attribute:
 
 \[
 \bar{v}_a = \frac{1}{N} \sum_{i=1}^{N} v_a^i
 \]
 
-Such averaging ensures consistency in the feature representation, enhancing the effectiveness of the downstream federated averaging technique by maintaining uniformity in the input space for the GNN models across all clients.
+Such averaging ensures consistency in the feature representation, enhancing the effectiveness of the downstream federated averaging technique by maintaining uniformity in the input space for the \gnnshort models across all clients.
 
 \subsection{Semantic Vectors Harmonization}
 \label{semanticharmonization}
 
-This module integrates individual client word2vec models into a unified model for use across all clients. The word2vec model functions as a key-value store, with vocabulary tokens as keys, \(k\), and their corresponding vector representations as values, \(v_k\). To combine these models, we calculate the average vector of overlapping tokens from all client machines, creating a central model. The mathematical representation for averaging vectors of a token \(k\) across \(N\) clients is given by:
+\wajih{In the arch figure, you have \wordvec i, \wordvec j, notations, but you don't have it in the text below. Also you have the notion of \wordvec global in the figure, but not here.}
+
+This module integrates individual client \wordvec models into a unified model for use across all clients. The \wordvec model functions as a key-value store, with vocabulary tokens as keys, \(k\), and their corresponding vector representations as values, \(v_k\). To combine these models, we calculate the average vector of overlapping tokens from all client machines, creating a central model. The mathematical representation for averaging vectors of a token \(k\) across \(N\) clients is given by:
 
 \[
 \bar{v}_k = \frac{1}{N} \sum_{i=1}^{N} v_{k,i}
@@ -103,7 +109,7 @@ and send them to the utility server. This server merges the encrypted models and
 D(v_{k}^{'}) = v_{k}
 \]
 
-This procedure ensures that neither the central server nor the utility server can access the actual token information, assuming no collusion between the two servers. The process is explained in detailed in algorithm~\ref{alg:secure_integration_averaging_word2vec}
+This procedure ensures that neither the central server nor the utility server can access the actual token information, assuming no collusion between the two servers. The process is explained in detail in Algorithm~\ref{alg:secure_integration_averaging_word2vec}.
 
 \begin{algorithm}[!t]
   \scriptsize
@@ -154,12 +160,19 @@ This procedure ensures that neither the central server nor the utility server ca
 
 \subsection{System Entity Categorization}
 \label{sys:catg}
-To address the challenges of data imbalance and heterogeneity among clients, we developed a framework that categorizes the processes across different clients. Utilizing a utility server, each client transmits a list of encrypted process names. The utility server aggregates these lists and randomly divides them into \(k\) categories, where \(k\) is a predefined hyperparameter. It then dispatches these categorized lists back to the clients, which organize their processes into \(k\) bins based on the assigned categories. Clients use the processes in each bin to generate provenance subgraphs, capturing the interaction of these processes with other system objects. These subgraphs serve as the training data for an ensemble of GNN models, which participate in federated averaging.
+To address the challenges of data imbalance and heterogeneity among clients, we developed a framework that categorizes the processes across different clients.
 
-This approach ensures balanced and uniform segmentation of data across clients, maintaining consistency in the training datasets for each GNN model before federated averaging. By dividing the overall task into sub-tasks (sub-models) and assigning them to different subsets of processes, the influence of clients with large datasets is diversified across multiple models. This prevents any single client from disproportionately influencing the outcome of the federated learning system. Each sub-model specializes in a different aspect of the data, potentially leading to more even contributions across the ensemble.
+\wajih{Need more motivation here. It is not clear why we need system entity categorization in the first place. Maybe adding your experiment results where we did not get good results without system entity categorization would convince the reader.}
+
+Utilizing a utility server, each client transmits a list of encrypted process names. The utility server aggregates these lists and randomly divides them into \(k\) categories, where \(k\) is a predefined hyperparameter. It then dispatches these categorized lists back to the clients, which organize their processes into \(k\) bins based on the assigned categories. Clients use the processes in each bin to generate provenance subgraphs, capturing the interaction of these processes with other system objects. These subgraphs serve as the training data for an ensemble of \gnnshort models, which participate in federated averaging.
+
+This approach ensures balanced and uniform segmentation of data across clients, maintaining consistency in the training datasets for each \gnnshort model before federated averaging. By dividing the overall task into sub-tasks (sub-models) and assigning them to different subsets of processes, the influence of clients with large datasets is diversified across multiple models. This prevents any single client from disproportionately influencing the outcome of the federated learning system. Each sub-model specializes in a different aspect of the data, potentially leading to more even contributions across the ensemble.
 
 \subsection{\fpgl}
 \label{sys:fpgl}
+
+\wajih{In the arch figure, you have GNN Global notation, but you don't have it in the text below.}
+
 The module performs graph representation learning in a federated manner. It includes a central server responsible for initializing the global \gnnshort models with random weights, which are then sent to all clients. These clients use their local process subgraphs and semantic feature vectors to train the \gnnshort models in an unsupervised way, following a training method similar to Flash. The \gnnshort model's objective is to classify each node entity into its corresponding type. The server then applies the federated averaging algorithm to merge the \gnnshort models into a set of global models. The models are then merged according to the system entity categories on which they were trained. This ensures that models with similar distributions are combined together to address the data heterogeneity problem. Specifically, for each submodel, the server aggregates parameters from \(N\) client models, to update the global model as follows:
 
 \begin{equation}
@@ -178,7 +191,9 @@ The federated averaging process is repeated for a set number of rounds \(R\), an
 \subsection{Anomaly Detection}
 \label{sys:anomaly_detection}
 
-\Sys employs a standard node level detection methodology similar to systems like Flash and \threatrace, focusing on identifying irregular nodes through the comparison of their expected and observed types. This approach is grounded in a detailed analysis of both the surrounding structures and inherent properties of the nodes, with the aim to define normal pattern baselines for various node types. Typically, entities with malicious intentions display neighborhood structures and characteristics deviating from these established norms. In operational phases, the detection of anomalies that diverge from the pre-established node distribution patterns often results in their misclassification. The emergence of nodes misclassified in the system's output is indicative of potential security issues.
+\wajih{In the problem formation subsection, you used  \( \{G_{u_1}, G_{u_2}, \ldots, G_{u_P}\} \), but you never used it here. Make sure your notations are consistent with the problem formulation. }
+
+\Sys employs a standard a node level detection methodology focusing on identifying irregular nodes through the comparison of their expected and observed types. This approach is grounded in a detailed analysis of both the surrounding structures and inherent properties of the nodes, to define normal pattern baselines for various node types. Typically, entities with malicious intentions display neighborhood structures and characteristics deviating from these established norms. In operational phases, the detection of anomalies that diverge from the pre-established node distribution patterns often results in their misclassification. The emergence of nodes misclassified in the system's output is indicative of potential security issues.
 
 For a given provenance graph \(G = (V, E)\) during evaluation, where \(V\) and \(E\) represent the sets of nodes and edges respectively, \Sys uses the global \(\{M_1, M_2, \ldots, M_n\}\) \gnnshort models trained using federated learning. Each submodel \(M_i\) performs inference on \(G\), utilizing the nodes' features \(X_v\) and the graph's adjacency matrix \(A\) to predict each node \(v\)'s label \(y_v^i\). A node \(v\) is identified as an anomaly if it is misclassified by all submodels, indicating that none of the submodels recognize the neighborhood structure or features displayed by this node. 
 
