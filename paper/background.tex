@@ -1,4 +1,4 @@
-\section{Background \& Motivation}
+\section{Overview}
 \label{sec:motivation}
 % Contemporary host PIDS, exemplified by \unicorn~\cite{han2020unicorn}, \streamspot~\cite{streamspot}, \threatrace~\cite{wang2022threatrace} and \prographer~\cite{yangprographer}, heavily rely on system audit log data to identify malicious entities within a system. Employing advanced deep learning techniques such as \gnn (\gnnshort), these systems strive to enhance the accuracy of threat detection. However, the efficacy of these techniques is contingent upon vast amounts of data to train the underlying models, often reaching terabytes in size. Acquiring such extensive training data from a single user machine is impractical.
 
@@ -12,7 +12,7 @@
 
 %\wajih{make a macro for Provenance-based IDS which is PIDS and use PIDS everywhere where you say intrusion detection. It saves space and also narrows the scope of our paper to PIDS. Use macros for words like word2vec, etc. because of letter capitalization. Also convert the words like Graph Neural Network into GNN to save space.}
 
-\subsection{System logs \& Provenance Graphs}
+\subsection{Background: Data Provenance Graphs}
 %\wajih{citations are missing in this subsection.}
 %\wajih{Add one or two paragraphs explaining provenance graphs. Give information about what is present in audit logs. Provide information about how to convert audit logs into provenance graphs. }
 
@@ -27,20 +27,15 @@
 
 %\wajih{Please put a concise provenance graph figure here.}
 
-\Logs play a crucial role in recording the activities within a system, detailing interactions among various system entities such as processes, files, and sockets. Various operating systems come equipped with built-in mechanisms to gather these logs, including Event Tracing for Windows (ETW)~\cite{windowsaudit}, the Linux Audit system~\cite{linuxaudit}, and DTrace~\cite{dtrace} for FreeBSD. Each entry in a \logs  characterizes a system event, identifying a subject and an object entity within the system. Moreover, these records include additional contextual attributes, including process names, file names, and socket IP addresses.
+\Logs play a crucial role in recording the activities within a system, detailing interactions among various system entities such as processes, files, and sockets. Various operating systems come equipped with built-in mechanisms to gather these logs, including Event Tracing for Windows (ETW)~\cite{windowsaudit}, the Linux Audit system~\cite{linuxaudit}, and DTrace~\cite{dtrace} for FreeBSD. Each entry in a \logs characterizes a system event, identifying a subject and an object entity within the system. Moreover, these records include additional contextual attributes, including process names, file names, and socket IP addresses.
 
 Data provenance employs the concept of modeling the causal links among different system entities. Fundamentally, it utilizes system logs to construct a dependency graph that captures the relationships between events. Within this graph, nodes symbolize system entities such as processes, files, and sockets, while the edges represent various system syscalls. This provenance graph is instrumental in analyzing the activities of different system entities and plays a vital role in identifying anomalous or malicious entities. Figure~\ref{provexp} shows an example of a provenance graph where \textit{Explorer.exe} is executing other processes such as \textit{Notepad.exe} and \textit{Firefox.exe}. These processes then interact with other file and socket nodes.
 
 %\wajih{Since we do not have any provenance graph in the paper, we need to provide a short example of a provenance graph.}
 
 
-\subsection{Provenance-based IDS (PIDS)}
-%\wajih{Add one or two paragraphs explaining PIDS Give information about what is present in audit logs.}
-
-%\wajih{Througout the paper you are using either FLASH or Flash. Could you please make a macro and use that macro to be consistent? This applies to other system names as well.}
-
-%\wajih{citations are missing.}
-Provenance-based Intrusion Detection Systems can be broadly classified into two main types: rule-based and learning-based approaches. The rule-based approaches~\cite{holmes2019,rapsheet2020,poirot2019} leverage knowledge of known attack behaviors to identify attack activities in the provenance graph. However, developing these rules demands significant effort from analysts, and attacks with unseen patterns could go undetected. Conversely, learning-based approaches~\cite{wang2022threatrace,flash2024,cheng2023kairos,yangprographer,shadewatcher} focus on detecting zero-day attacks without requiring prior knowledge of past attacks or specific rules. These anomaly-based methods establish a baseline of benign system activities and identify any significant deviations from this baseline behavior as anomalies.
+% \subsection{Provenance-based IDS (PIDS)}
+% Provenance-based Intrusion Detection Systems can be broadly classified into two main types: rule-based and learning-based approaches. The rule-based approaches~\cite{holmes2019,rapsheet2020,poirot2019} leverage knowledge of known attack behaviors to identify attack activities in the provenance graph. However, developing these rules demands significant effort from analysts, and attacks with unseen patterns could go undetected. Conversely, learning-based approaches~\cite{wang2022threatrace,flash2024,cheng2023kairos,yangprographer,shadewatcher} focus on detecting zero-day attacks without requiring prior knowledge of past attacks or specific rules. These anomaly-based methods establish a baseline of benign system activities and identify any significant deviations from this baseline behavior as anomalies.
 
 % \subsection{Limitations of Existing PIDS}
 % Here we examine existing PIDS and underscore their design flaws, particularly regarding the preservation of user log privacy and scalability. \flash~\cite{flash2024}, a node-level anomaly detection system, utilizes Graph Neural Networks to learn standard system behavior from provenance graphs. This system adopts an advanced featurization method, using a temporal ordering-aware \wordvec model to capture both structural and semantic characteristics in \logs. Moreover, \flash enhances inference speed via a \gnnshort embedding store. In contrast, \threatrace~\cite{wang2022threatrace}, another node-level detection system, also employs Graph Neural Networks for anomaly detection. However, it stands apart from \flash due to its scalability issues and reliance on basic features, which limits its effectiveness in fully leveraging the information contained in provenance graphs. \kairos~\cite{cheng2023kairos}, an anomaly-based detector, segments logs into time window queues and uses temporal graph neural networks for anomaly detection. Despite the progress made by existing PIDS, they fail to provide any privacy safeguards for sensitive information that may be contained in the \logs they utilize. This deficiency can impede the deployment of these systems in real world settings.
@@ -81,7 +76,7 @@ Provenance-based Intrusion Detection Systems can be broadly classified into two 
 %         \label{limitations}
 %     \end{table}
 
-\subsection{Federated Learning}
+\subsection{Background: Federated Learning}
 
 Federated learning (FL)~\cite{mcmahan2017communication} is a machine learning approach that enables a model to be trained across multiple decentralized devices or servers holding local data samples, without exchanging them. This method addresses privacy concerns, bandwidth limitations, and data security issues inherent in centralized machine learning approaches used in existing PIDS~\cite{flash2024,cheng2023kairos,wang2022threatrace}. The mathematical formulation of FL involves aggregating locally computed updates to a global model, rather than directly sharing raw data.
 
@@ -90,11 +85,9 @@ In a federated learning setup, consider a global model parameterized by \(\theta
 The central server aggregates these updates from all participating devices to update the global model. The aggregation is an average function: \(\Delta \theta_{global} = \frac{1}{N} \sum_{i=1}^{N} \Delta \theta_i\), where \(N\) is the number of devices. This aggregated update is then used to update the global model parameters: \(\theta_{new} = \theta + \Delta \theta_{global}\). This process iterates, with the updated global model being sent back to the devices for further local updates, until convergence. This iterative process ensures that the global model learns from all devices while keeping the data localized, thus addressing privacy and bandwidth concerns.
 
 
-\subsection{Why is it challenging to apply FL to IDS?}
+\subsection{Why is it challenging to apply FL to \pids?}
 
-Applying FL to PIDS can be challenging due to the heterogeneity of data across devices, which can lead to skewed model updates and performance variances. This is often referred to as non-IID~\cite{zhao2018federated} data, where the local data on each device may not represent the overall distribution of data across the organization.
-
-Additionally, applying FL to existing systems will produce suboptimal results. This is primarily because these systems were not originally designed to function under a federated learning framework. These challenges are discussed below:
+Applying FL to PIDS can be challenging due to the heterogeneity of data across devices, which can lead to skewed model updates and performance variances. This is often referred to as non-IID~\cite{zhao2018federated} data, where the local data on each device may not represent the overall distribution of data across the organization. Additionally, applying FL to existing PIDS will produce suboptimal results. This is primarily because these systems were not originally designed to function under a federated learning framework. These challenges are discussed below:
 
 \PP{Data imbalance \& heterogeneity among clients} In federated learning scenarios, data distribution and volume can significantly vary across participating devices or clients. This variability can lead to scenarios where some clients have extensive data representing a wide array of benign patterns, while others possess limited or skewed data sets. Such imbalances challenge the training of a global model that performs uniformly well across all clients, potentially causing the model to become biased towards clients with more comprehensive data collections. This bias may lead to the neglect of unique patterns found in less-represented clients. Existing PIDS lack built-in mechanisms to address this challenge effectively.
 

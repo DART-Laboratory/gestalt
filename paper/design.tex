@@ -37,40 +37,9 @@
 %   \label{alg:federated_learning}
 % \end{algorithm}
 
-\begin{algorithm}[!t]
-  \scriptsize
-  \DontPrintSemicolon
-  \SetKwInOut{Input}{Inputs}
-  \SetKwInOut{Output}{Output}
-  \Input{Set of client models $\{\{M_{1,1}, M_{1,2}, \ldots, M_{1,n}\},$\\ 
-  $\{M_{2,1}, M_{2,2}, \ldots, M_{2,n}\}, \ldots,$\\
-  $\{M_{N,1}, M_{N,2}, \ldots, M_{N,n}\}\}$;}
-  \Output{Set of global GNN models $\{G_1, G_2, \ldots, G_n\}$.}
-  \BlankLine
-  \tcc{Initialize global GNN models with random weights.}
-  $\{G_1, G_2, \ldots, G_n\} \leftarrow \text{InitializeRandomWeightsForEachModel}(n)$\\
-  \BlankLine
-  \tcc{Distribute each $G_k$ to corresponding models of all clients.}
-  \For{$k \leftarrow 1$ \KwTo $n$}{
-    \ForEach{client model set $\{M_{i,1}, M_{i,2}, \ldots, M_{i,n}\}$}{
-      Send $G_k$ to $M_{i,k}$\\
-      $G_{i,k} \leftarrow \text{TrainOnLocalData}(M_{i,k})$\\
-    }
-  }
-  \BlankLine
-  \For{$k \leftarrow 1$ \KwTo $n$}{
-    $AggregatedWeights_k \leftarrow list([])$\\
-    \ForEach{client model $G_{i,k}$}{
-      $AggregatedWeights_k.append(\text{ExtractWeights}(G_{i,k}))$\\
-    }
-    $G_k \leftarrow \text{FederatedAveraging}(AggregatedWeights_k)$\\
-  }
-  \BlankLine
-  \Return $\{G_1, G_2, \ldots, G_n\}$\\
-  \BlankLine
-  \caption{Federated graph representation learning.}
-  \label{alg:federated_learning}
-\end{algorithm}
+
+
+\wajih{Move these two paragraphs to 2.4 Overview subsection. You need to combine information and remove redundant information after moving.}
 
 In this section, we detail the architecture of \Sys, which is composed of six key modules. The architecture begins with the \textit{Provenance Graph Constructor} module~\ref{provconstruct} on each client machine, transforming \logs into a provenance graph. Following this, the \textit{Semantic Featurization}~\ref{semanfeat} module encodes semantic attributes from the \logs into feature vectors, facilitating the training of client-specific \gnnshort models.
 
