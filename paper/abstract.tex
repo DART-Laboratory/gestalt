@@ -1,16 +1,18 @@
 \begin{abstract}
 
-    Enterprises increasingly depend on the Intrusion Detection System (\ids) for protection against malicious threats. These \ids use \logs for threat detection. However, the common practice of centralized management of logs, containing sensitive data like IP addresses and file activities, raises privacy concerns, especially with the involvement of Managed Security Service Providers (MSSPs). These third-party entities provide vital security management services, such as intrusion detection, to enterprises. Storing and analyzing these sensitive \logs in the cloud, as part of MSSP services, inadvertently heightens the risk of privacy leakage.
+    Enterprises increasingly rely on Intrusion Detection Systems (\ids) to guard against malicious threats, utilizing \logs for detecting such activities. However, the common practice of centrally managing these logs, which include sensitive data such as IP addresses and file activities, raises privacy concerns, particularly when Managed Security Service Providers (MSSPs) are involved. These third parties, which offer essential services like intrusion detection, may inadvertently breach user privacy when storing and analyzing these sensitive logs in the cloud.
 
-    Addressing these issues, our system \Sys combines Federated Learning (FL) and Provenance Graph Representation Learning to create a scalable, decentralized, and privacy-focused \ids.
-    
-    \wajih{Remove this sentence with all the challenges in one sentence, describe one challenge at a time and describe your novel solution. For example, To tackle the issue of blah blah, we propose blah blah. To address blah blah, we leverage blah blah} However, designing such a system presents challenges, including generalizing the model across diverse data distributions, ensuring fair learning amid imbalanced client datasets, and generating consistent semantic feature encodings in a distributed setting for model convergence.
-    
-    \wajih{Make sure to use the like we designed a novel Semantic word harmonization and we built sophisticated process entity categorization. Don't need to capitalize Graph Neural Network unless you put (GNN) against it.}
+    Addressing these challenges, our system \Sys integrates Federated Learning (FL) with Graph Representation Learning, allowing clients to train models locally on their \logs without sharing data with a central entity. This approach ensures a scalable, decentralized, and privacy-centric \ids.
 
-    In our system, logs from user machines remain local, enhancing privacy. We employ a multi-server architecture for secure aggregation of semantic attributes. One server generates encryption keys for client-level log attributes, while another performs computations on the encrypted data. To tackle the challenges of non-IID data distributions and imbalanced clients, we use a sophisticated ensemble framework of Graph Neural Networks, with each submodel specializing in unique system activity patterns.
     
-    Extensive evaluations on DARPA E3, E5, and OpTC datasets show that our system achieves state-of-the-art detection accuracy, comparable to Provenance-based \ids (PIDS), while being privacy-preserving. Moreover, our system is highly scalable and resilient against adversarial attacks.
+    %\wajih{Remove this sentence with all the challenges in one sentence, describe one challenge at a time and describe your novel solution. For example, To tackle the issue of blah blah, we propose blah blah. To address blah blah, we leverage blah blah}
+    However, the application of FL presents several challenges. In a FL setting, data distribution and volume can significantly vary among participating clients, complicating the generalization of the global model across diverse heterogeneous patterns. To address this, we introduce a novel ensemble learning approach and a process entity categorization scheme, where each submodel specializes in distinct system activity patterns across clients, thus preventing conflation during model aggregation.
+
+    The use of semantically rich feature vectors is crucial for achieving high detection performance. However, semantic encoders such as \wordvec contain sensitive log attributes, complicating private aggregation on a central server in a FL scenario. To address this, we developed a sophisticated \wordvec harmonization framework using a multi-server architecture for secure private aggregation of semantic attributes. One server generates encryption keys for client-level log attributes, while another performs computations on the encrypted data without revealing the sensitive tokens.
+
+    %\wajih{Make sure to use the like we designed a novel Semantic word harmonization and we built sophisticated process entity categorization. Don't need to capitalize Graph Neural Network unless you put (GNN) against it.}
+    
+    Extensive evaluations on DARPA E3, E5, and OpTC datasets show that our system achieves state-of-the-art detection accuracy, while being highly scalable, efficient and privacy-preserving.
 \end{abstract}
 
 % Data provenance transforms \logs logs into detailed provenance graphs, offering a better understanding of host activities. When combined with Graph Neural Networks (GNNs) and FL, it becomes a powerful technique for differentiating benign from malicious behaviors.
