@@ -18,9 +18,9 @@ In this section, we will describe our problem formulation and discuss each compo
 %   \tcc{Initialize global GNN model with random weights.}
 %   $G \leftarrow \text{InitializeRandomWeights}()$\\
 %   \tcc{Distribute $G$ to all clients.}
-%   \ForEach{client model $M_i$}{
-%     Send $G$ to $M_i$\\
-%     $G_i \leftarrow \text{TrainOnLocalData}(M_i)$
+%   \ForEach{client model $Word2vec_i$}{
+%     Send $G$ to $Word2vec_i$\\
+%     $G_i \leftarrow \text{TrainOnLocalData}(Word2vec_i)$
 %   }
 %   \BlankLine
 %   \tcc{Aggregate trained models from clients.}
@@ -111,24 +111,25 @@ This procedure ensures that neither the central server nor the utility server ca
   \DontPrintSemicolon
   \SetKwInOut{Input}{Inputs}
   \SetKwInOut{Output}{Output}
-  \Input{Client Word2Vec models $\{M_1, M_2, \ldots, M_N\}$ encrypted with key $E$; Encryption key $E$; Decryption key $D$.}
-  \Output{Encrypted unified Word2Vec model $U'$ sent to clients.}
+  \Input{Client Word2Vec models $\{Word2vec_1, Word2vec_2, \ldots, Word2vec_k\}$.}
+  \Output{Harmonized Word2Vec model $Word2vec_{Global}'$ sent to clients.}
   \BlankLine
-  \tcc{Distribute encryption and decryption keys to each client.}
+  \tcc{Central server distribute symmetric encryption keys to each client.}
   \ForEach{client $C_i$}{
-    Send $E$ and $D$ to $C_i$\\
+
+    Send $key$ to $C_i$\\
   }
   \tcc{Clients encrypt their model tokens.}
-  \ForEach{client model $M_i$}{
-    $M_i' \leftarrow$ EncryptModelTokens($M_i$, $E$) \tcc*{Encrypt tokens using $E$.}
-    Send $M_i'$ to Utility Server\\
+  \ForEach{client model $word2vec_i$}{
+    $Word2vec_i \leftarrow$ EncryptModelTokens($Word2vec_i$, $E$) \tcc*{Encrypt tokens using $E$.}
+    Send $Wor2vec_i$ to Utility Server\\
   }
   \tcc{Utility server merges encrypted models.}
   $TokenVectors \leftarrow$ InitializeEmptyDictionary()\\
   $TokenCounts \leftarrow$ InitializeEmptyDictionary()\\
-  \ForEach{encrypted model $M_i'$}{
-    \ForEach{token $t$ in $M_i'$}{
-      $Vector \leftarrow M_i'[t]$\\
+  \ForEach{encrypted model $Word2vec_i$}{
+    \ForEach{token $t$ in $Word2vec_i$}{
+      $Vector \leftarrow Word2vec_i[t]$\\
       \eIf{$TokenVectors$.HasKey($t$)}{
         $TokenVectors[t] \leftarrow TokenVectors[t] + Vector$\\
         $TokenCounts[t] \leftarrow TokenCounts[t] + 1$\\
@@ -142,14 +143,14 @@ This procedure ensures that neither the central server nor the utility server ca
   \ForEach{token $t$ in $TokenVectors$.Keys()}{
     $TokenVectors[t] \leftarrow TokenVectors[t] / TokenCounts[t]$\\
   }
-  $U' \leftarrow$ NewModel($TokenVectors$, $EncryptedTokens$) \tcc*{Constructing a new unified model.}
+  $Word2vec_{Global} \leftarrow$ NewModel($TokenVectors$, $EncryptedTokens$) \tcc*{Constructing a new harmonized model.}
   \ForEach{client $C_i$}{
-    Send $U'$ to $C_i$\\
+    Send $Word2vec_{Global}$ to $C_i$\\
   }
   \BlankLine
-  \Return{Harmonized model $U'$ has been dispatched to all clients.}\\
+  \Return{Harmonized model $Word2vec_{Global}$ has been dispatched to all clients.}\\
   \BlankLine
-  \caption{Secure integration and averaging of \wordvec models.}
+  \caption{Privacy preserving harmonization of \wordvec models.}
   \label{alg:secure_integration_averaging_word2vec}
 \end{algorithm}
 
