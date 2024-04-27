@@ -1,6 +1,6 @@
 \section{\Sys Design}
 \label{sec:methodology}
-\wajih{Let's use the word process entity categorization instead of system entity categorization in the whole paper. Do CTRL F on the whole paper. making "process" as macro can help in the future. }
+In this section, we will describe our problem formulation and discuss each component of \Sys architecture in detail.
 % \wajih{Use macros for common words in this whole section.}
 
 % \wajih{Be consistent with the terminology that you used in the abstract/intro.}
@@ -39,19 +39,16 @@
 
 
 
-\wajih{Move these two paragraphs to 2.4 Overview subsection. You need to combine information and remove redundant information after moving.}
-
-In this section, we detail the architecture of \Sys, which is composed of six key modules. The architecture begins with the \textit{Provenance Graph Constructor} module~\ref{provconstruct} on each client machine, transforming \logs into a provenance graph. Following this, the \textit{Semantic Featurization}~\ref{semanfeat} module encodes semantic attributes from the \logs into feature vectors, facilitating the training of client-specific \gnnshort models.
-
-The \textit{Semantic Vectors Harmonization}~\ref{semanticharmonization} module aims to privately consolidate individual client word2vec models into a cohesive global model, employing a trusted utility server and encryption techniques to ensure the privacy of model data. Next, the \textit{System Entity Categorization Module}~\ref{sys:catg} categorizes all system entities across clients into standardized categories, promoting uniformity in the training of \gnnshort models. The \textit{Federated Graph Learning Module}~\ref{sys:fpgl} proceeds to train \gnnshort models by these categories on each client machine, using the harmonized semantic features. After training, the models are sent to a central server for federated learning, where the federated averaging algorithm integrates the models based on the system entity categories they were trained on. Lastly, the \textit{Anomaly Detection Module}~\ref{sys:anomaly_detection} employs the unified global models for anomaly detection on each client machine. Figure \ref{fig:arch} presents the comprehensive architecture of \Sys, with further details in the subsequent subsections.
+% \wajih{Move these two paragraphs to 2.4 Overview subsection. You need to combine information and remove redundant information after moving.}
 
 \subsection{Problem Formulation}
 
 %\wajih{Look at Nature's paper page 7 to have a similar problem formulation here as well.}
 
-\wajih{The mathematical notations in this paragraph does not match with the Arch diagram. For example, in the figure you have Client i, Client j while you have u1 and u2 here. Make sure other notations also match the figures.}
+% \wajih{The mathematical notations in this paragraph does not match with the Arch diagram. For example, in the figure you have Client i, Client j while you have u1 and u2 here. Make sure other notations also match the figures.}
 
-Let \( C = \{u_1, u_2, \ldots, u_P\} \) denote the set of client machines, where each machine \( u_i \), for \( i = 1, 2, \ldots, P \), locally maintains its \logs to preserve privacy, ensuring that raw logs do not leave the machine. Our objective is to detect anomalous nodes within the provenance graphs, \( \{G_{u_1}, G_{u_2}, \ldots, G_{u_P}\} \), generated from these logs. To this end, we propose training a set of unified \gnnshort models to model the benign behavior exhibited across all client logs without centralizing the log data. Additionally, we aim to develop a global semantic encoder, \( \mathcal{E}_{\text{semantic}} \), capable of converting contextual attributes into vector space, thereby generating feature vectors for training our GNN models. \wajih{You need to talk about threat detection and alert generation.}
+Let \( C = \{client_1, client_2, \ldots, client_k\} \) denote the set of client machines, where each machine \( client_i \), for \( i = 1, 2, \ldots, k \), locally maintains its \logs to preserve privacy, ensuring that raw logs do not leave the machine. Our objective is to detect anomalous nodes within the provenance graphs, \( \{G_{u_1}, G_{u_2}, \ldots, G_{u_P}\} \), generated from these logs. To this end, we propose training a set of global \gnnshort models to model the benign behavior exhibited across all client logs without centralizing the log data. Additionally, we aim to develop a global semantic encoder, \( \mathcal{E}_{\text{semantic}} \), capable of converting contextual attributes into vector space, thereby generating feature vectors for training our GNN models. Using these global \gnnshort models, we aim to identify anomalous nodes in provenance graphs constructed from \logs during runtime. These anomalies could be potential threats as their system activity significantly differs from benign patterns.
+%\wajih{You need to talk about threat detection and alert generation.}
 
 %\wajih{Give two or three sentences about the overall workflow. Think about what are the inputs, how the inputs are processed, and what are the outputs.} \wajih{Annotate "Audit Logs" in the Figure. Also use the word "Word2Vec" instead of Word2vec.}
 
@@ -158,11 +155,11 @@ This procedure ensures that neither the central server nor the utility server ca
   \label{alg:secure_integration_averaging_word2vec}
 \end{algorithm}
 
-\subsection{System Entity Categorization}
+\subsection{Process entity categorization}
 \label{sys:catg}
 To address the challenges of data imbalance and heterogeneity among clients, we developed a framework that categorizes the processes across different clients.
 
-\wajih{Need more motivation here. It is not clear why we need system entity categorization in the first place. Maybe adding your experiment results where we did not get good results without system entity categorization would convince the reader.}
+\wajih{Need more motivation here. It is not clear why we need process entity categorization in the first place. Maybe adding your experiment results where we did not get good results without process entity categorization would convince the reader.}
 
 Utilizing a utility server, each client transmits a list of encrypted process names. The utility server aggregates these lists and randomly divides them into \(k\) categories, where \(k\) is a predefined hyperparameter. It then dispatches these categorized lists back to the clients, which organize their processes into \(k\) bins based on the assigned categories. Clients use the processes in each bin to generate provenance subgraphs, capturing the interaction of these processes with other system objects. These subgraphs serve as the training data for an ensemble of \gnnshort models, which participate in federated averaging.
 
