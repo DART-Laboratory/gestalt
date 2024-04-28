@@ -152,7 +152,6 @@ This procedure ensures that neither the central server nor the utility server ca
 \label{sys:catg}
 
 Our experimental results, presented in Table~\ref{categorized_gnn}, indicate that a single global \gnnshort model is not able to achieve good detection performance in a FL setting due to the diverse and heterogeneous distributions of clients data. To overcome this limitation, we developed a framework that categorizes process entities across different clients. Subsequently, each category is modeled by a dedicated submodel to better capture its unique distribution.
-% \wajih{Need more motivation here. It is not clear why we need process entity categorization in the first place. Maybe adding your experiment results where we did not get good results without process entity categorization would convince the reader.}
 
 Utilizing a utility server, each client transmits a list of encrypted process names. The utility server aggregates these lists and divides them into \(k\) categories, where \(k\) is a predefined hyperparameter. It then dispatches these categorized lists back to the clients, which organize their processes into \(k\) bins based on the assigned categories. Clients use the processes in each bin to generate provenance subgraphs, capturing the interaction of these processes with other system objects. These subgraphs serve as the training data for an ensemble of \gnnshort models, which participate in federated averaging.
 
