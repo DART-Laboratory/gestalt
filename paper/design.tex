@@ -92,13 +92,13 @@ This module integrates individual client \wordvec models denoted by \(\{word2vec
 
 where \(\bar{v}_k\) is the averaged vector for token \(k\), and \(v_{k,i}\) is the vector representation of token \(k\) from the \(i\)-th client model.
 
-However, transferring tokens—containing sensitive data like process names, file names, and IP addresses—to a central server could breach user privacy. To mitigate this, we employ a trusted utility server. Initially, the central server distributes an encryption key, \(E\), and a decryption key, \(D\), pair to each client. Clients then encrypt their word2vec model tokens using the encryption key:
+However, transferring tokens—containing sensitive data like process names, file names, and IP addresses—to a central server could breach user privacy. To mitigate this, we employ a trusted utility server. Initially, the central server uses symmetric key encryption to generate an encryption key which is distributed to clients. Clients then encrypt their word2vec model tokens using the encryption key:
 
 \[
 E(v_{k}) = v_{k}^{'}
 \]
 
-and send them to the utility server. This server merges the encrypted models and dispatches the unified semantic vectors back to the respective clients, who decrypt it using the decryption key:
+and send them to the utility server. This server merges the encrypted models and dispatches the unified semantic vectors back to the respective clients, who decrypt it back:
 
 \[
 D(v_{k}^{'}) = v_{k}
