@@ -98,7 +98,7 @@ D(v_{k}^{'}) = v_{k}
 This procedure ensures that neither the central server nor the utility server can access the actual token information, assuming no collusion between the two servers. The process is explained in detail in Algorithm~\ref{alg:secure_integration_averaging_word2vec}.
 
 \begin{algorithm}[!t]
-  \scriptsize
+  \small
   \DontPrintSemicolon
   \SetKwInOut{Input}{Inputs}
   \SetKwInOut{Output}{Output}
@@ -145,7 +145,7 @@ This procedure ensures that neither the central server nor the utility server ca
   \label{alg:secure_integration_averaging_word2vec}
 \end{algorithm}
 
-\subsection{Process entity categorization}
+\subsection{Process Entity Categorization}
 \label{sys:catg}
 
 Our experimental results, presented in Table~\ref{categorized_gnn}, indicate that a single global \gnnshort model is not able to achieve good detection performance in a FL setting due to the diverse and heterogeneous distributions of clients data. To overcome this limitation, we developed a framework that categorizes process entities across different clients. Subsequently, each category is modeled by a dedicated submodel to better capture its unique distribution.
