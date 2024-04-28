@@ -1,5 +1,7 @@
 \section{\Sys Design}
 \label{sec:methodology}
+\wajih{Do a GLOBAL SEARCH of the paper and replace federated graph learning with federated provenance graph learning and replace anomaly detection with GNN-based anomaly detection where ever appropriate}
+
 In this section, we will describe our problem formulation and discuss each component of \Sys architecture in detail.
 % \wajih{Use macros for common words in this whole section.}
 
@@ -68,6 +70,8 @@ Let \( C = \{client_1, client_2, \ldots, client_k\} \) denote the set of client 
 
 \subsection{Semantic Featurization}
 \label{semanfeat}
+
+\wajih{I thought we discussed in the meeting that we will combine Semantic Featurization and Semantic Vector Harmonization???}
 
 This module processes the provenance graph generated from \logs by transforming node attributes into feature vectors for the graph learning phase. Existing systems, such as Flash~\cite{flash2024} have demonstrated the effectiveness of utilizing semantic attributes of nodes to enhance detection performance. Building on this approach, we employ a \wordvec language model to encode these attributes into a vector format, \(\mathbf{v}\), where each attribute \(a\) is transformed into a vector \(v_a\). Each client independently trains a \wordvec model using their local \logs.
 
@@ -184,7 +188,7 @@ where:
 
 The federated averaging process is repeated for a set number of rounds \(R\), and concludes when there is no further reduction in training loss.
 
-\subsection{Anomaly Detection}
+\subsection{GNN-based Anomaly Detection}
 \label{sys:anomaly_detection}
 
 \Sys employs a standard a node level detection methodology focusing on identifying irregular nodes through the comparison of their expected and observed types. This approach is grounded in a detailed analysis of both the surrounding structures and inherent properties of the nodes, to define normal pattern baselines for various node types. Typically, entities with malicious intentions display neighborhood structures and characteristics deviating from these established norms. In operational phases, the detection of anomalies that diverge from the pre-established node distribution patterns often results in their misclassification. The emergence of nodes misclassified in the system's output is indicative of potential security issues.
