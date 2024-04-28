@@ -33,7 +33,7 @@ Despite PIDS potential, the current operational mode of MSSPs and the state-of-t
 \begin{figure}[t!]
     \centering
     \includegraphics[width=0.47\textwidth]{fig/mssp.pdf}
-    \caption{The MSSP architecture for intrusion detection. The plain-text system logs are first collected in a centralized storage managed by the MSSP. Then these system logs are analyzed for threats.}
+    \caption{The MSSP architecture for intrusion detection, which is vulnerable to privacy leakage. The plain-text system logs are first collected in a centralized storage managed by the MSSP. Then these system logs are analyzed for intrusions.}
     \label{mssp}
     \vspace{-4ex}
   \end{figure}
@@ -61,7 +61,7 @@ To address these challenges, we introduce \Sys, a novel privacy-preserving PIDS 
   \centering
   \scriptsize
     %\caption{Limitations of existing PIDS. \wajih{Add in caption that which PIDS are not specified in the table and why.}}
-    \caption{Existing PIDS limitations: \flash and \kairos outperform other existing PIDS systems ~\cite{wang2022threatrace,han2020unicorn,streamspot,yangprographer,shadewatcher,provdetector2020}. Therefore, we have excluded these PIDSes from the table. }
+    \caption{Existing PIDS limitations. \flash and \kairos outperform other existing PIDS systems ~\cite{wang2022threatrace,han2020unicorn,streamspot,yangprographer,shadewatcher,provdetector2020} in terms of scalability. Also, they all suffer from data privacy leakage issues. Therefore, we have excluded these PIDS from the table. }
     \setlength{\tabcolsep}{10pt}
       \begin{tabular}{ | c | c | c | c |}
 
@@ -100,7 +100,7 @@ To address semantic inconsistencies in \wordvec models, we implement a \wordvec 
 
 %\wajih{Add one paragraph related to evaluation results.}
 
-We have conducted extensive evaluations of our system's effectiveness using open-source datasets from \darpa, specifically E3~\cite{error3}, E5~\cite{bug5}, and \optc~\cite{anjum2021analyzing}. These datasets encompass a broad spectrum of attack scenarios and system behaviors. Our findings indicate that \Sys achieves high detection performance, with an average precision of 96\% and recall of 97\%. Thus, our system performs comparably to state-of-the-art centralized systems like \flash and \kairos. As detailed in section~\ref{cost_metric}, our system achieves a 170-fold reduction in communication and storage costs compared to \flash and \kairos. Since our technique is decentralized, our inference time is bounded by the client with the most log data; it will only take approximately 3 minutes to run inference on the complete \optc dataset, whereas \flash and \kairos take many hours. Employing FL exposes our system to certain types of adversarial attacks, such as model poisoning, inference, and gradient attacks. We provide a comprehensive analysis of our system's resilience against these attacks in Section~\ref{sec:discussion}. We also present a detailed analysis of the privacy protection of our system in Section~\ref{privacy}.
+We have conducted extensive evaluations of our system's effectiveness using open-source datasets from \darpa, specifically E3~\cite{error3}, E5~\cite{bug5}, and \optc~\cite{anjum2021analyzing}. These datasets encompass a broad spectrum of attack scenarios and system behaviors. Our findings indicate that \Sys achieves high detection performance, with an average precision of 96\% and recall of 97\%. Thus, our system performs comparably to state-of-the-art centralized systems like \flash and \kairos. As detailed in section~\ref{cost_metric}, our system achieves a 170-fold reduction in communication and storage costs compared to \flash and \kairos. Since our technique is decentralized, our inference time is bounded by the client with the most log data; it will only take approximately 3 minutes to run inference on the complete \optc dataset, whereas \flash and \kairos take many hours.  We present a detailed analysis of the privacy protection of our system in Section~\ref{privacy}. We also provide a comprehensive analysis of our system's resilience against adversarial attacks in Section~\ref{s:relwk} and Section~\ref{sec:discussion}.
 
 %\wajih{Add list of main contributions}
 The main contributions of our work are as follows:

@@ -101,6 +101,8 @@ Applying FL to PIDS can be challenging due to the heterogeneity of data across d
 \PP{Non-Privacy-Preserving data structure} \disdet employs a Hierarchical System Event Tree (HST) for storing the attributes of system events observed during the benign period. Events with attributes absent in the HST are subsequently identified as anomalous. This HST is forwarded to a central server, where attributes from HSTs of analogous clients are aggregated and redistributed. The architecture of the HST inherently precludes the possibility of preserving privacy. Furthermore, the reliance on a non-learning-based methodology restricts \disdet's capability to adapt to previously unseen benign patterns, making the application of machine learning algorithms, such as federated averaging~\cite{mcmahan2017communication}, unsuitable in this scenario.
 
 
+
+
 \subsection{Overview of \Sys}
 %\wajih{Lets use the word \fpgl throughout this paper. And say that we introduce the notion of \fpgl to solve the above challenges. Make sure you use this macro throughout the paper. }
 The challenges outlined above significantly impede the adoption of federated learning in current systems. To overcome these hurdles, We introduce the notion of \fpgl , which integrates federated learning with \grl to create a privacy-preserving detection mechanism. Our approach introduces a novel framework that personalizes \grl at the system entity level, addressing data imbalance and client heterogeneity effectively.
@@ -111,3 +113,11 @@ To tackle feature space heterogeneity, we introduce a two-server architecture an
 
 Next, the \textit{Process Entity Categorization Module}~\ref{sys:catg} categorizes all system entities across clients into standardized categories, promoting uniformity in the training of \gnnshort models. The \textit{Federated Graph Learning Module}~\ref{sys:fpgl} proceeds to train \gnnshort models by these categories on each client machine, using the harmonized semantic features. After training, the models are sent to a central server for federated learning, where the federated averaging algorithm integrates the models based on the process entity categories they were trained on. Lastly, the \textit{Anomaly Detection Module}~\ref{sys:anomaly_detection} employs the unified global models for anomaly detection on each client machine. Figure \ref{fig:arch} presents the comprehensive architecture of \Sys, with further details in the subsequent sections.
 
+
+\begin{figure*}[t!]
+  \centering
+  \includegraphics[width=0.95\textwidth]{fig/archv3.pdf}
+  \caption{High-level architecture of \Sys. In the training phase, our system builds local provenance graphs for each client and trains an ensemble of \gnnshort models. Prior to this, we aggregate semantic models contextually for feature encoding. The local \gnnshort models participate in federated learning to develop a global \gnnshort model, which is then utilized for anomaly detection.}
+  \vspace{-3ex}
+  \label{fig:arch}
+\end{figure*}

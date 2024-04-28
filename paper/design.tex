@@ -9,36 +9,7 @@ In this section, we will describe our problem formulation and discuss each compo
 
 % \wajih{Use formalism wherever is possible}
 
-\begin{algorithm}[h]
-  \scriptsize
-  \DontPrintSemicolon
-  \SetKwInOut{Input}{Inputs}
-  \SetKwInOut{Output}{Output}
-  \Input{Set of client models $\{GNN_1, GNN_2, \ldots, GNN_N\}$;\\}
-  \Output{Global GNN model $GNN_{Global}$.}
-  \BlankLine
-  \tcc{Initialize global GNN model with random weights for a given process Category.}
-  \tcc{This initialization happens for the first FL round only.}
-  $G \leftarrow \text{InitializeRandomWeights}()$\\
-  \tcc{Distribute $GNN$ to all clients.}
-  \ForEach{client}{
-    Send $GNN$ to $client_i$\\
-    $GNN \leftarrow \text{TrainOnLocalData}(ProcessCategory_i)$
-  }
-  \BlankLine
-  \tcc{Aggregate trained models from clients.}
-  $AggregatedWeights \leftarrow list([])$\\
-  \ForEach{client model $GNN_i$}{
-    $AggregatedWeights.append(\text{ExtractWeights}(GNN_i))$\\
-  }
-  \tcc{Apply federated averaging.}
-  $GNN_{Global} \leftarrow \text{FederatedAveraging}(AggregatedWeights)$\\
-  \BlankLine
-  \Return $GNN_{Global}$\\
-  \BlankLine
-  \caption{Federated Provenance Graph Learning}
-  \label{alg:federated_learning}
-\end{algorithm}
+
 
 % \wajih{Move these two paragraphs to 2.4 Overview subsection. You need to combine information and remove redundant information after moving.}
 
@@ -58,19 +29,14 @@ Additionally, we aim to develop a global semantic encoder, \( \mathcal{E}_{\text
 
 %\wajih{Please divide this figure as we talked about. Use the color palette as I specified in the Dart Lab channel. Also, what is the difference between black and red edges? Could you add a legend for edges types?}
 
-\begin{figure*}[t!]
-  \centering
-  \includegraphics[width=0.95\textwidth]{fig/archv3.pdf}
-  \caption{High-level architecture of \Sys. In the training phase, our system builds local provenance graphs for each client and trains an ensemble of \gnnshort models. Prior to this, we aggregate semantic models contextually for feature encoding. The local \gnnshort models participate in federated learning to develop a global \gnnshort model, which is then utilized for anomaly detection.}
-  \vspace{-3ex}
-  \label{fig:arch}
-\end{figure*}
 
-\subsection{Provenance Graph Constructor} 
+
+\subsection{Provenance Graph Constructor}
 \label{provconstruct}
 %\wajih{why are you using Sys instead of \\Sys in the following paragraph? }
 
 \Sys utilizes \logs to construct a system provenance graph. It operates on each client machine, using their local system logs to build the graph. Major operating systems, including Linux and Windows, come equipped with built-in mechanisms for log collection -- specifically, the Linux Audit system~\cite{linuxaudit} and Windows Event Tracing~\cite{windowsaudit}. These logs provide detailed insights into the interactions among various system entities, capturing activities, such as process executions, file operations, and network connections. Using this data, \Sys forms a graph where nodes represent system entities including processes, files, and sockets. The edges of this graph denote events, identified by syscalls, that occur between these entities. Moreover, \Sys enhances each node with comprehensive attributes, including process names, command lines, file names, and network IP addresses. As demonstrated by prior works~\cite{flash2024,cheng2023kairos}, these contextual attributes enable the model to develop a robust understanding of system behavior.
+
 
 \subsection{Semantic Featurization \& Harmonization}
 \label{semanfeat}
@@ -102,7 +68,7 @@ D(v_{k}^{'}) = v_{k}
 This procedure ensures that neither the central server nor the utility server can access the actual token information, assuming no collusion between the two servers. The process is explained in detail in Algorithm~\ref{alg:secure_integration_averaging_word2vec}.
 
 \begin{algorithm}[!t]
-  \small
+  \footnotesize
   \DontPrintSemicolon
   \SetKwInOut{Input}{Inputs}
   \SetKwInOut{Output}{Output}
@@ -177,6 +143,37 @@ where:
 \end{itemize}
 
 The federated averaging process is repeated for a set number of rounds \(R\), and concludes when there is no further reduction in training loss. Algorithm~\ref{alg:federated_learning} shows the training and aggregation process of \gnnshort for a given process category and one round of FL.
+
+\begin{algorithm}[!t]
+  \footnotesize
+  \DontPrintSemicolon
+  \SetKwInOut{Input}{Inputs}
+  \SetKwInOut{Output}{Output}
+  \Input{Set of client models $\{GNN_1, GNN_2, \ldots, GNN_N\}$;\\}
+  \Output{Global GNN model $GNN_{Global}$.}
+  \BlankLine
+  \tcc{Initialize global GNN model with random weights for a given process Category.}
+  \tcc{This initialization happens for the first FL round only.}
+  $G \leftarrow \text{InitializeRandomWeights}()$\\
+  \tcc{Distribute $GNN$ to all clients.}
+  \ForEach{client}{
+    Send $GNN$ to $client_i$\\
+    $GNN \leftarrow \text{TrainOnLocalData}(ProcessCategory_i)$
+  }
+  \BlankLine
+  \tcc{Aggregate trained models from clients.}
+  $AggregatedWeights \leftarrow list([])$\\
+  \ForEach{client model $GNN_i$}{
+    $AggregatedWeights.append(\text{ExtractWeights}(GNN_i))$\\
+  }
+  \tcc{Apply federated averaging.}
+  $GNN_{Global} \leftarrow \text{FederatedAveraging}(AggregatedWeights)$\\
+  \BlankLine
+  \Return $GNN_{Global}$\\
+  \BlankLine
+  \caption{Federated Provenance Graph Learning}
+  \label{alg:federated_learning}
+\end{algorithm}
 
 \subsection{GNN-based Anomaly Detection}
 \label{sys:anomaly_detection}
