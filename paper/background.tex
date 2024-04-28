@@ -16,6 +16,14 @@
 %\wajih{citations are missing in this subsection.}
 %\wajih{Add one or two paragraphs explaining provenance graphs. Give information about what is present in audit logs. Provide information about how to convert audit logs into provenance graphs. }
 
+
+
+%\wajih{Please put a concise provenance graph figure here.}
+
+\Logs play a crucial role in recording the activities within a system, detailing interactions among various system entities such as processes, files, and sockets. Various operating systems come equipped with built-in mechanisms to gather these logs, including Event Tracing for Windows (ETW)~\cite{windowsaudit}, the Linux Audit system~\cite{linuxaudit}, and DTrace~\cite{dtrace} for FreeBSD. Each entry in a \logs characterizes a system event, identifying a subject and an object entity within the system. Moreover, these records include additional contextual attributes, including process names, file names, and socket IP addresses.
+
+Data provenance employs the concept of modeling the causal links among different system entities. Fundamentally, it utilizes system logs to construct a dependency graph that captures the relationships between events. Within this graph, nodes symbolize system entities such as processes, files, and sockets, while the edges represent various system syscalls. This provenance graph is instrumental in analyzing the activities of different system entities and plays a vital role in identifying anomalous or malicious entities. Figure~\ref{provexp} shows an example of a provenance graph where \textit{Explorer.exe} is executing other processes such as \textit{Notepad.exe} and \textit{Firefox.exe}. These processes then interact with other file and socket nodes.
+
 \begin{figure}[t!]
   \centering
   \includegraphics[width=0.4\textwidth]{fig/provexp.pdf}
@@ -24,13 +32,6 @@
   \label{provexp}
   \vspace{-2ex}
 \end{figure}
-
-%\wajih{Please put a concise provenance graph figure here.}
-
-\Logs play a crucial role in recording the activities within a system, detailing interactions among various system entities such as processes, files, and sockets. Various operating systems come equipped with built-in mechanisms to gather these logs, including Event Tracing for Windows (ETW)~\cite{windowsaudit}, the Linux Audit system~\cite{linuxaudit}, and DTrace~\cite{dtrace} for FreeBSD. Each entry in a \logs characterizes a system event, identifying a subject and an object entity within the system. Moreover, these records include additional contextual attributes, including process names, file names, and socket IP addresses.
-
-Data provenance employs the concept of modeling the causal links among different system entities. Fundamentally, it utilizes system logs to construct a dependency graph that captures the relationships between events. Within this graph, nodes symbolize system entities such as processes, files, and sockets, while the edges represent various system syscalls. This provenance graph is instrumental in analyzing the activities of different system entities and plays a vital role in identifying anomalous or malicious entities. Figure~\ref{provexp} shows an example of a provenance graph where \textit{Explorer.exe} is executing other processes such as \textit{Notepad.exe} and \textit{Firefox.exe}. These processes then interact with other file and socket nodes.
-
 %\wajih{Since we do not have any provenance graph in the paper, we need to provide a short example of a provenance graph.}
 
 
