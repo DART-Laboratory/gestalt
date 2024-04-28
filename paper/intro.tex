@@ -32,7 +32,7 @@ Despite PIDS potential, the current operational mode of MSSPs and the state-of-t
 
 \begin{figure}[t!]
     \centering
-    \includegraphics[width=0.4\textwidth]{fig/mssp.pdf}
+    \includegraphics[width=0.45\textwidth]{fig/mssp.pdf}
     \caption{The MSSP architecture for intrusion detection. The plain-text system logs are first collected in a centralized storage managed by the MSSP. Then these system logs are analyzed for threats.}
     \label{mssp}
     \vspace{-4ex}
@@ -40,9 +40,7 @@ Despite PIDS potential, the current operational mode of MSSPs and the state-of-t
     
 \smallskip
 \noindent
-\textbf{C2: Excessive Network Overhead:} In the context of MSSPs and centralized PIDS, the requirement to transmit \logs over the network for threat detection can result in substantial network overhead. Modern systems often generate logs amounting to gigabytes per day, imposing significant network costs on both users and organizations~\cite{inam2023sok,hossain+depend}. Our analysis of systems, such as \flash and \kairos, using the \optc dataset as detailed in Section~\ref{cost_metric}, highlights this issue. For an organization of a similar scale to that represented in the \optc dataset, with an equivalent number of hosts, the daily volume of logs transmitted could easily reach 1000 GB. This immense volume of data not only incurs considerable network expenses daily but also presents a significant challenge for users with limited network bandwidth, who may struggle to upload such large amounts of data efficiently. 
-
-\disdet reduces network costs by summarizing system events in hierarchical tree data structures but compromises privacy because HSTs must be sent to the server in plain text. Additionally, \disdet identifies anomalies as events simply missing from the benign HST, a method prone to false alarms in dynamically changing system environments.
+\textbf{C2: Excessive Network Overhead:} In the context of MSSPs and centralized PIDS, the requirement to transmit \logs over the network for threat detection can result in substantial network overhead. Modern systems often generate logs amounting to gigabytes per day, imposing significant network costs on both users and organizations~\cite{inam2023sok,hossain+depend}. Our analysis of systems, such as \flash and \kairos, using the \optc dataset as detailed in Section~\ref{cost_metric}, highlights this issue. For an organization of a similar scale to that represented in the \optc dataset, with an equivalent number of hosts, the daily volume of logs transmitted could easily reach 1000 GB. This immense volume of data not only incurs considerable network expenses daily but also presents a significant challenge for users with limited network bandwidth, who may struggle to upload such large amounts of data efficiently. Note that \disdet reduces network costs by summarizing system events in hierarchical tree data structures but compromises privacy because HSTs must be sent to the server in plain text. Additionally, \disdet identifies anomalies as events simply missing from the benign HST, a method prone to false alarms in dynamically changing system environments.
 
 %\wajih{is it possible to say something about DistDet here? I am worried that the reviewers are just going to say that you are building an extension of DisDet}
 
@@ -110,8 +108,8 @@ The main contributions of our work are as follows:
 \begin{itemize}[topsep=.1ex,itemsep=-.1ex,leftmargin=*]
     \item To the best our knowledge, we are the first to introduce a federated provenance graph learning-based IDS, \Sys, which is privacy-preserving, highly scalable, and achieves state-of-the-art detection accuracy.
     \item We have introduced a novel \textit{ensemble learning} and \textit{process entity categorization} framework for dealing with diverse heterogeneous client data distributions.
-    \item Wwe developed a sophisticated \textit{\wordvec harmonization framework} using a multi-server architecture for secure private aggregation of semantic attributes.
-    \item We conduct a comprehensive evaluation of our technique on real-world datasets. The results highlights \Sys's effectiveness in detecting system threats, while being scalable and privacy preserving.
+    \item We developed a sophisticated \textit{\wordvec harmonization framework} using a multi-server architecture for secure private aggregation of semantic attributes.
+    \item We conduct a comprehensive evaluation of our technique on real-world datasets, showing \Sys's effectiveness in detecting system threats while being scalable and privacy preserving.
 \end{itemize}
 
 \PP{Availability.} \wajih{Add a link for your code here.}
