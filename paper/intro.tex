@@ -85,9 +85,9 @@ To address these challenges, we introduce \Sys, a novel privacy-preserving PIDS 
 
 % \subsection{Our Approach and Main Contributions}
 
-\wajih{there should be some citations in this paragraph}
+% \wajih{there should be some citations in this paragraph}
 
-The implementation of FL for a privacy-preserving PIDS introduces multiple challenges. Firstly, model aggregation in a federated setting becomes complex due to heterogeneous data distributions from clients running different applications, leading to suboptimal unified model performance. Additionally, data imbalances across clients, where smaller data contributors have less impact on the federated model, skew the learning outcomes. Another significant hurdle is the inconsistent semantic information produced by independently trained \wordvec models on different client machines. This inconsistency across semantic encoders complicates the effectiveness of the global \gnnshort models, resulting in inaccurate system behavior representations due to varied feature vector qualities.
+The implementation of FL for a privacy-preserving PIDS introduces multiple challenges. Firstly, model aggregation in a federated setting becomes complex due to heterogeneous data distributions~\cite{qu2022rethinking} from clients running different applications, leading to suboptimal unified model performance. Additionally, data imbalances~\cite{duan2020self} across clients, where smaller data contributors have less impact on the federated model, skew the learning outcomes. Another significant hurdle is the inconsistent semantic information produced by independently trained \wordvec models on different client machines. This feature space inconsistency~\cite{zhou2023fedfa} across semantic encoders complicates the effectiveness of the global \gnnshort models, resulting in inaccurate system behavior representations due to varied feature vector qualities.
 
 
 
