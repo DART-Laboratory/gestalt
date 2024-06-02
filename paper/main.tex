@@ -8,7 +8,9 @@
 % \documentclass[conference,compsoc]{IEEEtran}
 %\IEEEoverridecommandlockouts
 
-\documentclass[sigconf]{sty/acmart}
+\documentclass[conference]{IEEEtran}
+\pagestyle{plain}
+
 
 \include{macros}
 \include{table-macros/exp}
@@ -17,10 +19,8 @@
 
 \title{\Sys: A Privacy-Aware Approach to System Intrusion Detection}
 
-\input{abstract}
-\input{concepts}
-\input{keyword}
 \maketitle
+\input{abstract}
 \input{intro}
 \input{relwk}
 \input{background}
@@ -43,7 +43,10 @@
 % \end{document}
 
 \balance
-\bibliographystyle{sty/ACM-Reference-Format}
-\bibliography{bib-files/hassan,bib-files/hassan-misc}
+\bibliographystyle{IEEEtranS}
+{
+\footnotesize
+\setlength{\bibsep}{3pt}
+\bibliography{bib-files/hassan,bib-files/hassan-misc}}
 \input{appendix}
 \end{document}
