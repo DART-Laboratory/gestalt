@@ -35,6 +35,8 @@ Additionally, we aim to develop a global semantic encoder, \( \mathcal{E}_{\text
 \label{provconstruct}
 %\wajih{why are you using Sys instead of \\Sys in the following paragraph? }
 
+\wajih{This paragraph does not give any important information. In other words, it does not show the novelty of our system. I suggest removing this paragraph to make some space and make sure that you change the number of modules to four. Just say in the first module that we use existing systems to generate provenance graphs and cite those systems. That is enough.}
+
 \Sys utilizes \logs to construct a system provenance graph. It operates on each client machine, using their local system logs to build the graph. Major operating systems, including Linux and Windows, come equipped with built-in mechanisms for log collection -- specifically, the Linux Audit system~\cite{linuxaudit} and Windows Event Tracing~\cite{windowsaudit}. These logs provide detailed insights into the interactions among various system entities, capturing activities, such as process executions, file operations, and network connections. Using this data, \Sys forms a graph where nodes represent system entities including processes, files, and sockets. The edges of this graph denote events, identified by syscalls, that occur between these entities. Moreover, \Sys enhances each node with comprehensive attributes, including process names, command lines, file names, and network IP addresses. As demonstrated by prior works~\cite{flash2024,cheng2023kairos}, these contextual attributes enable the model to develop a robust understanding of system behavior.
 
 
@@ -117,6 +119,8 @@ This procedure ensures that neither the central server nor the utility server ca
 
 \subsection{Process Entity Categorization}
 \label{sys:catg}
+
+\wajih{We need to add more details in this section as suggested by the reviewer. Currently in our paper we only spend 2.5 pages to describe our design. We should make it around 3.5 even if it means to move some experiments to appendix.}
 
 Our experimental results, presented in Table~\ref{categorized_gnn}, indicate that a single global \gnnshort model is not able to achieve good detection performance in a FL setting due to the diverse and heterogeneous distributions of clients data. To overcome this limitation, we developed a framework that categorizes process entities across different clients. Subsequently, each category is modeled by a dedicated submodel to better capture its unique distribution.
 
