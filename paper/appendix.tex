@@ -52,6 +52,20 @@ In this ablation study, we analyze the impact of key parameters within \Sys. Spe
   \vspace{-2ex}
 \end{figure}
 
+
+\PP{Effect of differential privacy on accuracy} Differential privacy is a method that can be combined with federated learning to offer protection against inference attacks~\cite{lyu2020threats,nasr2019comprehensive,zari2021efficient} at the cost of detection accuracy. We have analyzed the robustness of our system against these attacks in Section~\ref{privacy}. Here we will examine the impact of differential privacy noise levels on the detection performance of \Sys. Differential privacy achieves model privacy by adding a controlled amount of random noise to the model parameters, which helps in concealing the influence of any individual data point. In our context, differential privacy introduces a parameter called epsilon $\epsilon$ which dictates the intensity of noise added to the local \gnnshort model updates before they are aggregated at the central server for federated averaging, as detailed in Section~\ref{sec:methodology}.
+
+The parameter $\epsilon$ is crucial; it is inversely related to the amount of noise added -- lower values of $\epsilon$ result in higher noise levels, thereby increasing privacy but potentially degrading the utility of the model. Conversely, a higher $\epsilon$ indicates less noise, which may improve the model's detection capabilities but reduce privacy protection. By adjusting $\epsilon$ during the training phase, we assess the trade-off between privacy and detection performance in the globally trained models across various $\epsilon$ settings. Figure~\ref{epsvsscore} shows that increasing noise strength degrades model utility offering more privacy at the expense of reduced accuracy.
+
+\begin{figure}[!t]
+  \centering
+  \includegraphics[width=0.25\textwidth]{fig/epsvsscore.pdf}
+  \caption{Effect of differential privacy noise on detection using E3 dataset. Note that we observed similar results on the other datasets.}
+  \label{epsvsscore}
+  \vspace{-2ex}
+\end{figure}
+
+
 % \label{sub:hyper}
 
 % In  federated learning, where data originates from diverse sources such as user machines running various processes, quantifying this diversity becomes crucial for model development. The Shannon Diversity Index (SDI) is a metric adapted from ecology to measure the heterogeneity of datasets. This report elaborates on the application of SDI in federated learning, focusing on comparing the diversity of sub-models in an ensemble approach to a single model scheme.

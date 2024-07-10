@@ -56,7 +56,7 @@ Our evaluation experiments are conducted on a machine running Ubuntu 18.04.6 LTS
 
 %\wajih {Say here that we have an ablation study on metrics: Effect of Federated Averaging Round, blah blah in Appendix.}
 
-We also present a detailed ablation study in Appendix~\ref{app:ablation} on metrics, such as the effect of the number of hosts, number of \gnnshort submodels, number of federated averaging rounds, and the anomaly threshold on the detection performance.
+We present a detailed ablation study in Appendix~\ref{app:ablation} on metrics such as the effect of the number of hosts, \gnnshort\ submodels, federated averaging rounds, differential privacy, and the anomaly threshold on detection performance.
 
 \PP{Implementation} \Sys is developed in Python with around 5500 lines of code. It leverages the PyTorch and Torch Geometric libraries to implement the federated provenance graph learning framework. For developing the semantic attribute encoder, we employ the Gensim library. Secure communication between clients and the utility server is ensured through Python's Cryptography module. The federated averaging, semantic vector harmonization, and entity categorization modules are implemented as individual Python functions on the central and utility servers.
 
@@ -242,19 +242,19 @@ To calculate the daily operational costs of running these systems for a specific
 
 Compared to existing systems, \Sys processes client logs in a federated manner, eliminating the need for logs to leave the client's machine. The only network expenses arise from the transmission of \gnnshort and Word2Vec models. Specifically, the \gnnshort model is rougly 13kb, while the average Word2Vec model is 6 MB. For an organization with 1,000 hosts, the communication cost with the central server would be 12.70 MB, and for the utility server, it would be 5.86 GB. Overall, \Sys achieves a 170-fold reduction in communication and centralized storage costs compared to \flash and \kairos. The central and utility servers conduct a simple mean operation on the models, taking only a few seconds. Therefore, the operational cost of \Sys for 1,000 client machines is approximately \$10 per day, marking a 13-fold reduction compared to \flash and a 26-fold reduction compared to \kairos.
 
-\subsection{Effect of differential privacy on accuracy}
+% \subsection{Effect of differential privacy on accuracy}
 
-Differential privacy is a method that can be combined with federated learning to offer protection against inference attacks~\cite{lyu2020threats,nasr2019comprehensive,zari2021efficient} at the cost of detection accuracy. We have analyzed the robustness of our system against these attacks in Section~\ref{privacy}. Here we will examine the impact of differential privacy noise levels on the detection performance of \Sys. Differential privacy achieves model privacy by adding a controlled amount of random noise to the model parameters, which helps in concealing the influence of any individual data point. In our context, differential privacy introduces a parameter called epsilon $\epsilon$ which dictates the intensity of noise added to the local \gnnshort model updates before they are aggregated at the central server for federated averaging, as detailed in Section~\ref{sec:methodology}.
+% Differential privacy is a method that can be combined with federated learning to offer protection against inference attacks~\cite{lyu2020threats,nasr2019comprehensive,zari2021efficient} at the cost of detection accuracy. We have analyzed the robustness of our system against these attacks in Section~\ref{privacy}. Here we will examine the impact of differential privacy noise levels on the detection performance of \Sys. Differential privacy achieves model privacy by adding a controlled amount of random noise to the model parameters, which helps in concealing the influence of any individual data point. In our context, differential privacy introduces a parameter called epsilon $\epsilon$ which dictates the intensity of noise added to the local \gnnshort model updates before they are aggregated at the central server for federated averaging, as detailed in Section~\ref{sec:methodology}.
 
-The parameter $\epsilon$ is crucial; it is inversely related to the amount of noise added -- lower values of $\epsilon$ result in higher noise levels, thereby increasing privacy but potentially degrading the utility of the model. Conversely, a higher $\epsilon$ indicates less noise, which may improve the model's detection capabilities but reduce privacy protection. By adjusting $\epsilon$ during the training phase, we assess the trade-off between privacy and detection performance in the globally trained models across various $\epsilon$ settings. Figure~\ref{epsvsscore} shows that increasing noise strength degrades model utility offering more privacy at the expense of reduced accuracy.
+% The parameter $\epsilon$ is crucial; it is inversely related to the amount of noise added -- lower values of $\epsilon$ result in higher noise levels, thereby increasing privacy but potentially degrading the utility of the model. Conversely, a higher $\epsilon$ indicates less noise, which may improve the model's detection capabilities but reduce privacy protection. By adjusting $\epsilon$ during the training phase, we assess the trade-off between privacy and detection performance in the globally trained models across various $\epsilon$ settings. Figure~\ref{epsvsscore} shows that increasing noise strength degrades model utility offering more privacy at the expense of reduced accuracy.
 
-\begin{figure}[!t]
-  \centering
-  \includegraphics[width=0.25\textwidth]{fig/epsvsscore.pdf}
-  \caption{Effect of differential privacy noise on detection using E3 dataset. Note that we observed similar results on the other datasets.}
-  \label{epsvsscore}
-  \vspace{-2ex}
-\end{figure}
+% \begin{figure}[!t]
+%   \centering
+%   \includegraphics[width=0.25\textwidth]{fig/epsvsscore.pdf}
+%   \caption{Effect of differential privacy noise on detection using E3 dataset. Note that we observed similar results on the other datasets.}
+%   \label{epsvsscore}
+%   \vspace{-2ex}
+% \end{figure}
 
 
 % \begin{figure*}[!t]
