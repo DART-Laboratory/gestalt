@@ -31,13 +31,12 @@ Additionally, we aim to develop a global semantic encoder, \( \mathcal{E}_{\text
 
 
 
-\subsection{Provenance Graph Constructor}
-\label{provconstruct}
-%\wajih{why are you using Sys instead of \\Sys in the following paragraph? }
+% \subsection{Provenance Graph Constructor}
+% \label{provconstruct}
 
-\wajih{This paragraph does not give any important information. In other words, it does not show the novelty of our system. I suggest removing this paragraph to make some space and make sure that you change the number of modules to four. Just say in the first module that we use existing systems to generate provenance graphs and cite those systems. That is enough.}
+% \wajih{This paragraph does not give any important information. In other words, it does not show the novelty of our system. I suggest removing this paragraph to make some space and make sure that you change the number of modules to four. Just say in the first module that we use existing systems to generate provenance graphs and cite those systems. That is enough.}
 
-\Sys utilizes \logs to construct a system provenance graph. It operates on each client machine, using their local system logs to build the graph. Major operating systems, including Linux and Windows, come equipped with built-in mechanisms for log collection -- specifically, the Linux Audit system~\cite{linuxaudit} and Windows Event Tracing~\cite{windowsaudit}. These logs provide detailed insights into the interactions among various system entities, capturing activities, such as process executions, file operations, and network connections. Using this data, \Sys forms a graph where nodes represent system entities including processes, files, and sockets. The edges of this graph denote events, identified by syscalls, that occur between these entities. Moreover, \Sys enhances each node with comprehensive attributes, including process names, command lines, file names, and network IP addresses. As demonstrated by prior works~\cite{flash2024,cheng2023kairos}, these contextual attributes enable the model to develop a robust understanding of system behavior.
+% \Sys utilizes \logs to construct a system provenance graph. It operates on each client machine, using their local system logs to build the graph. Major operating systems, including Linux and Windows, come equipped with built-in mechanisms for log collection -- specifically, the Linux Audit system~\cite{linuxaudit} and Windows Event Tracing~\cite{windowsaudit}. These logs provide detailed insights into the interactions among various system entities, capturing activities, such as process executions, file operations, and network connections. Using this data, \Sys forms a graph where nodes represent system entities including processes, files, and sockets. The edges of this graph denote events, identified by syscalls, that occur between these entities. Moreover, \Sys enhances each node with comprehensive attributes, including process names, command lines, file names, and network IP addresses. As demonstrated by prior works~\cite{flash2024,cheng2023kairos}, these contextual attributes enable the model to develop a robust understanding of system behavior.
 
 
 \subsection{Semantic Featurization \& Harmonization}
