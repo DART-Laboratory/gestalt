@@ -1,35 +1,30 @@
 % % \documentclass[11pt,letterpaper,twocolumn]{article}
 % % conference specific style
-% \usepackage{sty/usenix}
+%\usepackage{sty/usenix}
 %
 % % conference specific style
 % \usepackage{sty/usenix}
-
-% \documentclass[conference,compsoc]{IEEEtran}
+\documentclass[11pt,letterpaper,twocolumn]{article}
+% conference specific style
+\usepackage{sty/usenix}
+\usepackage[square,comma,numbers,sort&compress]{natbib}
+%%\documentclass[conference,compsoc]{IEEEtran}
 %\IEEEoverridecommandlockouts
 
-\documentclass[conference]{IEEEtran}
-\pagestyle{plain}
-
-\IEEEoverridecommandlockouts
-\makeatletter\def\@IEEEpubidpullup{6.5\baselineskip}\makeatother
-\IEEEpubid{\parbox{\columnwidth}{
-    Network and Distributed System Security (NDSS) Symposium 2025\\
-     23–28 February 2025, San Diego, CA, USA\\
-    ISBN 1-891562-93-2\\
-    https://dx.doi.org/10.14722/ndss.2025.23xxx\\
-    www.ndss-symposium.org
-}
-\hspace{\columnsep}\makebox[\columnwidth]{}}
-
-
-
+% common packages
 \include{macros}
 \include{table-macros/exp}
 
 \begin{document}
 
 \title{\Sys: A Privacy-Aware Approach to System Intrusion Detection}
+% \author{
+%     \IEEEauthorblockN{Mati Ur Rehman}
+%     \IEEEauthorblockA{University of Virginia}
+%     \and
+%     \IEEEauthorblockN{Wajih Ul Hassan}
+%     \IEEEauthorblockA{University of Virginia}
+% }
 
 \maketitle
 \input{abstract}
@@ -55,10 +50,10 @@
 % \end{document}
 
 \balance
-\bibliographystyle{IEEEtranS}
+\bibliographystyle{plain}
 {
 \footnotesize
 \setlength{\bibsep}{3pt}
 \bibliography{bib-files/hassan,bib-files/hassan-misc}}
-\input{appendix}
+%\input{appendix}
 \end{document}
