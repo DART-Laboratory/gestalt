@@ -55,7 +55,7 @@ The \wordvec model functions as a key-value store, with vocabulary tokens as key
 
 where \(\bar{v}_k\) is the averaged vector for token \(k\), and \(v_{k,i}\) is the vector representation of token \(k\) from the \(i\)-th client model.
 
-However, transferring tokens—containing sensitive data like process names, file names, and IP addresses—to a central server could breach user privacy. To mitigate this, we employ a trusted utility server. Initially, the central server uses symmetric key encryption~\cite{bokhari2016review} to generate an encryption key which is distributed to clients. Clients then encrypt their word2vec model tokens using the encryption key:
+However, transferring tokens—containing sensitive data like process names, file names, and IP addresses—to a central server could breach user privacy. To mitigate this, we employ a trusted utility server. Initially, the central server uses Fernet symmetric key encryption~\cite{ismail2020fernet,bokhari2016review} to generate an encryption key which is distributed to clients. Clients then encrypt their word2vec model tokens using the encryption key:
 
 \[
 E(v_{k}) = v_{k}^{'}
