@@ -120,8 +120,6 @@ This procedure ensures that neither the central server nor the utility server ca
 \subsection{Process Entity Categorization}
 \label{sys:catg}
 
-%\wajih{We need to add more details in this section as suggested by the reviewer. Currently in our paper we only spend 2.5 pages to describe our design. We should make it around 3.5 even if it means to move some experiments to appendix.}
-
 Our experimental results, presented in Table~\ref{categorized_gnn}, indicate that a single global \gnnshort model is not able to achieve good detection performance in an FL setting due to the diverse and heterogeneous distributions of clients' data. The disparity in data distributions among various clients leads to a significant challenge in effectively training a unified model that can generalize well across all clients. This diversity often results in poor model performance, as the global model struggles to capture the unique characteristics and patterns inherent in the data of individual clients.
 
 To overcome this limitation, we developed a comprehensive framework that categorizes process entities across different clients into distinct groups. Our framework assigns process entities to specific categories, ensuring that each category is modeled by a dedicated submodel. This approach allows each submodel to better capture the unique distribution and intricate patterns of its assigned category, thereby improving the overall detection performance.
