@@ -249,6 +249,10 @@ We examined the operational costs of deploying \Sys in comparison to centralized
 \mati{Todo: multi host analysis on \optc}
 
 
+\subsection{Evaluation using FedProx and FedOpt}
+\mati{Todo: Replace FedAvg with other algorithms and test system}
+
+
 % \subsection{Effect of differential privacy on accuracy}
 
 % Differential privacy is a method that can be combined with federated learning to offer protection against inference attacks~\cite{lyu2020threats,nasr2019comprehensive,zari2021efficient} at the cost of detection accuracy. We have analyzed the robustness of our system against these attacks in Section~\ref{privacy}. Here we will examine the impact of differential privacy noise levels on the detection performance of \Sys. Differential privacy achieves model privacy by adding a controlled amount of random noise to the model parameters, which helps in concealing the influence of any individual data point. In our context, differential privacy introduces a parameter called epsilon $\epsilon$ which dictates the intensity of noise added to the local \gnnshort model updates before they are aggregated at the central server for federated averaging, as detailed in Section~\ref{sec:methodology}.
