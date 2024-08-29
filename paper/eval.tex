@@ -242,7 +242,17 @@ We examined the operational costs of deploying \Sys in comparison to centralized
 \PP{Overall Operating costs:} To calculate the daily operational costs of running these systems for a specific organization, we utilized the Google Cloud Platform's (GCP) pricing calculator~\cite{gcp}. The cost to operate \flash under the previously mentioned workload is estimated at \$135, with computing expenses accounting for \$100 and network costs comprising \$35. Given its longer processing duration, the operational cost for \kairos would be twice that of \flash. Compared to these systems, the operational cost of \Sys for 1,000 client machines would be approximately \$10 per day, marking a 13-fold reduction compared to \flash and a 26-fold reduction compared to \kairos.
 
 \subsection{Robustness against mimicry attacks}
-\mati{Getting experiment results}
+We assessed the robustness of our system against the adversarial mimicry attack proposed by Goyal et al.~\cite{goyal2023sometimes}. The attack's objective is to generate embeddings for nodes in the attack graphs that are similar to those in the benign graph, thus evading detection. To achieve this, structures from benign nodes are integrated into the attack graph. Figure~\ref{mimicryattack} illustrates the experimental results, with the x-axis representing the number of benign structures added and the y-axis corresponding to anomaly scores for all attack nodes. The findings indicate that our detector maintains robustness against this attack; adding benign structures does not affect the anomaly scores of the attack nodes. This level of robustness is significantly stronger compared to the \flash system. As demonstrated by the authors, \flash initially experiences a drop in anomaly scores, increasing the likelihood of attack nodes evading detection, a vulnerability not present in our system.
+
+The superior robustness of \Sys can be attributed to our process-categorization-based ensemble \gnnshort architecture, wherein each model specializes in understanding the behavior of specific system entities. Thus, when the graph structure surrounding these entities changes, the models can easily detect these alterations. In contrast, \flash relies on a downstream model using \gnnshort embeddings to detect malicious entities. Generalizing a single model across system entities makes it overlook critical details about individual entities, which can then be exploited by attackers. However, \Sys, with its focused approach, is less prone to this vulnerability, offering enhanced robustness against mimicry attacks.
+
+\begin{figure}[!t]
+  \centering
+  \includegraphics[width=0.4\textwidth]{fig/adversarial.pdf}
+  \caption{Adversarial mimicry attack analysis.}
+  \label{mimicryattack}
+  \vspace{-2ex}
+\end{figure}
 
 
 \subsection{Enterprise settings evaluation}
