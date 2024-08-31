@@ -261,7 +261,7 @@ The superior robustness of \Sys can be attributed to our process-categorization-
 
 \subsection{Evaluation using FedProx and FedOpt}
 
-Table~\ref{fedoptprox} shows the evaluation results. \mati{Explain results}
+We conducted experiments to assess the efficacy of existing federated learning solutions in addressing data heterogeneity and the non-IID problem. FedProx~\cite{li2020federated} and FedOpt~\cite{asad2020fedopt} were evaluated as potential solutions. FedProx is a federated learning algorithm that mitigates client heterogeneity by introducing a proximal term to the local loss function, penalizing deviations from the global model. This modification aids in reducing the impact of statistical heterogeneity by discouraging significant discrepancies from the global model. Conversely, FedOpt employs a global optimizer, specifically utilizing an Adam optimizer at the server side, to aggregate updates from distributed clients, thereby enhancing convergence. Table~\ref{fedoptprox} presents the evaluation results. \mati{Explain results}
 
 \begin{table}[!t]
   \centering
