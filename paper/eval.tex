@@ -260,7 +260,29 @@ The superior robustness of \Sys can be attributed to our process-categorization-
 
 
 \subsection{Evaluation using FedProx and FedOpt}
-\mati{Todo: Replace FedAvg with other algorithms and test system}
+
+\begin{table}[!t]
+  \centering
+  \small
+  \setlength{\tabcolsep}{9pt}
+  \caption{Federated averaging algorithms comparison.}
+  \begin{tabular}{ | c | c | c | c |}
+    \hline
+    \bf Algorithm & \bf Prec. & \bf Rec. & \bf \fscore \\
+    \hline
+    \Sys & \TOP & \TOR & \TOF \\
+    \hline
+    FedAvg & \VFOP & \VFOR & \VFOF \\ 
+    \hline
+    FedProx & 0.64 & 0.95 & 0.76 \\
+    \hline
+    FedOpt & 0.63 & 0.90  & 0.74 \\
+    \hline
+  \end{tabular}
+  \label{local:wordvec}
+\end{table}
+
+\mati{Todo: Explain results}
 
 
 % \subsection{Effect of differential privacy on accuracy}
