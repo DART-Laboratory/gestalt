@@ -233,7 +233,7 @@ To examine the effectiveness of our process categorization based \gnnshort ensem
 
 \subsection{Enterprise settings evaluation}
 \label{cost_metric}
-We analyzed the performance of our system in an enterprise setting using the \optc dataset, which includes a large number of host machines. We compared our system to centralized systems such as \flash and \kairos. The evaluation focused on two key metrics important for scalability: network overhead and processing overhead.
+We analyzed the performance of our system in an enterprise setting using the \optc dataset, which includes a large number of host machines. We compared our system to centralized systems such as \flash and \kairos, focusing on important metrics such as network and processing overhead.
 
 \PP{Network Overhead:} We estimate this cost for the \flash and \kairos system using the \optc dataset. Each host within \optc produces approximately 1GB of audit logs daily, equating to nearly one million audit events. For an organization with 1,000 hosts, the total daily log volume would be 1,000 GB. This data volume necessitates transmission over the network to a central server operating the \pids. In contrast, \Sys achieves a significant reduction in these overheads. The only network expenses for \Sys arise from the transmission of the \gnnshort and \wordvec models; the \gnnshort model is roughly 13kb, while the average \wordvec model is 6 MB. Thus, the communication cost with the central server would be 12.70 MB, and for the utility server, it would be 5.86 GB. Ultimately, \Sys results in a 170-fold decrease in communication costs compared to \flash and \kairos.
 
