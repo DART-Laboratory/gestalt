@@ -1,9 +1,9 @@
-\section{Overview}
+\section{Background \& Motivation}
 \label{sec:motivation}
 
 % \wajih{Add two three sentences here saying that in this section, first we give background on blah blah and then we describe why it is challenging blah blah. }
 
-In this section, we will provide background on data provenance graphs constructed from \logs. Additionally, we will delve into the details of federated learning and how it facilitates the privacy-preserving training of machine learning models. We will also discuss the challenges associated with applying federated learning to \pids.
+% In this section, we will provide background on data provenance graphs constructed from \logs. Additionally, we will delve into the details of federated learning and how it facilitates the privacy-preserving training of machine learning models. We will also discuss the challenges associated with applying federated learning to \pids.
 
 % Contemporary host PIDS, exemplified by \unicorn~\cite{han2020unicorn}, \streamspot~\cite{streamspot}, \threatrace~\cite{wang2022threatrace} and \prographer~\cite{yangprographer}, heavily rely on system audit log data to identify malicious entities within a system. Employing advanced deep learning techniques such as \gnn (\gnnshort), these systems strive to enhance the accuracy of threat detection. However, the efficacy of these techniques is contingent upon vast amounts of data to train the underlying models, often reaching terabytes in size. Acquiring such extensive training data from a single user machine is impractical.
 
@@ -17,18 +17,7 @@ In this section, we will provide background on data provenance graphs constructe
 
 %\wajih{make a macro for Provenance-based IDS which is PIDS and use PIDS everywhere where you say intrusion detection. It saves space and also narrows the scope of our paper to PIDS. Use macros for words like \wordvec, etc. because of letter capitalization. Also convert the words like Graph Neural Network into GNN to save space.}
 
-\subsection{Background: Data Provenance Graphs}
-%\wajih{citations are missing in this subsection.}
-%\wajih{Add one or two paragraphs explaining provenance graphs. Give information about what is present in audit logs. Provide information about how to convert audit logs into provenance graphs. }
-
-
-
-%\wajih{Please put a concise provenance graph figure here.}
-
-\Logs play a crucial role in recording the activities within a system, detailing interactions among various system entities such as processes, files, and sockets. Various operating systems come equipped with built-in mechanisms to gather these logs, including Event Tracing for Windows (ETW)~\cite{windowsaudit}, the Linux Audit system~\cite{linuxaudit}, and DTrace~\cite{dtrace} for FreeBSD. Each entry in a \logs characterizes a system event, identifying a subject and an object entity within the system. Moreover, these records include additional contextual attributes, including process names, file names, and socket IP addresses.
-
-Data provenance employs the concept of modeling the causal links among different system entities. Fundamentally, it utilizes system logs to construct a dependency graph that captures the relationships between events. Within this graph, nodes symbolize system entities such as processes, files, and sockets, while the edges represent various system syscalls. This provenance graph is instrumental in analyzing the activities of different system entities and plays a vital role in identifying anomalous or malicious entities. Figure~\ref{provexp} shows an example of a provenance graph where \textit{Explorer.exe} is executing other processes such as \textit{Notepad.exe} and \textit{Firefox.exe}. These processes then interact with other file and socket nodes.
-
+\PP{Data Provenance Graphs} \Logs are crucial for recording system activities, detailing interactions among entities such as processes, files, and sockets. Operating systems like Windows, Linux, and FreeBSD offer built-in mechanisms to gather these logs, such as Event Tracing for Windows (ETW)\cite{windowsaudit}, the Linux Audit system\cite{linuxaudit}, and DTrace~\cite{dtrace}. Each log entry characterizes a system event, identifying a subject and object entity, along with contextual attributes like process names, file names, and socket IP addresses. Data provenance models the causal links among system entities by using logs to construct a dependency graph that captures event relationships. In this graph, nodes represent entities like processes, files, and sockets, while edges represent system syscalls. This provenance graph is essential for analyzing system activities and identifying anomalous or malicious entities. Figure~\ref{provexp} illustrates a provenance graph where \textit{Explorer.exe} executes processes like \textit{Notepad.exe} and \textit{Firefox.exe}, which then interact with other file and socket nodes.
 \begin{figure}[t!]
   \centering
   \includegraphics[width=0.4\textwidth]{fig/provexp.pdf}
@@ -82,13 +71,7 @@ Data provenance employs the concept of modeling the causal links among different
 %         \label{limitations}
 %     \end{table}
 
-\subsection{Background: Federated Learning}
-
-Federated learning (FL)~\cite{mcmahan2017communication} is a machine learning approach that enables a model to be trained across multiple decentralized devices or servers holding local data samples, without exchanging them. This method addresses privacy concerns, bandwidth limitations, and data security issues inherent in centralized machine learning approaches used in existing PIDS~\cite{flash2024,cheng2023kairos,wang2022threatrace}. The mathematical formulation of FL involves aggregating locally computed updates to a global model, rather than directly sharing raw data.
-
-In a federated learning setup, consider a global model parameterized by \(\theta\). The goal is to minimize some loss function \(L(\theta)\) that measures the discrepancy between the model's predictions and the actual data across all devices. However, instead of pooling all the data together, each device \(i\) computes an update \(\Delta \theta_i\) based on its local data and a local loss function \(L_i(\theta)\). Mathematically, the update rule on device \(i\) for a learning rate \(\eta\) is given by \(\Delta \theta_i = -\eta \nabla L_i(\theta)\), where \(\nabla L_i(\theta)\) is the gradient of the loss function with respect to the model parameters for the local data. After computing \(\Delta \theta_i\), each device sends this update to a central server.
-
-The central server aggregates these updates from all participating devices to update the global model. The aggregation is an average function: \(\Delta \theta_{global} = \frac{1}{N} \sum_{i=1}^{N} \Delta \theta_i\), where \(N\) is the number of devices. This aggregated update is then used to update the global model parameters: \(\theta_{new} = \theta + \Delta \theta_{global}\). This process iterates, with the updated global model being sent back to the devices for further local updates, until convergence. This iterative process ensures that the global model learns from all devices while keeping the data localized, thus addressing privacy and bandwidth concerns.
+\PP{Federated Learning} Federated learning (FL)~\cite{mcmahan2017communication} is a machine learning approach that enables a model to be trained across multiple decentralized devices or servers holding local data samples, without exchanging them. The mathematical formulation of FL involves aggregating locally computed updates to a global model, rather than directly sharing raw data. In a federated learning setup, consider a global model parameterized by \(\theta\). The goal is to minimize some loss function \(L(\theta)\) that measures the discrepancy between the model's predictions and the actual data across all devices. However, instead of pooling all the data together, each device \(i\) computes an update \(\Delta \theta_i\) based on its local data and a local loss function \(L_i(\theta)\). Mathematically, the update rule on device \(i\) for a learning rate \(\eta\) is given by \(\Delta \theta_i = -\eta \nabla L_i(\theta)\), where \(\nabla L_i(\theta)\) is the gradient of the loss function with respect to the model parameters for the local data. After computing \(\Delta \theta_i\), each device sends this update to a central server. The central server aggregates these updates from all participating devices to update the global model. The aggregation is an average function: \(\Delta \theta_{global} = \frac{1}{N} \sum_{i=1}^{N} \Delta \theta_i\), where \(N\) is the number of devices. This aggregated update is then used to update the global model parameters: \(\theta_{new} = \theta + \Delta \theta_{global}\). This process iterates, with the updated global model being sent back to the devices for further local updates, until convergence. This iterative process ensures that the global model learns from all devices while keeping the data localized, thus addressing privacy and bandwidth concerns.
 
 
 \subsection{Why is it challenging to apply FL to \pids?}
@@ -103,23 +86,4 @@ Applying Federated Learning to PIDS can present challenges due to the heterogene
 
 \PP{Non-Privacy-Preserving Data Structure} The \disdet system employs a Hierarchical System Event Tree (HST) to store attributes of system events observed during benign periods. Events with attributes not present in the HST are identified as anomalous. This HST is forwarded to a central server, where attributes from HSTs of similar clients are aggregated and redistributed. The structure of the HST inherently prevents privacy preservation. Moreover, reliance on a non-learning-based methodology limits \disdet's ability to adapt to previously unseen benign patterns, rendering the application of machine learning algorithms, such as federated averaging~\cite{mcmahan2017communication}, inappropriate in this context.
 
-\subsection{Overview of \Sys}
-%\wajih{Lets use the word \fpgl throughout this paper. And say that we introduce the notion of \fpgl to solve the above challenges. Make sure you use this macro throughout the paper. }
-The challenges outlined above significantly impede the adoption of federated learning in current systems. To overcome these hurdles, We introduce the notion of \fpgl , which integrates federated learning with \grl to create a privacy-preserving detection mechanism. Our approach introduces a novel framework that personalizes \grl at the system entity level, addressing data imbalance and client heterogeneity effectively.
 
-To deal with varying data distribution and heterogeneity, \Sys uses an ensemble learning approach and a process entity categorization scheme, where each submodel specializes in distinct system activity patterns across clients, preventing conflation during model aggregation. To address the feature space heterogeneity, we developed a Word2Vec harmonization framework within a multi-server architecture that securely aggregates semantic attributes. One server generates encryption keys for client-level log attributes, while another performs computations on encrypted data without revealing sensitive tokens. To avoid the problem of temporal misalignment, \Sys uses GraphSAGE~\cite{hamilton2017inductive} neural network, which has been shown by prior work~\cite{flash2024,shadewatcher,wang2022threatrace} to offer good performance and is not affected by temporal dependencies.
-
-% To tackle feature space heterogeneity, we introduce a two-server architecture and an encryption scheme to privately synchronize individual semantic encoders across clients. Within this framework, each client trains an ensemble of \gnnshort models, with each model specializing in a particular category of system entities consistent across all participants. These models then participate in a federated averaging process coordinated by a central server. By specifying the learning objectives for each sub-model across clients, our method aims to standardize federated averaging, enhancing its robustness against skewed data distributions.
-
-\Sys is composed of five key modules. The architecture begins with the \textit{Provenance Graph Constructor} module~\ref{provconstruct} on each client machine, transforming \logs into a provenance graph. Following this, the \textit{Semantic Featurization \& Harmonization}~\ref{semanfeat} module train \wordvec models to encode semantic attributes from the \logs into feature vectors. It also aims to privately consolidate individual client \wordvec models into a cohesive global model, employing a trusted utility server and encryption techniques to ensure the privacy of model data.
-
-Next, the \textit{Process Entity Categorization Module}~\ref{sys:catg} categorizes all system entities across clients into standardized categories, promoting uniformity in the training of \gnnshort models. The \textit{Federated Provenance Graph Learning Module}~\ref{sys:fpgl} proceeds to train \gnnshort models by these categories on each client machine, using the harmonized semantic features. After training, the models are sent to a central server for federated learning, where the federated averaging algorithm integrates the models based on the process entity categories they were trained on. Lastly, the \textit{Anomaly Detection Module}~\ref{sys:anomaly_detection} employs the unified global models for anomaly detection on each client machine. Figure \ref{fig:arch} presents the comprehensive architecture of \Sys, with further details in the subsequent sections.
-
-
-\begin{figure*}[t!]
-  \centering
-  \includegraphics[width=0.95\textwidth]{fig/archv3.pdf}
-  \caption{High-level architecture of \Sys. In the training phase, our system builds local provenance graphs for each client and trains an ensemble of \gnnshort models. Prior to this, we aggregate semantic models contextually for feature encoding. The local \gnnshort models participate in federated learning to develop a global \gnnshort model, which is then utilized for anomaly detection.}
-  \vspace{-3ex}
-  \label{fig:arch}
-\end{figure*}

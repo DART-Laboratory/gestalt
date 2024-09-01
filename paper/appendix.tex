@@ -1,7 +1,20 @@
-\section{Appendix}
-\label{appendix}
+\begin{appendices}
 
-\subsection{Ablation study}
+\section{Provenance Graph Constructor}
+\label{sub:provconstruct}
+
+\Sys utilizes \logs to construct a system provenance graph. It operates on each client machine, using their local system logs to build the graph. Major operating systems, including Linux and Windows, come equipped with built-in mechanisms for log collection -- specifically, the Linux Audit system~\cite{linuxaudit} and Windows Event Tracing~\cite{windowsaudit}. These logs provide detailed insights into the interactions among various system entities, capturing activities, such as process executions, file operations, and network connections. Using this data, \Sys forms a graph where nodes represent system entities including processes, files, and sockets. The edges of this graph denote events, identified by syscalls, that occur between these entities. Moreover, \Sys enhances each node with comprehensive attributes, including process names, command lines, file names, and network IP addresses. As demonstrated by prior works~\cite{flash2024,cheng2023kairos}, these contextual attributes enable the model to develop a robust understanding of system behavior.
+
+\section{Dataset Description}
+\label{sec:dataset:description}
+
+The E3 dataset contains two kinds of threat actors: a nation-state actor and a common threat actor. The goal of the nation-state attacker is to steal proprietary information from the targeted company. Initially, the attacker intends to exploit the webserver hosted on FreeBSD, inject into the SSHD process, and then wait. At this point, the attacker monitors connections and network activity while residing on the FreeBSD host. Subsequently, the attacker targets and exploits the discovered hosts to exfiltrate proprietary data. The common threat attacker aims to steal Personal Identifiable Information (PII) for financial gain by deceiving targeted users into providing access to the network using spear phishing.
+
+The \darpa E5 dataset is more advanced than E3 in terms of attack complexity and data volume. The attackers' capabilities span the entire MITRE ATT\&CK~\cite{xiong2022cyber} adversarial lifecycle, from backdoors to exploit shellcode, from download to the execution of APT simulacra in-memory of the exploited process’s memory, from fingerprinting and surveying the target to exfiltrating sensitive data. Multiple variations of APTs and attack capabilities were delivered for Windows, Ubuntu, FreeBSD, and Android. The logs from E3 and E5 are documented under various scenario names, including Cadets, Trace, Theia, and ClearScope. The attacks in E3 were conducted on a single host per scenario, whereas E5 features three hosts per scenario, presenting a multi-host threat environment.
+
+The \optc dataset, another open-source resource from \darpa, encompasses a comprehensive collection of audit logs from an enterprise environment with 1,000 hosts. This dataset includes six days of benign system logs. Subsequently, attack logs span three days of system activities, featuring red team tactics such as initial compromises, privilege escalations, malicious software installations, and data exfiltration. Each attack day targeted different host machines.
+
+\section{Ablation study}
 \label{app:ablation}
 
 In this ablation study, we analyze the impact of key parameters within \Sys. Specifically, we examine the effects of the number of client machines, the number of federated averaging rounds, the number of \gnnshort categorized models, and the anomaly threshold. The effects of these parameters are discussed below:
@@ -65,12 +78,14 @@ The parameter $\epsilon$ is crucial; it is inversely related to the amount of no
   \vspace{-2ex}
 \end{figure}
 
-\subsection{Word2vec Semantic Featurization}
+\section{Word2vec Semantic Featurization}
 \label{app:Word2vec:Semantic:Featurization}
 
 The system logs contain rich attributes related to various system entities. These attributes, such as process names and file paths, first need to be encoded into vector space so that they can be utilized by our \gnnshort model as node features. To encode these features, we use the \wordvec semantic encoder~\cite{mikolov2013efficient}. The \wordvec model considers the following node attributes per node type: process name and command line arguments for process nodes, file path for file nodes, network IP address and port for socket nodes, and module name for module nodes. For each node, we convert its subgraph to a document by combining semantic attributes and the types of causal events (system calls) between nodes and their neighbors. Each document is then encoded into a fixed-length vector through a \wordvec model trained on benign system logs. Our method captures semantic relationships between words, generating dense embeddings that provide node features for subsequent graph representation learning.
 
 
+
+\end{appendices}
 
 % \label{sub:hyper}
 

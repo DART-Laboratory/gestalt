@@ -12,7 +12,7 @@ Intrusion Detection Systems (\ids) are crucial for countering Advanced Persisten
 
 \begin{figure}[t!]
   \centering
-  \includegraphics[width=0.35\textwidth]{fig/mssp.pdf}
+  \includegraphics[width=0.32\textwidth]{fig/mssp.pdf}
   \caption{The MSSP architecture for intrusion detection, which is vulnerable to privacy leakage. The plain-text system logs are first collected in a centralized storage managed by the MSSP. Then these system logs are analyzed for intrusions.}
   \label{mssp}
   \vspace{-4ex}
@@ -37,24 +37,47 @@ Despite PIDS potential, the current operational mode of MSSPs and the state-of-t
 
 \subsection{Our Approach \& Contributions}
 
-To address these challenges, we introduce \Sys, a novel privacy-preserving PIDS that integrates provenance graph representation learning with Federated Learning (FL). In \Sys, client logs remain local, which significantly enhances user privacy by ensuring sensitive data does not leave the client's environment. Each client independently trains \gnnshort models, and these models are aggregated on a central server with those from other clients, capturing diverse activity patterns across organizations without transmitting actual logs, thus minimizing network overhead. Instead, the only data transmitted are model updates, which are mere kilobytes per client, significantly reducing the network burden. All major computations, including the training and operational phases of \Sys, take place locally on client machines, using their computing resources to process provenance graphs derived from their logs for real-time threat detection. This approach allows \Sys to scale effectively with the addition of more hosts, each utilizing its own computing power and storage, addressing scalability and efficiency comprehensively.
+We introduce \Sys, a novel privacy-preserving PIDS that integrates provenance graph representation learning with Federated Learning (FL) to address the challenges in applying FL to PIDS. {\it To the best of our knowledge, \Sys is the first system to build a privacy-preserving PIDS and effectively solve these challenges.} \Sys introduces Federated Provenance Graph Learning, combining FL with graph representation learning to create a robust detection mechanism. In \Sys, client logs remain local, ensuring that sensitive data never leaves the client's environment. Each client independently trains \gnnshort models, which are aggregated on a central server with models from other clients. This approach captures diverse activity patterns without transmitting actual logs, minimizing network overhead. Only model updates -- mere kilobytes per client -- are transmitted, greatly reducing the network burden. All major computations, including training, take place locally on client machines, leveraging their resources for real-time threat detection. This decentralized approach allows \Sys to scale effectively as more hosts are added, with each utilizing its own computing power and storage.
 
-The implementation of FL for a privacy-preserving PIDS introduces multiple challenges. Firstly, model aggregation in a federated setting becomes complex due to heterogeneous data distributions~\cite{qu2022rethinking} from clients running different applications, leading to suboptimal unified model performance. Additionally, data imbalances~\cite{duan2020self} across clients, where smaller data contributors have less impact on the federated model, skew the learning outcomes. Another significant hurdle is the inconsistent semantic information produced by independently trained \wordvec models on different client machines. This feature space inconsistency~\cite{zhou2023fedfa} across semantic encoders complicates the effectiveness of the global \gnnshort models, resulting in inaccurate system behavior representations due to varied feature vector qualities.
 
-To effectively address the challenges of heterogeneity and data imbalance, we have designed a novel ensemble learning framework. In this framework, each submodel is trained to specialize in learning system activities associated with specific process entities, which are standardized across all clients. This standardization is facilitated by a sophisticated categorization scheme enabled by our dual-server architecture. Through this system, process entities from all clients are organized into \textit{K} privacy-preserving bins. Each client then aligns its process nodes with these bins, constructs a provenance subgraph for each bin, and trains a \gnnshort model on these graphs. The models from all clients are then aggregated into \textit{K} model pairs, forming a comprehensive global ensemble model set. This strategic approach ensures that models with similar data distributions are merged effectively, thereby maintaining the integrity of unique activity patterns across diverse client environments.
+However, applying FL to PIDS introduces several significant challenges, summarized below and detailed in Section~\ref{sec:motivation}
 
-To address semantic inconsistencies in \wordvec models, we implement a \wordvec harmonization scheme utilizing a dual-server architecture. In this setup, a central server issues encryption keys to clients, allowing them to securely encode \wordvec tokens. Subsequently, a utility server processes these encrypted tokens to achieve a unified, privacy-preserving vector representation. This method ensures that sensitive data remains protected while facilitating accurate and consistent semantic encoding across different clients.
+\begin{enumerate}[itemsep=0.1em, parsep=0em, topsep=0em]
+  \labitem{C1}{itm:c1}{\bf Data Imbalance \& Heterogeneity Among Clients.} Data distribution and volume can vary significantly across clients, complicating the training of a global model that performs uniformly well across all clients. Heterogeneous data distributions from clients running different applications can lead to suboptimal unified model performance~\cite{qu2022rethinking}. Additionally, data imbalances across clients, where smaller data contributors have less impact, can skew learning outcomes~\cite{duan2020self}.
 
-We have conducted extensive evaluations of our system's effectiveness using open-source datasets from \darpa, specifically E3~\cite{error3}, E5~\cite{bug5}, and \optc~\cite{anjum2021analyzing}. These datasets encompass a broad spectrum of attack scenarios and system behaviors. Our findings indicate that \Sys achieves high detection performance, with an average precision of 96\% and recall of 97\%. Thus, our system performs comparably to state-of-the-art centralized systems like \flash and \kairos. As detailed in section~\ref{cost_metric}, our system achieves a 170-fold reduction in communication and storage costs compared to \flash and \kairos. Since our technique is decentralized, our inference time is bounded by the client with the most log data; it will only take approximately 3 minutes to run inference on the complete \optc dataset, whereas \flash and \kairos take many hours.  We present a detailed analysis of the privacy protection of our system in Section~\ref{privacy}. We also provide a comprehensive analysis of our system's resilience against adversarial attacks in Section~\ref{sec:discussion}.
+  \labitem{C2}{itm:c2}{\bf Feature Space Heterogeneity.} Inconsistent encoding of identical features across clients leads to difficulties in model convergence and reduces the effectiveness of federated averaging. The independent training of \wordvec models on different client machines results in feature space inconsistencies~\cite{zhou2023fedfa}, complicating the effectiveness of global \gnnshort models.
 
-The main contributions of our work are as follows:
+  \labitem{C3}{itm:c3} {\bf Temporal Misalignment.} Aggregating models trained on temporally diverse data from different clients can result in a loss of crucial temporal information, impairing the creation of a cohesive global model.
+  
+  \labitem{C4}{itm:c4} {\bf Non-Privacy-Preserving Data Structure.} Existing PIDS frameworks often use data structures that do not preserve privacy, making them unsuitable for integration with FL.
+\end{enumerate}
 
-\begin{itemize}[topsep=.1ex,itemsep=-.1ex,leftmargin=*]
-    \item[--] To the best of our knowledge, we are the first to introduce federated provenance graph learning in the domain of IDS with our system, \Sys.
-    \item[--] We have introduced a novel \textbf{ensemble learning} and \textbf{process entity categorization} framework for dealing with diverse heterogeneous client data distributions.
-    \item[--] We developed a sophisticated \textbf{\wordvec harmonization framework} using a multi-server architecture for secure private aggregation of semantic attributes.
-    \item[--] We conduct a comprehensive evaluation of our technique on real-world datasets, demonstrating \Sys's effectiveness in detecting system threats while being scalable and privacy-preserving.
-\end{itemize}
+\wajih{Make sure that the following paragarphs are correct and have all the information. Very important to highlight all our contributions here. So spend significant time on these paragraphs. Also, make sure to refer C4 and provide solution for that problem.}
+
+
+To address ~\ref{itm:c1}, we have designed a novel ensemble learning framework. In this framework, each submodel is trained to specialize in learning system activities associated with specific process entities, which are standardized across all clients. This standardization is facilitated by a sophisticated categorization scheme enabled by our dual-server architecture. Through this system, process entities from all clients are organized into \textit{K} privacy-preserving bins. Each client then aligns its process nodes with these bins, constructs a provenance subgraph for each bin, and trains a \gnnshort model on these graphs. The models from all clients are then aggregated into \textit{K} model pairs, forming a comprehensive global ensemble model set. This strategic approach ensures that models with similar data distributions are merged effectively, thereby maintaining the integrity of unique activity patterns across diverse client environments.
+
+To tackle ~\ref{itm:c2}, we implement a \wordvec harmonization scheme utilizing a dual-server architecture. In this setup, a central server issues encryption keys to clients, allowing them to securely encode \wordvec tokens. Subsequently, a utility server processes these encrypted tokens to achieve a unified, privacy-preserving vector representation. This method ensures that sensitive data remains protected while facilitating accurate and consistent semantic encoding across different clients.
+
+To avoid the problem of ~\ref{itm:c3}, \Sys employs the GraphSAGE~\cite{hamilton2017inductive} neural network, which has been shown by prior work~\cite{flash2024,shadewatcher,wang2022threatrace} to offer good performance and is less affected by temporal dependencies. This approach mitigates the issues of temporal misalignment that often arise in federated learning settings.
+
+
+
+
+
+\wajih{make sure that the numbers are correct below.}
+We conducted extensive evaluations of \Sys using open-source datasets from \darpa, specifically E3~\cite{error3}, E5~\cite{bug5}, and \optc~\cite{anjum2021analyzing}, which encompass a broad spectrum of attack scenarios and system behaviors. The primary goal of \Sys is not to improve the accuracy of state-of-the-art PIDS, but to demonstrate that a privacy-preserving PIDS can be built while maintaining comparable performance. Our results show that \Sys achieves impressive detection performance, with an average precision of 96\% and recall of 97\%, matching the accuracy levels of existing PIDS. What sets \Sys apart is its ability to achieve this accuracy while significantly reducing the risks associated with centralized data collection. Moreover, \Sys achieves a 170-fold reduction in communication and storage costs compared to existing systems. Moreover, the decentralized nature of \Sys allows for much faster inference times, completing the full \optc dataset in just 3 minutes, whereas \flash and \kairos require many hours.
+
+We present a detailed analysis of the privacy protection of our system in Section~\ref{privacy}. We also provide a comprehensive analysis of our system's resilience against adversarial attacks in Section~\ref{sec:discussion}. \Fix{Add more research questions and their results here.}
+
+% The main contributions of our work are as follows:
+
+% \begin{itemize}[topsep=.1ex,itemsep=-.1ex,leftmargin=*]
+%     \item[--] To the best of our knowledge, we are the first to introduce federated provenance graph learning in the domain of IDS with our system, \Sys.
+%     \item[--] We have introduced a novel \textbf{ensemble learning} and \textbf{process entity categorization} framework for dealing with diverse heterogeneous client data distributions.
+%     \item[--] We developed a sophisticated \textbf{\wordvec harmonization framework} using a multi-server architecture for secure private aggregation of semantic attributes.
+%     \item[--] We conduct a comprehensive evaluation of our technique on real-world datasets, demonstrating \Sys's effectiveness in detecting system threats while being scalable and privacy-preserving.
+% \end{itemize}
 
 \PP{Availability.} We plan to open-source our codebase upon publication to promote further development in privacy-preserving IDS research. %\url{https://anonymous.4open.science/r/TrustWatch}
 
