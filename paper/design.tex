@@ -37,7 +37,7 @@ Temporal misalignment can significantly impair the ability of the global model t
 The inability to preserve privacy in the data structures used by PIDS can lead to significant privacy risks, undermining the trust and security of the system. Moreover, the reliance on non-privacy-preserving structures makes it difficult to integrate such systems into a federated learning framework, limiting the scalability and applicability of PIDS in privacy-sensitive environments.
 
 
-\subsection{Problem Formulation}
+\subsection{Problem Formulation \& Overview}
 
 \wajih{Make sure that the notations here match with Figure 3. I see some discrepancies.}
 
@@ -49,7 +49,7 @@ Let \( C = \{client_1, client_2, \ldots, client_k\} \) denote the set of client 
 
 Additionally, we aim to develop a global semantic encoder, \( \mathcal{E}_{\text{semantic}} \), capable of converting contextual attributes into vector space, thereby generating feature vectors for training our GNN models. Using these global \gnnshort models, we aim to identify anomalous nodes in provenance graphs constructed from \logs during runtime. These anomalies could be potential threats as their system activity significantly differs from benign patterns.
 
-\subsection{Overview}
+% \subsection{Overview}
 \Sys comprises five key modules, starting with the \textit{Provenance Graph Constructor} module on each client machine, which transforms \logs into a provenance graph. While our approach to constructing provenance graphs builds on established methods~\cite{inam2023sok,nodoze2019,mpi+ma,loggc,lpm2015,hossain2017sleuth}, detailed information is provided in Appendix~\ref{sub:provconstruct}. The \textit{Semantic Featurization \& Harmonization} module (Section~\ref{semanfeat}) trains \wordvec models to encode semantic attributes and consolidates individual client models into a cohesive global model using a trusted utility server and encryption techniques. The \textit{Process Entity Categorization Module} (Section~\ref{sys:catg}) standardizes system entities across clients, ensuring uniformity in \gnnshort model training. The \textit{Federated Provenance Graph Learning Module} (Section~\ref{sys:fpgl}) then trains \gnnshort models on each client machine using harmonized semantic features, with the models aggregated on a central server through federated averaging. Finally, the \textit{Anomaly Detection Module} (Section~\ref{sys:anomaly_detection}) applies the unified global models for anomaly detection on each client machine. Figure \ref{fig:arch} illustrates the comprehensive architecture of \Sys, with further details in subsequent sections.
 
 
