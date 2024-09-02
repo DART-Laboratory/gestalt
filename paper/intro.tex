@@ -47,7 +47,7 @@ However, applying FL to PIDS introduces several significant challenges, summariz
 
   \labitem{C2}{itm:c2}{\bf Feature Space Heterogeneity.} Inconsistent encoding of identical features across clients leads to difficulties in model convergence and reduces the effectiveness of federated averaging. The independent training of \wordvec models on different client machines results in feature space inconsistencies~\cite{zhou2023fedfa}, complicating the effectiveness of global \gnnshort models.
 
-  \labitem{C3}{itm:c3} {\bf Temporal Misalignment.} Aggregating models trained on temporally diverse data from different clients can result in a loss of crucial temporal information, impairing the creation of a cohesive global model.
+  \labitem{C3}{itm:c3} {\bf Temporal Misalignment.} Aggregating models trained on temporally misaligned data from different clients can result in inconsistencies, impairing the creation of a cohesive global model.
   
   \labitem{C4}{itm:c4} {\bf Non-Privacy-Preserving Data Structure.} Existing PIDS frameworks often use data structures that do not preserve privacy, making them unsuitable for integration with FL.
 \end{enumerate}
