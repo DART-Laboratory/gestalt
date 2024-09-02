@@ -1,8 +1,7 @@
-\section{\Sys Design}
+\section{Design}
 \label{sec:methodology}
 % \wajih{Do a GLOBAL SEARCH of the paper and replace federated graph learning with federated provenance graph learning and replace anomaly detection with GNN-based anomaly detection where ever appropriate}
 
-\Sys comprises five key modules, starting with the \textit{Provenance Graph Constructor} module on each client machine, which transforms \logs into a provenance graph. While our approach to constructing provenance graphs builds on established methods~\cite{inam2023sok,nodoze2019,mpi+ma,loggc,lpm2015,hossain2017sleuth}, detailed information is provided in Appendix~\ref{sub:provconstruct}. The \textit{Semantic Featurization \& Harmonization} module (Section~\ref{semanfeat}) trains \wordvec models to encode semantic attributes and consolidates individual client models into a cohesive global model using a trusted utility server and encryption techniques. The \textit{Process Entity Categorization Module} (Section~\ref{sys:catg}) standardizes system entities across clients, ensuring uniformity in \gnnshort model training. The \textit{Federated Provenance Graph Learning Module} (Section~\ref{sys:fpgl}) then trains \gnnshort models on each client machine using harmonized semantic features, with the models aggregated on a central server through federated averaging. Finally, the \textit{Anomaly Detection Module} (Section~\ref{sys:anomaly_detection}) applies the unified global models for anomaly detection on each client machine. Figure \ref{fig:arch} illustrates the comprehensive architecture of \Sys, with further details in subsequent sections.
 
 
 \begin{figure*}[t!]
@@ -13,15 +12,30 @@
   \label{fig:arch}
 \end{figure*}
 
-% \wajih{Use macros for common words in this whole section.}
 
-% \wajih{Be consistent with the terminology that you used in the abstract/intro.}
+\subsection{Why is it challenging to apply FL to \pids?}
 
-% \wajih{Use formalism wherever is possible}
+\wajih{I added second paragraph in each challenge make sure that these paragraphs are factually correct.}
+
+Applying Federated Learning (FL) to PIDS~\cite{streamspot,provdetector2020,wang2022threatrace,shadewatcher,yangprographer,han2020unicorn,jia2023magic,flash2024,cheng2023kairos,sigl} presents significant challenges due to the inherent characteristics of federated learning and the nature of data in PIDS environments. The key challenges are outlined below:
+
+\PP{Data Imbalance \& Heterogeneity Among Clients} In federated learning scenarios, the heterogeneity of data across devices often leads to skewed model updates and performance variances, a phenomenon referred to as non-IID~\cite{zhao2018federated} data. This variability in data distribution and volume can result in some clients having extensive data representing a broad spectrum of benign patterns, while others have limited or skewed datasets. Such imbalances complicate the training of a global model \( GNN_{Global} \) that performs uniformly well across all clients. Specifically, if \( GNN_{Global} \) is optimized based on $\mathcal{D} = \bigcup_{i=1}^{N} \mathcal{D}_i$, where $\mathcal{D}_i$ denotes the local dataset of client $i$, the model may become biased toward clients with more comprehensive data collections, potentially overlooking unique patterns in less-represented clients. Existing PIDS lack mechanisms to effectively address this challenge.
+
+This imbalance complicates the training of a global model \( GNN_{Global} \) that performs uniformly well across all clients, which is critical for PIDS. If the global model is biased towards certain clients, it may fail to recognize anomalous behavior patterns present in less-represented clients, reducing the overall detection accuracy and increasing the risk of undetected threats.
+
+\PP{Feature Space Heterogeneity} PIDS, such as \flash~\cite{cheng2023kairos}, employ a temporally-aware \wordvec model to encode the semantic attributes of entities within a provenance graph. In a federated learning environment, each client machine independently trains its \wordvec model \( word2vec_{i} \) on its local feature set $\mathcal{F}_i$. The inherent randomness of the \wordvec algorithm means that identical tokens $t$ can be encoded into different vectors $v_i(t)$ by each client $i$. As a result, when each client trains its \wordvec model, identical features are projected into disparate embedding spaces. This discrepancy hinders the convergence of \gnn models \( GNN_{i} \) trained on these features, leading to poor performance when federated averaging is applied.
+
+This discrepancy hinders the performance of the global model \( GNN_{Global} \), which is essential for accurately detecting anomalies in provenance graphs. Feature space heterogeneity can cause the global model to misinterpret the semantic relationships within the data, leading to false positives or missed detections in anomaly detection systems.
 
 
+\PP{Temporal Misalignment} Some PIDS, such as Kairos~\cite{cheng2023kairos}, leverage temporal graph neural networks to analyze the evolution of a system's provenance graph over time. However, the application of federated learning to capture these temporal dependencies presents significant challenges. Data fragmentation across clients results in a lack of temporal alignment, which is crucial for the effective implementation of federated averaging in such networks. Specifically, when models trained on temporally diverse datasets from individual clients are aggregated, they may not align properly, leading to a loss of temporal information. This misalignment impedes the ability to integrate individual learnings into a cohesive global model \( GNN_{Global} \).
 
-% \wajih{Move these two paragraphs to 2.4 Overview subsection. You need to combine information and remove redundant information after moving.}
+Temporal misalignment can significantly impair the ability of the global model to accurately detect anomalies in PIDS, as the sequence and timing of events are crucial in identifying suspicious activities. PIDS depend on the temporal correlation of events to spot deviations from normal behavior, and misalignment can lead to ineffective or delayed threat detection.
+
+\PP{Non-Privacy-Preserving Data Structure} The \disdet system employs a Hierarchical System Event Tree (HST) to store attributes of system events observed during benign periods. Events with attributes not present in the HST are identified as anomalous. This HST is forwarded to a central server, where attributes from HSTs of similar clients are aggregated and redistributed. The structure of the HST inherently prevents privacy preservation. Moreover, reliance on a non-learning-based methodology limits \disdet's ability to adapt to previously unseen benign patterns, rendering the application of machine learning algorithms, such as federated averaging~\cite{mcmahan2017communication}, inappropriate in this context.
+
+The inability to preserve privacy in the data structures used by PIDS can lead to significant privacy risks, undermining the trust and security of the system. Moreover, the reliance on non-privacy-preserving structures makes it difficult to integrate such systems into a federated learning framework, limiting the scalability and applicability of PIDS in privacy-sensitive environments.
+
 
 \subsection{Problem Formulation}
 
@@ -34,6 +48,10 @@
 Let \( C = \{client_1, client_2, \ldots, client_k\} \) denote the set of client machines, where each machine \( client_i \), for \( i = 1, 2, \ldots, k \), locally maintains its \logs to preserve privacy, ensuring that raw logs do not leave the machine. Our objective is to detect anomalous nodes within the client's provenance graphs, \( \{G_{c_1}, G_{c_2}, \ldots, G_{c_P}\} \), generated from these logs. To this end, we propose training a set of global \gnnshort models to model the benign behavior exhibited across all client logs without centralizing the log data.
 
 Additionally, we aim to develop a global semantic encoder, \( \mathcal{E}_{\text{semantic}} \), capable of converting contextual attributes into vector space, thereby generating feature vectors for training our GNN models. Using these global \gnnshort models, we aim to identify anomalous nodes in provenance graphs constructed from \logs during runtime. These anomalies could be potential threats as their system activity significantly differs from benign patterns.
+
+\subsection{Overview}
+\Sys comprises five key modules, starting with the \textit{Provenance Graph Constructor} module on each client machine, which transforms \logs into a provenance graph. While our approach to constructing provenance graphs builds on established methods~\cite{inam2023sok,nodoze2019,mpi+ma,loggc,lpm2015,hossain2017sleuth}, detailed information is provided in Appendix~\ref{sub:provconstruct}. The \textit{Semantic Featurization \& Harmonization} module (Section~\ref{semanfeat}) trains \wordvec models to encode semantic attributes and consolidates individual client models into a cohesive global model using a trusted utility server and encryption techniques. The \textit{Process Entity Categorization Module} (Section~\ref{sys:catg}) standardizes system entities across clients, ensuring uniformity in \gnnshort model training. The \textit{Federated Provenance Graph Learning Module} (Section~\ref{sys:fpgl}) then trains \gnnshort models on each client machine using harmonized semantic features, with the models aggregated on a central server through federated averaging. Finally, the \textit{Anomaly Detection Module} (Section~\ref{sys:anomaly_detection}) applies the unified global models for anomaly detection on each client machine. Figure \ref{fig:arch} illustrates the comprehensive architecture of \Sys, with further details in subsequent sections.
+
 
 %\wajih{You need to talk about threat detection and alert generation.}
 
@@ -52,14 +70,7 @@ This module processes the provenance graph generated from \logs by transforming 
 
 However, before these models can be utilized to encode text attributes effectively, it is essential to contextually merge individual client \wordvec models into a unified model \( word2vec_{Global} \) for use across all clients. This unification is crucial; without it, each client would produce a different encoding, \(v_a^i\), for identical inputs, where \(i\) denotes the client. The variability in feature vectors, \(\{v_a^1, v_a^2, \ldots, v_a^N\}\), for the same attribute \(a\) across \(N\) clients, would compromise the consistency of client-based \gnnshort models. To ensure uniformity, the feature vectors for overlapping attributes must be averaged across clients. Such averaging ensures consistency in the feature representation, enhancing the effectiveness of the downstream federated averaging technique by maintaining uniformity in the input space for the \gnnshort models across all clients.
 
-The \wordvec model functions as a key-value store, with vocabulary tokens as keys, \(k\), and their corresponding vector representations as values, \(v_k\). To combine these models, we calculate the average vector of overlapping tokens from all client machines, creating a central model. The mathematical representation for averaging vectors of a token \(k\) across \(N\) clients is given by:
-
-\begin{equation*}
-  \!\bar{v}_k = \frac{1}{N}\sum_{i=1}^{N} v_{k,i}\!
-\end{equation*}
-
-
-where \(\bar{v}_k\) is the averaged vector for token \(k\), and \(v_{k,i}\) is the vector representation of token \(k\) from the \(i\)-th client model.
+The \wordvec model functions as a key-value store, with vocabulary tokens as keys, \(k\), and their corresponding vector representations as values, \(v_k\). To combine these models, we calculate the average vector of overlapping tokens from all client machines, creating a central model. The mathematical representation for averaging vectors of a token \(k\) across \(N\) clients is given by \(\bar{v}_k = \frac{1}{N}\sum_{i=1}^{N} v_{k,i}\) where \(\bar{v}_k\) is the averaged vector for token \(k\), and \(v_{k,i}\) is the vector representation of token \(k\) from the \(i\)-th client model.
 
 However, transferring tokens -- containing sensitive data like process names, file names, and IP addresses -- to a central server could breach user privacy. To mitigate this, we employ a trusted utility server. Initially, the central server uses Fernet symmetric key encryption~\cite{ismail2020fernet,bokhari2016review} to generate an encryption key, which is distributed to clients. Clients then encrypt their \texttt{word2vec} model tokens using the encryption key: \( E(v_{k}) = v_{k}^{'} \) and send them to the utility server. This server merges the encrypted models and dispatches the unified semantic vectors back to the respective clients, who decrypt them back: \( D(v_{k}^{'}) = v_{k} \).
 
