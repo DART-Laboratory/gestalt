@@ -47,8 +47,7 @@ However, applying FL to PIDS introduces several significant challenges, summariz
 
   \labitem{C2}{itm:c2}{\bf Feature Space Heterogeneity.} Inconsistent encoding of identical features across clients leads to difficulties in model convergence and reduces the effectiveness of federated averaging. The independent training of \wordvec models on different client machines results in feature space inconsistencies~\cite{zhou2023fedfa}, complicating the effectiveness of global \gnnshort models.
 
-  \mati{I think C3 \& C4 are more of design limitations of Kairos and Disdet which complicates applying FL to them. I feel like we should not discuss them as challenges because we dont provide any solutions to them. We just prevented these design choices to avoid these problems.}
-  % \labitem{C3}{itm:c3} {\bf Temporal Misalignment.} Aggregating models trained on temporally misaligned data from different clients can result in inconsistencies, impairing the creation of a cohesive global model.
+  \labitem{C3}{itm:c3} {\bf Temporal Misalignment.} Aggregating temporal graph models trained on temporally misaligned data from different clients can result in inconsistencies, impairing the creation of a cohesive global model.
   
   % \labitem{C4}{itm:c4} {\bf Non-Privacy-Preserving Data Structure.} Existing PIDS frameworks often use data structures that do not preserve privacy, making them unsuitable for integration with FL.
 \end{enumerate}
@@ -60,7 +59,7 @@ To address ~\ref{itm:c1}, we have designed a novel ensemble learning framework. 
 
 To tackle ~\ref{itm:c2}, we implement a \wordvec harmonization scheme utilizing a dual-server architecture. In this setup, a central server issues encryption keys to clients, allowing them to securely encode \wordvec tokens. Subsequently, a utility server processes these encrypted tokens to achieve a unified, privacy-preserving vector representation. This method ensures that sensitive data remains protected while facilitating accurate and consistent semantic encoding across different clients.
 
-% To avoid the problem of ~\ref{itm:c3}, \Sys employs the GraphSAGE~\cite{hamilton2017inductive} neural network, which has been shown by prior work~\cite{flash2024,shadewatcher,wang2022threatrace} to offer good performance and is less affected by temporal dependencies. This approach mitigates the issues of temporal misalignment that often arise in federated learning settings.
+To avoid the problem of ~\ref{itm:c3} arising from the use of temporal graph networks, \Sys employs the GraphSAGE~\cite{hamilton2017inductive} neural network, which has been shown by prior work~\cite{flash2024,shadewatcher,wang2022threatrace} to offer good performance and is less affected by temporal dependencies. This approach mitigates the issues of temporal misalignment that often arise in federated learning settings.
 
 \wajih{make sure that the numbers are correct below.}
 We conducted extensive evaluations of \Sys using open-source datasets from \darpa, specifically E3~\cite{error3}, E5~\cite{bug5}, and \optc~\cite{anjum2021analyzing}, which encompass a broad spectrum of attack scenarios and system behaviors. The primary goal of \Sys is not to improve the accuracy of state-of-the-art PIDS, but to demonstrate that a privacy-preserving PIDS can be built while maintaining comparable performance. Our results show that \Sys achieves impressive detection performance, with an average precision of 96\% and recall of 97\%, matching the accuracy levels of existing PIDS. What sets \Sys apart is its ability to achieve this accuracy while significantly reducing the privacy risks associated with centralized data collection.
