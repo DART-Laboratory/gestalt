@@ -37,13 +37,13 @@ The inability to preserve privacy in these data structures can lead to significa
 
 \subsection{Problem Formulation \& Overview}
 
-\wajih{Make sure that the notations here match with Figure 3. I see some discrepancies.}
+% \wajih{Make sure that the notations here match with Figure 3. I see some discrepancies.}
 
 %\wajih{Look at Nature's paper page 7 to have a similar problem formulation here as well.}
 
 % \wajih{The mathematical notations in this paragraph does not match with the Arch diagram. For example, in the figure you have Client i, Client j while you have u1 and u2 here. Make sure other notations also match the figures.}
 
-Let \( C = \{client_1, client_2, \ldots, client_k\} \) denote the set of client machines, where each machine \( client_i \), for \( i = 1, 2, \ldots, k \), locally maintains its \logs to preserve privacy, ensuring that raw logs do not leave the machine. Our objective is to detect anomalous nodes within the client's provenance graphs, \( \{G_{c_1}, G_{c_2}, \ldots, G_{c_P}\} \), generated from these logs. To this end, we propose training a set of global \gnnshort models to model the benign behavior exhibited across all client logs without centralizing the log data.
+Let \( C = \{Client_1, Client_2, \ldots, Client_k\} \) denote the set of client machines, where each machine \( Client_i \), for \( i = 1, 2, \ldots, k \), locally maintains its \logs to preserve privacy, ensuring that raw logs do not leave the machine. Our objective is to detect anomalous nodes within the client's provenance graphs, \( \{G_{c_1}, G_{c_2}, \ldots, G_{c_P}\} \), generated from these logs. To this end, we propose training a set of global \gnnshort models to model the benign behavior exhibited across all client logs without centralizing the log data.
 
 Additionally, we aim to develop a global semantic encoder, \( \mathcal{E}_{\text{semantic}} \), capable of converting contextual attributes into vector space, thereby generating feature vectors for training our GNN models. Using these global \gnnshort models, we aim to identify anomalous nodes in provenance graphs constructed from \logs during runtime. These anomalies could be potential threats as their system activity significantly differs from benign patterns.
 
@@ -163,7 +163,7 @@ The federated averaging process is repeated for a set number of rounds \(R\), an
   $G \leftarrow \text{InitializeRandomWeights}()$\\
   \tcc{Distribute $GNN$ to all clients.}
   \ForEach{client}{
-    Send $GNN$ to $client_i$\\
+    Send $GNN$ to $Client_i$\\
     $GNN \leftarrow \text{TrainOnLocalData}(ProcessCategory_i)$
   }
   \BlankLine
