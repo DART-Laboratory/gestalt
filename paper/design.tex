@@ -31,6 +31,7 @@ This discrepancy hinders the performance of the global model \( GNN_{\text{Globa
 
 Temporal misalignment can significantly impair the ability of the global model to accurately detect anomalies in PIDS, as the sequence and timing of events is cruical for TGNs to work. PIDS depending on the temporal correlation of events can lead to ineffective threat detection.
 
+\Fix{Remove this part from here and move it to related work. It is not concsistent with intro. }
 \PP{Non-Privacy-Preserving Data Structure} The \disdet system employs a Hierarchical System Event Tree (HST) to store attributes of system events observed during benign periods. Events with attributes not present in the HST are identified as anomalous. This HST is forwarded to a central server, where attributes from HSTs of similar clients are aggregated and redistributed. The structure of the HST inherently prevents privacy preservation. Moreover, reliance on a non-learning-based methodology limits \disdet's ability to adapt to previously unseen benign patterns, rendering the application of machine learning algorithms, such as federated averaging~\cite{mcmahan2017communication}, inappropriate in this context.
 
 The inability to preserve privacy in these data structures can lead to significant privacy risks, undermining the trust and security of the system. Moreover, the reliance on non-learning-based algorithms makes it difficult to integrate these systems into a federated learning framework.
