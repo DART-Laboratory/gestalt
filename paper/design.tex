@@ -19,11 +19,6 @@ Additionally, we aim to develop a global semantic encoder, \( \mathcal{E}_{\text
   \label{fig:arch}
 \end{figure*}
 
-
-
-
-
-
 % \subsection{Overview}
 \Sys comprises five key modules, starting with the \textit{Provenance Graph Constructor} module on each client machine, which transforms \logs into a provenance graph. While our approach to constructing provenance graphs builds on established methods~\cite{inam2023sok,nodoze2019,mpi+ma,loggc,lpm2015,hossain2017sleuth}, detailed information is provided in Appendix~\ref{sub:provconstruct}. The \textit{Semantic Featurization \& Harmonization} module (Section~\ref{semanfeat}) trains \wordvec models to encode semantic attributes and consolidates individual client models into a cohesive global model using a trusted utility server and encryption techniques. The \textit{Process Entity Categorization Module} (Section~\ref{sys:catg}) standardizes system entities across clients, ensuring uniformity in \gnnshort model training. The \textit{Federated Provenance Graph Learning Module} (Section~\ref{sys:fpgl}) then trains \gnnshort models on each client machine using harmonized semantic features, with the models aggregated on a central server through federated averaging. Finally, the \textit{Anomaly Detection Module} (Section~\ref{sys:anomaly_detection}) applies the unified global models for anomaly detection on each client machine. Figure \ref{fig:arch} illustrates the comprehensive architecture of \Sys, with further details in subsequent sections.
 
@@ -123,36 +118,36 @@ where \(\bar{w}\) is the aggregated global model parameter, \(N\) is the number 
 
 The federated averaging process is repeated for a set number of rounds \(R\), and concludes when there is no further reduction in training loss. Algorithm~\ref{alg:federated_learning} shows the training and aggregation process of \gnnshort for a given process category and one round of FL.
 
-\begin{algorithm}[!t]
-  \scriptsize
-  \DontPrintSemicolon
-  \SetKwInOut{Input}{Inputs}
-  \SetKwInOut{Output}{Output}
-  \Input{Set of client models $\{GNN_1, GNN_2, \ldots, GNN_N\}$;\\}
-  \Output{Global GNN model $GNN_{Global}$.}
-  \BlankLine
-  \tcc{Initialize global GNN model with random weights for a given process Category.}
-  %\tcc{This initialization happens for the first FL round only.}
-  $G \leftarrow \text{InitializeRandomWeights}()$\\
-  \tcc{Distribute $GNN$ to all clients.}
-  \ForEach{client}{
-    Send $GNN$ to $Client_i$\\
-    $GNN \leftarrow \text{TrainOnLocalData}(ProcessCategory_i)$
-  }
-  \BlankLine
-  \tcc{Aggregate trained models from clients.}
-  $AggregatedWeights \leftarrow list([])$\\
-  \ForEach{client model $GNN_i$}{
-    $AggregatedWeights.append(\text{ExtractWeights}(GNN_i))$\\
-  }
-  \tcc{Apply federated averaging.}
-  $GNN_{Global} \leftarrow \text{FederatedAveraging}(AggregatedWeights)$\\
-  \BlankLine
-  \Return $GNN_{Global}$\\
-  \BlankLine
-  \caption{Federated Provenance Graph Learning}
-  \label{alg:federated_learning}
-\end{algorithm}
+% \begin{algorithm}[!t]
+%   \scriptsize
+%   \DontPrintSemicolon
+%   \SetKwInOut{Input}{Inputs}
+%   \SetKwInOut{Output}{Output}
+%   \Input{Set of client models $\{GNN_1, GNN_2, \ldots, GNN_N\}$;\\}
+%   \Output{Global GNN model $GNN_{Global}$.}
+%   \BlankLine
+%   \tcc{Initialize global GNN model with random weights for a given process Category.}
+%   %\tcc{This initialization happens for the first FL round only.}
+%   $G \leftarrow \text{InitializeRandomWeights}()$\\
+%   \tcc{Distribute $GNN$ to all clients.}
+%   \ForEach{client}{
+%     Send $GNN$ to $Client_i$\\
+%     $GNN \leftarrow \text{TrainOnLocalData}(ProcessCategory_i)$
+%   }
+%   \BlankLine
+%   \tcc{Aggregate trained models from clients.}
+%   $AggregatedWeights \leftarrow list([])$\\
+%   \ForEach{client model $GNN_i$}{
+%     $AggregatedWeights.append(\text{ExtractWeights}(GNN_i))$\\
+%   }
+%   \tcc{Apply federated averaging.}
+%   $GNN_{Global} \leftarrow \text{FederatedAveraging}(AggregatedWeights)$\\
+%   \BlankLine
+%   \Return $GNN_{Global}$\\
+%   \BlankLine
+%   \caption{Federated Provenance Graph Learning}
+%   \label{alg:federated_learning}
+% \end{algorithm}
 
 \subsection{GNN-based Anomaly Detection}
 \label{sys:anomaly_detection}

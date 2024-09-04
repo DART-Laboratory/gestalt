@@ -48,22 +48,17 @@ Our evaluation experiments are conducted on a machine running Ubuntu 18.04.6 LTS
 
 % \Fix{There are eight subsection in the evaluation while we have six research question. Make them consistent. This can confuse reader. Also, if you moved something to Appendix, refer them below. }
 
-\wajih{These are just too many research question. You need to combine similar RQs into one. If you think something is an ablation study then move it to the ablation study section. }
+% \wajih{These are just too many research question. You need to combine similar RQs into one. If you think something is an ablation study then move it to the ablation study section. }
 \begin{itemize}[leftmargin=*,itemsep=0.1em, parsep=0em, topsep=0em]
-\item \textbf{RQ1.} How does \Sys compares to existing systems in terms of detection performance?
-\item \textbf{RQ2.} How effective is the categorization based \gnnshort ensemble compared to a single \gnnshort? 
-\item \textbf{RQ3.} What is the effectiveness of \wordvec harmonization in a utility server setting?
-\item \textbf{RQ4.} What is the resource consumption of various components of \Sys? 
-\item \textbf{RQ5.} What is the end to end processing time of \Sys on a client machine? 
-\item \textbf{RQ6.} How does \Sys operates in an enterprise level setting with multiple host machines?
-\item \textbf{RQ7.} How robust is \Sys against adversarial mimicry attacks?
-\item \textbf{RQ8.} How does \Sys compare to existing federated learning solutions in handling data heterogeneity?
-
-\end{itemize}
-
+  \item \textbf{RQ1.} How does \Sys compare to existing systems in terms of detection performance?
+  \item \textbf{RQ2.} How effective is the categorization-based \gnnshort ensemble and word2vec harmonization scheme, and how does it compare to existing federated learning solutions for handling data heterogeneity?
+  \item \textbf{RQ3.} What is the resource consumption of various components of \Sys and its end-to-end processing time on a client machine? 
+  \item \textbf{RQ4.} How does \Sys perform in an enterprise-level setting with multiple host machines?
+  \item \textbf{RQ5.} How robust is \Sys against adversarial mimicry attacks?
+  \end{itemize}  
 %\wajih {Say here that we have an ablation study on metrics: Effect of Federated Averaging Round, blah blah in Appendix.}
 
-We present a detailed ablation study in Appendix~\ref{app:ablation} on the following metrics: the effect of the number of \gnnshort\ submodels, federated averaging rounds, differential privacy, and the anomaly threshold on detection performance.
+We discuss the resource consumption of various components of \Sys in Appendix~\ref{sec:resource_consumption}. Additionally, we present a detailed ablation study in Appendix~\ref{app:ablation} on the following metrics: the effect of the number of \gnnshort\ submodels, federated averaging rounds, differential privacy, and the anomaly threshold on detection performance.
 
 \PP{Implementation} \Sys is developed in Python with around 5500 lines of code. It leverages the PyTorch and Torch Geometric libraries to implement the federated provenance graph learning framework. The graph learning framework uses the GraphSAGE~\cite{hamilton2017inductive} family of \gnnshort. Our architecture consists of two graph convolution layers with a Tanh activation function in between. The last layer uses a softmax function to output class probabilities for the nodes. For developing the semantic attribute encoder, we employ the Gensim library. Secure communication between clients and the utility server is ensured through Python's Cryptography module. The federated averaging, semantic vector harmonization, and entity categorization modules are implemented as individual Python functions on the central and utility servers.
 
@@ -194,27 +189,53 @@ To examine the effectiveness of our process categorization based \gnnshort ensem
   \label{local:wordvec}
 \end{table}
 
- \subsection{Resource consumption}
+%  \subsection{Resource consumption}
 
- We conducted experiments to analyze the resource consumption of the central, utility server, and client-side modules of \Sys. We modeled the resource utilization on a client machine using different batches of audit events of varying sizes. For the central and utility servers, we studied resource consumption by varying the number of clients to understand the demands of federated averaging and semantic vector harmonization. The results, depicted in Figure~\ref{fig:resource}, indicate that \Sys's resource consumption is moderate. Specifically, \Sys can process up to 100,000 audit events simultaneously while consuming less than 900 MB of memory and utilizing less than 20\% of CPU resources. This performance suggests that \Sys does not significantly burden the client machine, especially considering the typically low event throughput on such machines. Additionally, our analysis of the host data in the \optc dataset shows that, on average, each client generates approximately 100,000 audit log events within a three-hour period. For the central and utility servers, the resource usage is minimal, demonstrating that our architecture is scalable and suitable for large organizations with many clients.
+%  We conducted experiments to analyze the resource consumption of the central, utility server, and client-side modules of \Sys. We modeled the resource utilization on a client machine using different batches of audit events of varying sizes. For the central and utility servers, we studied resource consumption by varying the number of clients to understand the demands of federated averaging and semantic vector harmonization. The results, depicted in Figure~\ref{fig:resource}, indicate that \Sys's resource consumption is moderate. Specifically, \Sys can process up to 100,000 audit events simultaneously while consuming less than 900 MB of memory and utilizing less than 20\% of CPU resources. This performance suggests that \Sys does not significantly burden the client machine, especially considering the typically low event throughput on such machines. Additionally, our analysis of the host data in the \optc dataset shows that, on average, each client generates approximately 100,000 audit log events within a three-hour period. For the central and utility servers, the resource usage is minimal, demonstrating that our architecture is scalable and suitable for large organizations with many clients.
 
- \begin{figure}[!t]
+%  \begin{figure}[!t]
+%   \centering
+%   \subfloat[CPU utilization client side.]{\includegraphics[width=0.20\textwidth]{fig/cpu.pdf}\label{cpu_client}}
+%   \hfill
+%   \subfloat[RAM utilization client side]{\includegraphics[width=0.20\textwidth]{fig/ram.pdf}\label{ram_client}}
+%   \hfill
+%   \subfloat[CPU utilization central server.]{\includegraphics[width=0.20\textwidth]{fig/cpu_central.pdf}\label{cpu_central}}
+%   \hfill
+%   \subfloat[RAM utilization central server]{\includegraphics[width=0.20\textwidth]{fig/ram_central.pdf}\label{ram_central}}
+%   \hfill
+%   \subfloat[CPU utilization utility server.]{\includegraphics[width=0.20\textwidth]{fig/cpu_utility.pdf}\label{cpu_utility}}
+%   \hfill
+%   \subfloat[RAM utilization utility server]{\includegraphics[width=0.20\textwidth]{fig/ram_utility.pdf}\label{ram_utility}}
+%   \caption{Resource consumption of various components of \Sys.}
+%   \label{fig:resource}
+%   \vspace{-2ex}
+% \end{figure}
+
+\subsection{Comparison with existing FL solutions for heterogeneity.}
+\label{sec:fedalternatives}
+
+We conducted experiments to assess the efficacy of existing federated learning solutions for data heterogeneity and the non-IID problem. We evaluated two techniques: FedProx~\cite{li2020federated} and FedOpt~\cite{asad2020fedopt}. FedProx mitigates client heterogeneity by introducing a proximal term to the local loss function, which penalizes deviations from the global model, thereby reducing the impact of statistical heterogeneity. Conversely, FedOpt employs an optimizer on the server side, to aggregate updates from distributed clients, enhancing convergence. We compared these techniques with the traditional FedAvg and the \Sys version of FedAvg, which incorporates semantic harmonization and categorized learning. Table~\ref{fedoptprox} presents the evaluation results. Both FedProx and FedOpt outperform simple FedAvg; however, they do not match the performance of \Sys, which employs novel techniques for addressing heterogeneity in provenance graphs. The reason for this is that when penalizing the deviations between global and local models, the learning focuses only on the patterns common to all clients, neglecting entities unique to each client, leading to high false alarms. This issue is mitigated in our ensemble \gnnshort learning, which is specifically designed to preserve unique patterns across clients.
+
+\begin{table}[!t]
   \centering
-  \subfloat[CPU utilization client side.]{\includegraphics[width=0.20\textwidth]{fig/cpu.pdf}\label{cpu_client}}
-  \hfill
-  \subfloat[RAM utilization client side]{\includegraphics[width=0.20\textwidth]{fig/ram.pdf}\label{ram_client}}
-  \hfill
-  \subfloat[CPU utilization central server.]{\includegraphics[width=0.20\textwidth]{fig/cpu_central.pdf}\label{cpu_central}}
-  \hfill
-  \subfloat[RAM utilization central server]{\includegraphics[width=0.20\textwidth]{fig/ram_central.pdf}\label{ram_central}}
-  \hfill
-  \subfloat[CPU utilization utility server.]{\includegraphics[width=0.20\textwidth]{fig/cpu_utility.pdf}\label{cpu_utility}}
-  \hfill
-  \subfloat[RAM utilization utility server]{\includegraphics[width=0.20\textwidth]{fig/ram_utility.pdf}\label{ram_utility}}
-  \caption{Resource consumption of various components of \Sys.}
-  \label{fig:resource}
-  \vspace{-2ex}
-\end{figure}
+  \small
+  \setlength{\tabcolsep}{9pt}
+  \caption{Federated averaging algorithms comparison.}
+  \begin{tabular}{ | c | c | c | c |}
+    \hline
+    \bf Algorithm & \bf Prec. & \bf Rec. & \bf \fscore \\
+    \hline
+    \Sys & \TOP & \TOR & \TOF \\
+    \hline
+    FedAvg & \VFOP & \VFOR & \VFOF \\ 
+    \hline
+    FedProx & 0.64 & 0.95 & 0.76 \\
+    \hline
+    FedOpt & 0.63 & 0.90  & 0.74 \\
+    \hline
+  \end{tabular}
+  \label{fedoptprox}
+\end{table}
 
  \subsection{Processing time analysis}
 
@@ -258,34 +279,6 @@ We assessed the robustness of our system against the adversarial mimicry attack 
   \label{mimicryattack}
   \vspace{-2ex}
 \end{figure}\
-
-
-\subsection{Evaluation using FedProx and FedOpt}
-\label{sec:fedalternatives}
-
-We conducted experiments to assess the efficacy of existing federated learning solutions for data heterogeneity and the non-IID problem. We evaluated two techniques: FedProx~\cite{li2020federated} and FedOpt~\cite{asad2020fedopt}. FedProx mitigates client heterogeneity by introducing a proximal term to the local loss function, which penalizes deviations from the global model, thereby reducing the impact of statistical heterogeneity. Conversely, FedOpt employs an optimizer on the server side, to aggregate updates from distributed clients, enhancing convergence. We compared these techniques with the traditional FedAvg and the \Sys version of FedAvg, which incorporates semantic harmonization and categorized learning. Table~\ref{fedoptprox} presents the evaluation results. Both FedProx and FedOpt outperform simple FedAvg; however, they do not match the performance of \Sys, which employs novel techniques for addressing heterogeneity in provenance graphs. The reason for this is that when penalizing the deviations between global and local models, the learning focuses only on the patterns common to all clients, neglecting entities unique to each client, leading to high false alarms. This issue is mitigated in our ensemble \gnnshort learning, which is specifically designed to preserve unique patterns across clients.
-
-\begin{table}[!t]
-  \centering
-  \small
-  \setlength{\tabcolsep}{9pt}
-  \caption{Federated averaging algorithms comparison.}
-  \begin{tabular}{ | c | c | c | c |}
-    \hline
-    \bf Algorithm & \bf Prec. & \bf Rec. & \bf \fscore \\
-    \hline
-    \Sys & \TOP & \TOR & \TOF \\
-    \hline
-    FedAvg & \VFOP & \VFOR & \VFOF \\ 
-    \hline
-    FedProx & 0.64 & 0.95 & 0.76 \\
-    \hline
-    FedOpt & 0.63 & 0.90  & 0.74 \\
-    \hline
-  \end{tabular}
-  \label{fedoptprox}
-\end{table}
-
 
 
 % \subsection{Effect of differential privacy on accuracy}
