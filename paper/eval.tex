@@ -48,6 +48,7 @@ Our evaluation experiments are conducted on a machine running Ubuntu 18.04.6 LTS
 
 % \Fix{There are eight subsection in the evaluation while we have six research question. Make them consistent. This can confuse reader. Also, if you moved something to Appendix, refer them below. }
 
+\wajih{These are just too many research question. You need to combine similar RQs into one. If you think something is an ablation study then move it to the ablation study section. }
 \begin{itemize}[leftmargin=*,itemsep=0.1em, parsep=0em, topsep=0em]
 \item \textbf{RQ1.} How does \Sys compares to existing systems in terms of detection performance?
 \item \textbf{RQ2.} How effective is the categorization based \gnnshort ensemble compared to a single \gnnshort? 
@@ -62,7 +63,7 @@ Our evaluation experiments are conducted on a machine running Ubuntu 18.04.6 LTS
 
 %\wajih {Say here that we have an ablation study on metrics: Effect of Federated Averaging Round, blah blah in Appendix.}
 
-We present a detailed ablation study in Appendix~\ref{app:ablation} on metrics such as the effect of the number \gnnshort\ submodels, federated averaging rounds, differential privacy, and the anomaly threshold on detection performance.
+We present a detailed ablation study in Appendix~\ref{app:ablation} on the following metrics: the effect of the number \gnnshort\ submodels, federated averaging rounds, differential privacy, and the anomaly threshold on detection performance. \Fix{Add any missing ablation study metrics here.}
 
 \PP{Implementation} \Sys is developed in Python with around 5500 lines of code. It leverages the PyTorch and Torch Geometric libraries to implement the federated provenance graph learning framework. The graph learning framework uses the GraphSAGE~\cite{hamilton2017inductive} family of \gnnshort. Our architecture consists of two graph convolution layers with a Tanh activation function in between. The last layer uses a softmax function to output class probabilities for the nodes. For developing the semantic attribute encoder, we employ the Gensim library. Secure communication between clients and the utility server is ensured through Python's Cryptography module. The federated averaging, semantic vector harmonization, and entity categorization modules are implemented as individual Python functions on the central and utility servers.
 
