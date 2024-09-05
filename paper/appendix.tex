@@ -14,10 +14,10 @@ The \darpa E5 dataset is more advanced than E3 in terms of attack complexity and
 
 The \optc dataset, another open-source resource from \darpa, encompasses a comprehensive collection of audit logs from an enterprise environment with 1,000 hosts. This dataset includes six days of benign system logs. Subsequently, attack logs span three days of system activities, featuring red team tactics such as initial compromises, privilege escalations, malicious software installations, and data exfiltration. Each attack day targeted different host machines.
 
-\section{Resource consumption experiments}
+\section{Resource consumption and Processing Times}
 \label{sec:resource_consumption}
 
-We conducted experiments to analyze the resource consumption of the central, utility server, and client-side modules of \Sys. We modeled the resource utilization on a client machine using different batches of audit events of varying sizes. For the central and utility servers, we studied resource consumption by varying the number of clients to understand the demands of federated averaging and semantic vector harmonization. The results, depicted in Figure~\ref{fig:resource}, indicate that \Sys's resource consumption is moderate. Specifically, \Sys can process up to 100,000 audit events simultaneously while consuming less than 900 MB of memory and utilizing less than 20\% of CPU resources. This performance suggests that \Sys does not significantly burden the client machine, especially considering the typically low event throughput on such machines. Additionally, our analysis of the host data in the \optc dataset shows that, on average, each client generates approximately 100,000 audit log events within a three-hour period. For the central and utility servers, the resource usage is minimal, demonstrating that our architecture is scalable and suitable for large organizations with many clients.
+\PP{Resource Consumption} We conducted experiments to analyze the resource consumption of the central, utility server, and client-side modules of \Sys. We modeled the resource utilization on a client machine using different batches of audit events of varying sizes. For the central and utility servers, we studied resource consumption by varying the number of clients to understand the demands of federated averaging and semantic vector harmonization. The results, depicted in Figure~\ref{fig:resource}, indicate that \Sys's resource consumption is moderate. Specifically, \Sys can process up to 100,000 audit events simultaneously while consuming less than 900 MB of memory and utilizing less than 20\% of CPU resources. This performance suggests that \Sys does not significantly burden the client machine, especially considering the typically low event throughput on such machines. Additionally, our analysis of the host data in the \optc dataset shows that, on average, each client generates approximately 100,000 audit log events within a three-hour period. For the central and utility servers, the resource usage is minimal, demonstrating that our architecture is scalable and suitable for large organizations with many clients.
 
  \begin{figure}[!t]
   \centering
@@ -35,6 +35,16 @@ We conducted experiments to analyze the resource consumption of the central, uti
   \caption{Resource consumption of various components of \Sys.}
   \label{fig:resource}
   \vspace{-2ex}
+\end{figure}
+
+\PP{Processing Time Analysis}We conducted experiments to study the end-to-end processing time of our system for a client machine. For this, we used batches of audit events of various sizes, conducting end-to-end inference with \Sys to measure the time taken to process these events on a client machine. The results, illustrated in Figure~\ref{sizevstime}, demonstrate that \Sys processes events with notable efficiency. For example, it requires approximately 23 seconds to process a batch of 100,000 events. Given our previous analysis of host logs in the \optc dataset, which indicated that each host generates an average of 100,000 events in three hours, \Sys can process 24 hours worth of log data on a client in merely 3 minutes. This level of efficiency ensures that our system is highly effective, preventing any potential log congestion.
+
+\begin{figure}[!t]
+ \centering
+ \includegraphics[width=0.25\textwidth]{fig/sizevstime.pdf}
+ \caption{Processing time for various audit event sizes evaluated using \optc dataset.}
+ \label{sizevstime}
+ \vspace{-2ex}
 \end{figure}
 
 
@@ -102,10 +112,10 @@ The parameter $\epsilon$ is crucial; it is inversely related to the amount of no
   \vspace{-2ex}
 \end{figure}
 
-\section{Word2vec Semantic Featurization}
-\label{app:Word2vec:Semantic:Featurization}
+% \section{Word2vec Semantic Featurization}
+% \label{app:Word2vec:Semantic:Featurization}
 
-The system logs are rich in attributes related to various entities, including process names and file paths. These attributes must first be converted into vector space to serve as node features for our GNN model. For this encoding, we employ the \wordvec semantic encoder. The \wordvec model processes different attributes for each type of node: for process nodes, it considers the process name and command line arguments; for file nodes, the file path; for socket nodes, the network IP address and port; and for module nodes, the module name. We transform the subgraph for each node into a document by combining its semantic attributes with the types of causal events, such as system calls, involving its neighbors. These documents are then transformed into fixed-length vectors using a \wordvec model trained on non-malicious system logs. This approach effectively captures the semantic relationships between terms, producing dense embeddings that enhance the subsequent learning of graph representations.
+
 
 \end{appendices}
 
@@ -186,33 +196,3 @@ The system logs are rich in attributes related to various entities, including pr
 
 % Each sub-model specializes in a different aspect of the data, potentially leading to a scenario where clients contribute more evenly across the ensemble. Clients with large datasets still contribute significantly, but their impact is more evenly distributed, enhancing fairness.
 
-\begin{algorithm}[!t]
-  \scriptsize
-  \DontPrintSemicolon
-  \SetKwInOut{Input}{Inputs}
-  \SetKwInOut{Output}{Output}
-  \Input{Set of client models $\{GNN_1, GNN_2, \ldots, GNN_N\}$;\\}
-  \Output{Global GNN model $GNN_{Global}$.}
-  \BlankLine
-  \tcc{Initialize global GNN model with random weights for a given process Category.}
-  %\tcc{This initialization happens for the first FL round only.}
-  $G \leftarrow \text{InitializeRandomWeights}()$\\
-  \tcc{Distribute $GNN$ to all clients.}
-  \ForEach{client}{
-    Send $GNN$ to $Client_i$\\
-    $GNN \leftarrow \text{TrainOnLocalData}(ProcessCategory_i)$
-  }
-  \BlankLine
-  \tcc{Aggregate trained models from clients.}
-  $AggregatedWeights \leftarrow list([])$\\
-  \ForEach{client model $GNN_i$}{
-    $AggregatedWeights.append(\text{ExtractWeights}(GNN_i))$\\
-  }
-  \tcc{Apply federated averaging.}
-  $GNN_{Global} \leftarrow \text{FederatedAveraging}(AggregatedWeights)$\\
-  \BlankLine
-  \Return $GNN_{Global}$\\
-  \BlankLine
-  \caption{Federated Provenance Graph Learning}
-  \label{alg:federated_learning}
-\end{algorithm}

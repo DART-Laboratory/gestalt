@@ -34,6 +34,11 @@ Additionally, we aim to develop a global semantic encoder, \( \mathcal{E}_{\text
 
 This module processes the provenance graph generated from \logs by transforming node attributes into feature vectors for the graph learning phase. Existing systems, such as Flash~\cite{flash2024} have demonstrated the effectiveness of utilizing semantic attributes of nodes to enhance detection performance. Building on this approach, we employ a \wordvec language model to encode these attributes into a vector format, \(\mathbf{v}\), where each attribute \(a\) is transformed into a vector \(v_a\). Each client independently trains a \wordvec model using their local \logs for feature encoding. Appendix~\ref{app:Word2vec:Semantic:Featurization} explains this process in detail.
 
+\wajih{I copy pasted the following paragraph from appendix here. Makes sure that the transition before this paragraph and after this paragraph is correct. }
+
+\Fix{
+The system logs are rich in attributes related to various entities, including process names and file paths. These attributes must first be converted into vector space to serve as node features for our GNN model. For this encoding, we employ the \wordvec semantic encoder. The \wordvec model processes different attributes for each type of node: for process nodes, it considers the process name and command line arguments; for file nodes, the file path; for socket nodes, the network IP address and port; and for module nodes, the module name. We transform the subgraph for each node into a document by combining its semantic attributes with the types of causal events, such as system calls, involving its neighbors. These documents are then transformed into fixed-length vectors using a \wordvec model trained on non-malicious system logs. This approach effectively captures the semantic relationships between terms, producing dense embeddings that enhance the subsequent learning of graph representations.}
+
 However, before these models can be utilized to encode text attributes effectively, it is essential to contextually merge individual client \wordvec models into a unified model \( Word2vec_{Global} \) for use across all clients. This unification is crucial; without it, each client would produce a different encoding, \(v_a^i\), for identical inputs, where \(i\) denotes the client. The variability in feature vectors, \(\{v_a^1, v_a^2, \ldots, v_a^N\}\), for the same attribute \(a\) across \(N\) clients, would compromise the consistency of client-based \gnnshort models. To ensure uniformity, the feature vectors for overlapping attributes must be averaged across clients. Such averaging ensures consistency in the feature representation, enhancing the effectiveness of the downstream federated averaging technique by maintaining uniformity in the input space for the \gnnshort models across all clients.
 
 The \wordvec model functions as a key-value store, with vocabulary tokens as keys, \(k\), and their corresponding vector representations as values, \(v_k\). To combine these models, we calculate the average vector of overlapping tokens from all client machines, creating a central model. The mathematical representation for averaging vectors of a token \(k\) across \(N\) clients is given by \(\bar{v}_k = \frac{1}{N}\sum_{i=1}^{N} v_{k,i}\) where \(\bar{v}_k\) is the averaged vector for token \(k\), and \(v_{k,i}\) is the vector representation of token \(k\) from the \(i\)-th client model.
@@ -118,36 +123,38 @@ where \(\bar{w}\) is the aggregated global model parameter, \(N\) is the number 
 
 The federated averaging process is repeated for a set number of rounds \(R\), and concludes when there is no further reduction in training loss. Algorithm~\ref{alg:federated_learning} shows the training and aggregation process of \gnnshort for a given process category and one round of FL.
 
-% \begin{algorithm}[!t]
-%   \scriptsize
-%   \DontPrintSemicolon
-%   \SetKwInOut{Input}{Inputs}
-%   \SetKwInOut{Output}{Output}
-%   \Input{Set of client models $\{GNN_1, GNN_2, \ldots, GNN_N\}$;\\}
-%   \Output{Global GNN model $GNN_{Global}$.}
-%   \BlankLine
-%   \tcc{Initialize global GNN model with random weights for a given process Category.}
-%   %\tcc{This initialization happens for the first FL round only.}
-%   $G \leftarrow \text{InitializeRandomWeights}()$\\
-%   \tcc{Distribute $GNN$ to all clients.}
-%   \ForEach{client}{
-%     Send $GNN$ to $Client_i$\\
-%     $GNN \leftarrow \text{TrainOnLocalData}(ProcessCategory_i)$
-%   }
-%   \BlankLine
-%   \tcc{Aggregate trained models from clients.}
-%   $AggregatedWeights \leftarrow list([])$\\
-%   \ForEach{client model $GNN_i$}{
-%     $AggregatedWeights.append(\text{ExtractWeights}(GNN_i))$\\
-%   }
-%   \tcc{Apply federated averaging.}
-%   $GNN_{Global} \leftarrow \text{FederatedAveraging}(AggregatedWeights)$\\
-%   \BlankLine
-%   \Return $GNN_{Global}$\\
-%   \BlankLine
-%   \caption{Federated Provenance Graph Learning}
-%   \label{alg:federated_learning}
-% \end{algorithm}
+
+\begin{algorithm}[!t]
+  \scriptsize
+  \DontPrintSemicolon
+  \SetKwInOut{Input}{Inputs}
+  \SetKwInOut{Output}{Output}
+  \Input{Set of client models $\{GNN_1, GNN_2, \ldots, GNN_N\}$;\\}
+  \Output{Global GNN model $GNN_{Global}$.}
+  \BlankLine
+  \tcc{Initialize global GNN model with random weights for a given process Category.}
+  %\tcc{This initialization happens for the first FL round only.}
+  $G \leftarrow \text{InitializeRandomWeights}()$\\
+  \tcc{Distribute $GNN$ to all clients.}
+  \ForEach{client}{
+    Send $GNN$ to $Client_i$\\
+    $GNN \leftarrow \text{TrainOnLocalData}(ProcessCategory_i)$
+  }
+  \BlankLine
+  \tcc{Aggregate trained models from clients.}
+  $AggregatedWeights \leftarrow list([])$\\
+  \ForEach{client model $GNN_i$}{
+    $AggregatedWeights.append(\text{ExtractWeights}(GNN_i))$\\
+  }
+  \tcc{Apply federated averaging.}
+  $GNN_{Global} \leftarrow \text{FederatedAveraging}(AggregatedWeights)$\\
+  \BlankLine
+  \Return $GNN_{Global}$\\
+  \BlankLine
+  \caption{Federated Provenance Graph Learning}
+  \label{alg:federated_learning}
+\end{algorithm}
+
 
 \subsection{GNN-based Anomaly Detection}
 \label{sys:anomaly_detection}
