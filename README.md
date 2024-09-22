@@ -6,7 +6,10 @@ Welcome to the TrustWatch repository. Here, we offer the implementation details 
 To run TrustWatch you need to install Jupyter Notebook. More detailed instructions on installing and running Jupyter Notebooks can be found at this [Link](https://jupyter.org/install).
 
 ## Installation
-We have provided _requirements.ipynb_ file detailing the specific dependency versions. Just run this notebook and it will install all required dependencies.
+We have provided a requirements.txt file detailing the specific dependency versions. Use the following command to install the required libraries.
+```bash
+pip install -r requirements.txt
+```
 
 ## Datasets
 TrustWatch is evaluated on open-source datasets from Darpa and the research community. You can access these datasets using the following links.
