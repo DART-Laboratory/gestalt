@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Usage: ./script_name.sh <port_number> <user_name>
+# Usage: ./docker_setup.sh <port_number> <user_name>
 # This script starts a Jupyter notebook in a Docker container inside a screen session.
 # Arguments:
 #   <port_number> - The port on which the Jupyter notebook will be accessible.
