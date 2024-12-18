@@ -113,6 +113,19 @@ The parameter $\epsilon$ is crucial; it is inversely related to the amount of no
   \vspace{-2ex}
 \end{figure}
 
+\subsection*{Comparison of encryption methods}
+\label{sec:encrypt}
+
+We chose Fernet symmetric key encryption for its ability to efficiently handle large datasets while ensuring confidentiality and integrity. Fernet employs AES-based symmetric encryption along with an HMAC for authenticity. Because the HMAC relies on efficient hash functions rather than expensive asymmetric operations~\cite{raj2023performance}, Fernet is computationally more efficient for processing large volumes of data.
+
+In contrast, asymmetric methods like RSA—which use public-private key pairs and are commonly employed for key exchange—are significantly slower and therefore unsuitable for encrypting large datasets~\cite{menezes2018handbook}. Their computational overhead makes them impractical for scenarios involving substantial data, such as word2vec models with thousands of tokens.
+
+This efficiency is crucial in \Sys, where we encrypt \wordvec models that can contain a large number of tokens. In our experiments, encrypting and decrypting a \wordvec model with 1000 tokens took Fernet only 0.11 ms, compared to 0.64 ms with RSA, making Fernet nearly six times faster.
+
+After encryption, the utility server harmonizes these encrypted models by performing mean averaging on the vectors of overlapping tokens. It identifies such overlaps, averages their vectors, and updates the model accordingly before returning it to the clients.
+
+Our design ensures privacy without resorting to Homomorphic Encryption (HE). Although HE allows computations directly on encrypted data, it imposes a significant performance penalty~\cite{naehrig2011can}. Its mathematically complex operations reduce throughput and scalability. By avoiding HE, we maintain strong privacy protections without incurring the prohibitive computational costs that would impede efficient real-time model updates.
+
 % \section{Word2vec Semantic Featurization}
 % \label{app:Word2vec:Semantic:Featurization}
 % \label{sub:hyper}
