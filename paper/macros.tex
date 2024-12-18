@@ -1,97 +1,24 @@
-
-%% To suppress warnings
-\usepackage{silence}
-\WarningFilter*{caption}{Unsupported document class}
-%%%%%%%%%%%%%%%%%%%%%%% Packages %%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% For urls
-%\usepackage[hyphens]{url}
-%\usepackage[breaklinks,colorlinks]{hyperref}
-%\usepackage[usenames,dvipsnames]{xcolor}
-%\usepackage[square,comma,numbers,sort&compress]{natbib}
-%%
-
-\usepackage[square,comma,numbers,sort&compress]{natbib}
-\usepackage{appendix}
-
-\usepackage{fancyhdr,lastpage}
 \usepackage{epsfig}
-\usepackage{balance} % balance bibliography
-\usepackage{color}
-\usepackage{comment}
-\usepackage{enumitem}
-\usepackage{epic}
-\usepackage{epsf}
-\usepackage{listings}
-\usepackage{makecell}% http://ctan.org/pkg/makecell
-\usepackage{multirow}
-\usepackage{textcomp}
-\usepackage{xspace}    % sticks a sane space after a command
-\usepackage{latexsym}
-\usepackage[labelfont=bf,font=small,skip=5pt]{caption}
-\usepackage{afterpage}
-\usepackage{amstext}   % provides \text{} command in math mode
-\usepackage{amsmath}
+\usepackage{xspace}   
 \usepackage{graphicx}
 \usepackage{tabularx}
+\usepackage{tcolorbox}
+\usepackage{caption}
+\usepackage{threeparttable}
+\usepackage{makecell}
+\usepackage{enumitem}
+\usepackage[ruled,linesnumbered]{algorithm2e}
 \usepackage[caption=false]{subfig}
-\usepackage{longtable}
-\usepackage{rotating}
-\usepackage[algoruled,linesnumbered]{algorithm2e}
-% for math macro and numbers
-\usepackage{fp}
-\usepackage{siunitx}
-\usepackage{xstring}
+\usepackage{float}
 \usepackage{multirow}
-
 \usepackage{tabularx}
-\usepackage{ragged2e}
-\usepackage{amssymb}
+\usepackage{stfloats}
 \usepackage{booktabs}
 
-\usepackage{algorithmicx}
-\usepackage{algpseudocode}
-%%%%%%%%%%%%%%%%%%%%%%% END of Packages %%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% use \num{123456} -> 123,456
-\sisetup{group-separator={,},group-minimum-digits={3},output-decimal-marker={.}}
-%
-\pagestyle{fancy}
-\fancyhf{}
-\renewcommand{\headrulewidth}{0pt}
-\cfoot{\thepage}
-% Define Colors
-\definecolor{bblue}{HTML}{4F81BD}
-\definecolor{rred}{HTML}{C0504D}
-\definecolor{ggreen}{HTML}{9BBB59}
-\definecolor{ppurple}{HTML}{9F4C7C}
-\definecolor{darkgray}{rgb}{0.66, 0.66, 0.66}
-\definecolor{gray}{RGB}{136,136,136}
-\definecolor{dkgreen}{rgb}{0,0.6,0}
-\definecolor{gray}{rgb}{0.5,0.5,0.5}
-\definecolor{mauve}{rgb}{0.58,0,0.82}
-\definecolor{comment-red}{rgb}{0.8,0,0}
-
-\hypersetup{citecolor=ppurple,linkcolor=ppurple,urlcolor=black}
-\urlstyle{sf}
-
-% Macros
-\newcommand\inlineeqno{\stepcounter{equation}\ (\theequation)}
-\newcommand\mycommfont[1]{\footnotesize\ttfamily{\scriptsize \texttt{\textcolor{dkgreen}{#1}}}}
-\SetCommentSty{mycommfont}
-\renewcommand{\rothead}[2][60]{\makebox[9mm][c]{\rotatebox{#1}{\makecell[c]{#2}}}}
-\makeatletter
-\newcommand\footnoteref[1]{\protected@xdef\@thefnmark{\ref{#1}}\@footnotemark}
-\makeatother
-%%% Meta MA
-\newcommand{\DefMacro}[2]{\expandafter\newcommand\csname rmk-#1\endcsname{#2}}
-\newcommand{\UseMacro}[1]{\csname rmk-#1\endcsname}
-\newcommand{\Caption}[1]{\caption{#1}}
-\newcommand{\CodeIn}[1]{{\small \texttt{#1}}}
-%%\newcommand{\Comment}[1]{}
-\newcommand{\Space}[1]{}
-\newcommand{\NA}{-}
-\newcommand{\Fix}[1]{\textcolor{red}{#1}}
-\newcommand{\Bullet}{$\star$}
+\newcommand{\PP}[1]{
+\vspace{2px}
+\noindent{\bf \IfEndWith{#1}{.}{#1}{#1.}}
+}
 
 \newcommand{\TODO}[1]{\pgwrapper{TODO}{#1}}
 \makeatletter
@@ -99,35 +26,11 @@
 \def\@itemlabel{\textbf{#1}}
 \item
 \def\@currentlabel{#1}\label{#2}}
-
-\newcommand{\RN}[1]{%
-  \textup{\uppercase\expandafter{\romannumeral#1}}%
-}
-\SetKwProg{Fn}{Function}{}{}
-% MATH
-\newcommand{\shl}{\ \cc{<}\cc{<}\ }
-\newcommand{\shr}{\ \cc{>}\cc{>}\ }
-\newcommand{\x}{$\times$\xspace}
-\newcommand{\PP}[1]{
-\vspace{2px}
-\noindent{\bf \IfEndWith{#1}{.}{#1}{#1.}}
-}
-\renewcommand{\paragraph}[1]{\smallskip\noindent\emph{#1}\quad}
 \newcommand{\Norothead}[2][0]{\makebox[9mm][c]{\rotatebox{#1}{\makecell[c]{#2}}}}
-\newcommand{\V}{\checkmark}
-\newcommand{\X}{{\footnotesize $\times$}\xspace}
-\renewcommand{\O}{\phantom{0}}
-\newcommand{\etal}{\textit{et al}.\xspace}
-\newcommand{\ie}{\textit{i}.\textit{e}.}
-\newcommand{\eg}{\textit{e}.\textit{g}.}
-\newcommand{\URL}{\url}
-% Choose the values of the following 2 length parameters to suit your needs:
+
 \newlength\tbspace
 \setlength\tbspace{3mm}
 \newcolumntype{C}{c<{\hspace{\tbspace}}}
-%% \newlength\lengtha \setlength\lengtha{3mm}
-%% \newlength\lengthb \setlength\lengthb{8mm}
-%% \newcolumntype{C}{@{\extracolsep{8mm}}c@{\extracolsep{0.5em}}}%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

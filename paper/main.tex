@@ -1,6 +1,7 @@
 
-\documentclass[letterpaper,twocolumn,10pt]{article}
-\usepackage{sty/usenix}
+%\documentclass[letterpaper,twocolumn,10pt]{article}
+%\usepackage{sty/usenix}
+\documentclass[sigconf]{sty/acmart}
 
 % common packages
 \include{macros}
@@ -10,8 +11,10 @@
 
 \title{Seeing Without Seeing: A Privacy-Aware Approach to System Intrusion Detection}
 
-\maketitle
 \input{abstract}
+\input{concepts}
+\input{keyword}
+\maketitle
 \input{intro}
 \input{relwk}
 \input{background}
@@ -23,15 +26,20 @@
 % \input{adversarial}
 \input{discussion}
 \input{conclusion}
-\input{ethics}
+% \input{ethics}
 % \input{ack}
 
+% \balance
+% \bibliographystyle{plain}
+% {
+% \footnotesize
+% \setlength{\bibsep}{3pt}
+% \bibliography{bib-files/hassan,bib-files/hassan-misc}
+% }
+% \input{appendix}
+
 \balance
-\bibliographystyle{plain}
-{
-\footnotesize
-\setlength{\bibsep}{3pt}
+\bibliographystyle{sty/ACM-Reference-Format}
 \bibliography{bib-files/hassan,bib-files/hassan-misc}
-}
 \input{appendix}
 \end{document}
