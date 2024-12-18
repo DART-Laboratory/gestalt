@@ -84,6 +84,8 @@ In this ablation study, we analyze the impact of key parameters within \Sys. Spe
   \vspace{-2ex}
 \end{figure}
 
+\PP{Effect number of categories on training cost} We analyzed the impact of the number of submodels on the FL training cost. Regarding the training cost, two factors need consideration: the training time of a \gnnshort model on a single client machine and the network overhead resulting from communicating multiple models. We analyzed these factors. Each \gnnshort model in the ensemble is 13kb, and according to our ablation study, the optimal number of categories is 10. This indicates that the impact on network overhead is minimal. Moreover, the training cost is not affected because the quantity of underlying data remains constant, as we are merely dividing it into different groups. In fact, this division helps to further optimize the training process by allowing these models to be trained in parallel, which underscores the contribution of our technique. Hence, the training time of our ensemble model is limited by the time it takes to train the submodel handling the largest data bin.
+
 %\subsection{Detection Performance Under Different Methods}
 
 %\wajih{In the Nature's paper they apply different federated learning and GNN approaches to show that the one they propose is best. I remember you tried different FL approaches as well. Also tried if you can replace GNN with something else. In our Flash paper we have something similar where we switched ML methods to show the performance. I would like to see similar experimentation here as well. The idea is to prove that the method that we chose is the best.}
