@@ -10,7 +10,6 @@ Let \( C = \{Client_1, Client_2, \ldots, Client_k\} \) denote the set of client 
 Additionally, we aim to develop a global semantic encoder, \( \mathcal{E}_{\text{semantic}} \), capable of converting contextual attributes into vector space, thereby generating feature vectors for training our GNN models. Using these global \gnnshort models, we aim to identify anomalous nodes in provenance graphs constructed from \logs during runtime. These anomalies could be potential threats as their system activity significantly differs from benign patterns.
 
 
-
 \begin{figure*}[t!]
   \centering
   \includegraphics[width=1\textwidth]{fig/archv3.pdf}
@@ -110,9 +109,9 @@ This approach ensures a balanced and uniform segmentation of data across clients
 \subsection{\fpgl}
 \label{sys:fpgl}
 
-% \wajih{In the arch figure, you have GNN Global notation, but you don't have it in the text below.}
+We developed a federated provenance graph learning technique rather than applying FL directly on system logs data because APTs often consist of multiple, causally linked attack steps involving various system entities. These interactions are effectively modeled using provenance graphs, which help uncover attack paths by connecting related system objects. Graph representation learning (GRL) is well-suited for this scenario, enabling better detection performance compared to approaches that analyze system events in isolation. Consequently, existing \pids~\cite{flash2024,cheng2023kairos,jia2023magic} increasingly leverage GRL-based models to outperform techniques relying solely on individual system events~\cite{deeplog2017,liu2019log2vec,xia2019loggan}. We integrate GRL with federated learning to achieve comparable detection performance in a decentralized, privacy-preserving manner.
 
-The module performs graph representation learning in a federated manner. It includes a central server responsible for initializing the global \gnnshort models denoted by \(\{GNN_1, GNN_2, \ldots, GNN_k\} \) with random weights, which are then sent to all clients. These clients use their local process subgraphs and semantic feature vectors to train the \gnnshort models in an unsupervised way, following a training method similar to \flash. The \gnnshort model's objective is to classify each node entity into its corresponding type. The server then applies the federated averaging algorithm to merge the \gnnshort models into a set of global models (\( GNN_{Globals} \)). These models are then merged according to the process entity categories on which they were trained. This ensures that models with similar distributions are combined together to address the data heterogeneity problem. Specifically, for each submodel, the server aggregates parameters from \(N\) client models, to update the global model as follows:
+Our approach includes a central server responsible for initializing the global \gnnshort models denoted by \(\{GNN_1, GNN_2, \ldots, GNN_k\}\) with random weights, which are then sent to all clients. These clients use their local process subgraphs and semantic feature vectors to train the \gnnshort models in an unsupervised way, following a training method similar to \flash. The \gnnshort model's objective is to classify each node entity into its corresponding type. The server then applies the federated averaging algorithm to merge the \gnnshort models into a set of global models (\(GNN_{Globals}\)). These models are then merged according to the process entity categories on which they were trained. This ensures that models with similar distributions are combined together to address the data heterogeneity problem. Specifically, for each submodel, the server aggregates parameters from \(N\) client models to update the global model as follows:
 
 \begin{equation}
 \bar{w} = \frac{1}{N} \sum_{k=1}^{N}w_k
