@@ -7,7 +7,7 @@
 
 %\wajih{Move adversarial attacks in a separate section.}
 
-\input{adversarial.tex}
+%\input{adversarial.tex}
 
 \PP{Alert Investigation} In systems like \Sys, validating the veracity of alerts is crucial for ensuring system reliability and preventing alert fatigue~\cite{nodoze2019}, traditionally involving security analysts manually reviewing each alert based on activities within local provenance graphs. This manual process, while thorough, is time-consuming and prone to errors, posing challenges in scalability and privacy. To enhance privacy and maintain efficiency in alert verification, implementing privacy-preserving techniques such as Secure Multi-party Computation (SMC)~\cite{goldreich1998secure}, Homomorphic Encryption (HE)~\cite{yi2014homomorphic}, and Zero-Knowledge Proofs (ZKP)~\cite{fiege1987zero} is vital. SMC allows multiple stakeholders to collaboratively validate alerts by jointly computing functions over their inputs while keeping those inputs private. HE enables the central server to analyze encrypted data, ensuring data confidentiality, and ZKP offers a way for one party to prove the validity of an alert to another without revealing any other information. Leveraging these technologies allows \Sys to privately and securely validate alerts, enhancing the system's trustworthiness and optimizing operational workflow. We identify privacy-preserving alert verification as a promising research direction. We leave it to future work to develop methods for privately sharing alert data with a central server, enabling security analysts to perform more in-depth attack analysis.
 
