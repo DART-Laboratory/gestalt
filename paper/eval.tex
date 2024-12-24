@@ -59,7 +59,7 @@ Our evaluation experiments are conducted on a machine running Ubuntu 18.04.6 LTS
   \end{itemize}  
 %\wajih {Say here that we have an ablation study on metrics: Effect of Federated Averaging Round, blah blah in Appendix.}
 
-We discuss RQ6 in Appendix~\ref{sec:resource_consumption}. Additionally, we present a detailed ablation study in Appendix~\ref{app:ablation} on the following metrics: the effect of the number of \gnnshort\ submodels, federated averaging rounds, differential privacy, and the anomaly threshold on detection performance.
+We discuss RQ6 in Appendix~\ref{sec:resource_consumption}. Additionally, we present a detailed ablation study in Appendix~\ref{app:ablation} on the effect of the number of \gnnshort\ submodels, federated averaging rounds, differential privacy, anomaly threshold, and various system event sizes on our system’s scalability.
 
 \PP{Implementation} \Sys is developed in Python with around 5500 lines of code. It leverages the PyTorch and Torch Geometric libraries to implement the federated provenance graph learning framework. The graph learning framework uses the GraphSAGE~\cite{hamilton2017inductive} family of \gnnshort. Our architecture consists of two graph convolution layers with a Tanh activation function in between. The last layer uses a softmax function to output class probabilities for the nodes. For developing the semantic attribute encoder, we employ the Gensim library. Secure communication between clients and the utility server is ensured through Python's Cryptography module. The federated averaging, semantic vector harmonization, and entity categorization modules are implemented as individual Python functions on the central and utility servers.
 
