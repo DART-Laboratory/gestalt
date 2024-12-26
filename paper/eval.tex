@@ -261,6 +261,8 @@ In contrast, our system employs an ensemble learning framework. First, it catego
 
 % \PP{Overall Operating costs:} To calculate the daily operational costs of running these systems for a specific organization, we utilized the Google Cloud Platform's (GCP) pricing calculator~\cite{gcp}. The cost to operate \flash under the previously mentioned workload is estimated at \$135, with computing expenses accounting for \$100 and network costs comprising \$35. Given its longer processing duration, the operational cost for \kairos would be twice that of \flash. Compared to these systems, the operational cost of \Sys for 1,000 client machines would be approximately \$10 per day, marking a 13-fold reduction compared to \flash and a 26-fold reduction compared to \kairos.
 
+% Scalability concerns are addressed in this section
+
 \subsection{Scalability in Enterprise settings}
 \label{cost_metric}
 We analyzed the performance of our system in an enterprise setting using the \optc dataset, which includes a large number of host machines. We compared our system to centralized systems such as \flash and \kairos, focusing on important metrics such as network and processing overhead.
