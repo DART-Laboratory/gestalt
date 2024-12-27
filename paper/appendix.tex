@@ -124,7 +124,7 @@ Hence, although DP is a valid solution for protecting privacy, the accuracy dete
 
 We chose Fernet symmetric key encryption for its ability to efficiently handle large datasets while ensuring confidentiality and integrity. Fernet employs AES-based symmetric encryption along with an HMAC for authenticity. Because the HMAC relies on efficient hash functions rather than expensive asymmetric operations~\cite{raj2023performance}, Fernet is computationally more efficient for processing large volumes of data.
 
-In contrast, asymmetric methods like RSA—which use public-private key pairs and are commonly employed for key exchange—are significantly slower and therefore unsuitable for encrypting large datasets~\cite{menezes2018handbook}. Their computational overhead makes them impractical for scenarios involving substantial data, such as word2vec models with thousands of tokens.
+In contrast, asymmetric methods like RSA which use public-private key pairs and are commonly employed for key exchange are significantly slower and therefore unsuitable for encrypting large datasets~\cite{menezes2018handbook}. Their computational overhead makes them impractical for scenarios involving substantial data, such as \wordvec models with thousands of tokens.
 
 This efficiency is crucial in \Sys, where we encrypt \wordvec models that can contain a large number of tokens. In our experiments, encrypting and decrypting a \wordvec model with 1000 tokens took Fernet only 0.11 ms, compared to 0.64 ms with RSA, making Fernet nearly six times faster.
 
