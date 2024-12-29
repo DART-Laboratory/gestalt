@@ -11,11 +11,11 @@
 
 \begin{figure}[!t]
     \centering
-    \includegraphics[width=0.4\textwidth]{fig/adversarial.pdf}
+    \includegraphics[width=0.3\textwidth]{fig/adversarial.pdf}
     \caption{Adversarial mimicry attack analysis.}
     \label{mimicryattack}
     \vspace{-2ex}
-  \end{figure}\
+  \end{figure}
 
 
 \PP{Model Poisoning Attacks} These occur when one or more malicious clients submit corrupted local model updates to the central server during training, thereby degrading the model’s performance. Existing methods typically assume an attack-free training phase, providing no defense against such attacks. We conducted experiments on the \optc dataset to assess the impact of poisoning attacks on our system, and we also evaluated how robust aggregation methods—such as Multi-Krum~\cite{munoz2019byzantine}—can enhance resilience.

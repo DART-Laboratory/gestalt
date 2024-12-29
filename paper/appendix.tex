@@ -147,6 +147,11 @@ After encryption, the utility server harmonizes these encrypted models by perfor
 
 Our design ensures privacy without resorting to Homomorphic Encryption (HE). Although HE allows computations directly on encrypted data, it imposes a significant performance penalty~\cite{naehrig2011can}. Its mathematically complex operations reduce throughput and scalability. By avoiding HE, we maintain strong privacy protections without incurring the prohibitive computational costs that would impede efficient real-time model updates.
 
+\subsection*{State Explosion in Massive Networks}
+\label{state:explosion}
+
+Scaling FL to larger enterprise networks introduces potential state explosion issues, primarily due to the increasing complexity in managing and integrating updates from a growing number of clients. As more clients participate, each contributing their local model updates, the volume of data to be processed and aggregated can increase significantly. This escalation can strain communication channels, leading to higher bandwidth requirements and increased latency. Furthermore, the aggregation process itself becomes more computationally demanding as the number of updates grows. \Sys addresses these challenges by utilizing an ensemble learning approach and categorizing system activities, which simplifies the aggregation by processing more uniform data segments. Moreover, our system uses models with small network overhead to prevent bandwidth challenges. To further enhance efficiency, additional techniques such as model compression~\cite{choudhary2020comprehensive}, selective update aggregation~\cite{ye2020federated} and the implementation of more robust communication protocols~\cite{laclau2020robust} can significantly improve handling large volumes of updates, thus preventing state explosion and maintaining system performance in large-scale federated learning environments.
+
 % \section{Word2vec Semantic Featurization}
 % \label{app:Word2vec:Semantic:Featurization}
 % \label{sub:hyper}
@@ -226,3 +231,33 @@ Our design ensures privacy without resorting to Homomorphic Encryption (HE). Alt
 
 % Each sub-model specializes in a different aspect of the data, potentially leading to a scenario where clients contribute more evenly across the ensemble. Clients with large datasets still contribute significantly, but their impact is more evenly distributed, enhancing fairness.
 
+\begin{algorithm}[!t]
+  \scriptsize
+  \DontPrintSemicolon
+  \SetKwInOut{Input}{Inputs}
+  \SetKwInOut{Output}{Output}
+  \Input{Set of client models $\{GNN_1, GNN_2, \ldots, GNN_N\}$;\\}
+  \Output{Global GNN model $GNN_{Global}$.}
+  \BlankLine
+  \tcc{Initialize global GNN model with random weights for a given process Category.}
+  %\tcc{This initialization happens for the first FL round only.}
+  $G \leftarrow \text{InitializeRandomWeights}()$\\
+  \tcc{Distribute $GNN$ to all clients.}
+  \ForEach{client}{
+    Send $GNN$ to $Client_i$\\
+    $GNN \leftarrow \text{TrainOnLocalData}(ProcessCategory_i)$
+  }
+  \BlankLine
+  \tcc{Aggregate trained models from clients.}
+  $AggregatedWeights \leftarrow list([])$\\
+  \ForEach{client model $GNN_i$}{
+    $AggregatedWeights.append(\text{ExtractWeights}(GNN_i))$\\
+  }
+  \tcc{Apply federated averaging.}
+  $GNN_{Global} \leftarrow \text{FederatedAveraging}(AggregatedWeights)$\\
+  \BlankLine
+  \Return $GNN_{Global}$\\
+  \BlankLine
+  \caption{Federated Provenance Graph Learning}
+  \label{alg:federated_learning}
+\end{algorithm}
