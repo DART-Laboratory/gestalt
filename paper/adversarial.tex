@@ -9,7 +9,7 @@
 
 In this section, we analyze the robustness of our system against mimicry, model poisoning, and gradient-based attacks. Membership inference attacks are discussed in Section~\ref{sec:privacy}.
 
-\wajih{Two points about the following experiment. Explain why we only picked E3 dataset. Also, explain why we didn't use the other adversarial attack https://www.usenix.org/conference/usenixsecurity23/presentation/mukherjee}
+\wajih{explain why we didn't use the other adversarial attack https://www.usenix.org/conference/usenixsecurity23/presentation/mukherjee}
 
 \PP{Mimicry Attacks}  We evaluated our system's resilience against the adversarial mimicry attack detailed by Goyal et al.~\cite{goyal2023sometimes} and compared its robustness with \flash. The attack aims to mimic benign graph embeddings, integrating benign node structures to evade detection. Using the E3 dataset, similar to \flash for fair comparison, our findings (shown in Figure~\ref{mimicryattack}) reveal that our detector remains robust; the integration of benign structures has a minimal impact on anomaly scores. Our system's superior robustness is due to our process-categorization-based ensemble \gnnshort architecture, which allows model specialization for different system entities, enhancing detection of structural changes. Conversely, \flash, relying on a generalized model for anomaly detection, exhibits vulnerabilities to mimicry attacks, as it may miss critical details. As demonstrated by the authors, \flash initially experiences a drop in anomaly scores, increasing the likelihood of attack nodes evading detection—a vulnerability not present in our system.
 
