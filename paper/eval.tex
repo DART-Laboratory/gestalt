@@ -1,6 +1,8 @@
  \section{Evaluation}
  \label{sec:eval}
 
+ \wajih{Be consistent with datasets in each research question. Sometimes you use OpTC and sometimes you use E3 and you don't even explain why you excluded the other datasets. Rule of thumb is use all the datasets for the experiments unless you have reason or justification why you excluded certain datasets.}
+
  %\mati{Evaluation section has some writing inconsistencies. I will make a pass over it later today to fix it.}
 
 %  \wajih{the word DISTDET is not consistent in the paper.}
@@ -220,6 +222,8 @@ To examine the effectiveness of our process categorization based \gnnshort ensem
 
 \subsection{Comparison with existing FL solutions for heterogeneity.}
 \label{sec:fedalternatives}
+
+\wajih{Use all the datasets for this experiment. We can't cherry pick certain datasets. It is a very easy way to kill the paper.}
 
 We conducted experiments to evaluate the efficacy of existing federated learning solutions that address data heterogeneity and the non-IID problem. Specifically, we examined FedProx~\cite{li2020federated} and FedOpt~\cite{asad2020fedopt}. FedProx mitigates client heterogeneity by adding a proximal term to the local loss function, penalizing deviations from the global model and thereby reducing the impact of statistical heterogeneity. In contrast, FedOpt uses a server-side optimizer to aggregate updates from distributed clients, enhancing convergence. We compared these techniques with standard FedAvg and the \Sys variant of FedAvg, which incorporates semantic harmonization and categorized learning. Table~\ref{fedoptprox} presents the evaluation results. Both FedProx and FedOpt outperform FedAvg; however, neither matches the performance of \Sys.
 

@@ -2,8 +2,36 @@
 \label{sec:methodology}
 % \wajih{Do a GLOBAL SEARCH of the paper and replace federated graph learning with federated provenance graph learning and replace anomaly detection with GNN-based anomaly detection where ever appropriate}
 
+\wajih{Througout this section, replace verbose descriptions with concise references to these symbols/notations to streamline the text (e.g., use \( \psi(p) \) instead of "categorization map", \( \mathcal{P}_{\text{global}} \) instead of "the global set of unique process entities).
+}
+
 
 \subsection{Problem Formulation \& Overview}
+
+\wajih{let's use the following table. If you think there are other key notations, then add them to table. Make sure to update this susbsection to refer to table as well. Make sure to use these notations in the rest of the subsections}
+
+\begin{table}[!ht]
+  \centering
+  \scriptsize
+  \caption{Key Notations}
+  \label{tab:keynotations}
+  \begin{tabular}{|c|p{4cm}|}
+  \hline
+  \textbf{Notation} & \textbf{Definition} \\ \hline
+  \( N \) & Total number of clients in federated learning. \\ \hline
+  \( k \) & Number of categories for process entities. \\ \hline
+  \( R \) & Number of federated learning rounds. \\ \hline
+  \( G_{c_i} = (\mathcal{V}_i, \mathcal{E}_i) \) & Provenance graph for client \( i \), with nodes \( \mathcal{V}_i \) and edges \( \mathcal{E}_i \). \\ \hline
+  \( \mathcal{G}_{\text{global}} \) & Set of global GNN models, one per category. \\ \hline
+  \( w_j^{(r)} \) & Weights of global GNN for category \( j \) after round \( r \). \\ \hline
+  \( \mathcal{P}_{\text{global}} \) & Global set of unique process entities. \\ \hline
+  \( \psi(p) \) & Categorization map assigning process \( p \) to category \( \mathcal{C}_j \). \\ \hline
+  \( y_v \) & True label of node \( v \). \\ \hline
+  \( \hat{y}_v^j \) & Predicted label of node \( v \) by submodel \( j \). \\ \hline
+  \( \mathcal{L}^{(r)} \) & Loss function value after round \( r \). \\ \hline
+  \end{tabular}
+  \end{table}
+  
 
 Let \( C = \{Client_1, Client_2, \ldots, Client_k\} \) denote the set of client machines, where each machine \( Client_i \), for \( i = 1, 2, \ldots, k \), locally maintains its \logs to preserve privacy, ensuring that raw logs do not leave the machine. Our objective is to detect anomalous nodes within the client's provenance graphs, \( \{G_{c_1}, G_{c_2}, \ldots, G_{c_P}\} \), generated from these logs. To this end, we propose training a set of global \gnnshort models to model the benign behavior exhibited across all client logs without centralizing the log data.
 
@@ -13,7 +41,7 @@ Additionally, we aim to develop a global semantic encoder, \( \mathcal{E}_{\text
 \begin{figure*}[t!]
   \centering
   \includegraphics[width=1\textwidth]{fig/archv3.pdf}
-  \caption{High-level architecture of \Sys. In the training phase, our system builds local provenance graphs for each client and trains an ensemble of \gnnshort models. Prior to this, we aggregate semantic models contextually for feature encoding. The local \gnnshort models participate in federated learning to develop a global \gnnshort model, which is then utilized for anomaly detection.}
+  \caption{High-level architecture of \Sys. In the training phase, our system builds local provenance graphs for each client and trains an ensemble of \gnnshort models. Prior to this, we aggregate semantic models contextually for feature encoding. The local \gnnshort models participate in federated learning to develop a global \gnnshort model, which is then utilized for anomaly detection. \wajih{Use key notations in this figure.}}
   \vspace{-3ex}
   \label{fig:arch}
 \end{figure*}
@@ -30,6 +58,9 @@ Additionally, we aim to develop a global semantic encoder, \( \mathcal{E}_{\text
 
 \subsection{Semantic Featurization \& Harmonization}
 \label{semanfeat}
+
+\wajih{add a subsubsection to discuss non-overlapping token handling}
+
 
 This module processes the provenance graph generated from system logs by transforming node attributes into feature vectors for the graph learning phase. Existing systems, such as \flash~\cite{flash2024}, have demonstrated the effectiveness of utilizing semantic attributes of nodes to enhance detection performance. System logs are rich in attributes related to various entities, including process names and file paths. These attributes must first be converted into vector space to serve as node features for our GNN model. For this encoding, we employ the \wordvec semantic encoder. The \wordvec model processes different attributes for each type of node: for process nodes, it considers the process name and command line arguments; for file nodes, the file path; for socket nodes, the network IP address and port; and for module nodes, the module name. We transform the subgraph for each node into a document by combining its semantic attributes with the types of causal events, such as system calls, involving its neighbors. These documents are then transformed into fixed-length vectors using a \wordvec model trained on non-malicious system logs. This approach effectively captures the semantic relationships between terms, producing dense embeddings that enhance the subsequent learning of graph representations.
 
@@ -94,6 +125,23 @@ This procedure ensures that neither the central server nor the utility server ca
 \subsection{Process Entity Categorization}
 \label{sys:catg}
 
+\wajih{Use more formalism in this subsection and add an pseudocode/algorithm as well. You should use some notations like this:
+\begin{itemize}
+    \item \( N \): Total number of clients.
+    \item \( P_i \): Set of encrypted process entities from client \( i \), where \( i \in \{1, \dots, N\} \).
+    \item \( \mathcal{P}_{\text{global}} \): Global set of unique process entities, defined as:
+    \[
+    \mathcal{P}_{\text{global}} = \bigcup_{i=1}^{N} P_i
+    \]
+    \item \( k \): Number of predefined categories.
+    \item \( \mathcal{C} = \{\mathcal{C}_1, \mathcal{C}_2, \dots, \mathcal{C}_k\} \): Set of categories.
+    \item \( \psi(p) \): Categorization map that assigns a process \( p \in \mathcal{P}_{\text{global}} \) to a category \( \mathcal{C}_j \), where:
+    \[
+    \psi(p): \mathcal{P}_{\text{global}} \rightarrow \mathcal{C}
+    \]
+\end{itemize}
+}
+
 Our experimental results, presented in Table~\ref{categorized_gnn}, indicate that a single global \gnnshort model cannot achieve good detection performance in an FL setting due to the diverse and heterogeneous distributions of clients' data. The disparity in data distributions among clients poses a significant challenge in effectively training a unified model that can generalize well across all clients, since the global model struggles to capture the unique characteristics and patterns inherent in each client's data.
 
 To address this limitation, we developed a comprehensive framework that organizes process entities across different clients into distinct groups. Each category is modeled by a dedicated submodel, enabling it to focus on the unique distribution and intricate patterns of its assigned category and thereby enhance overall detection performance.
@@ -116,18 +164,28 @@ The clients use the processes within each bin to generate provenance subgraphs. 
 
 This approach ensures a balanced segmentation of data across clients, maintaining consistency in the training datasets for each \gnnshort model before federated averaging. By dividing the overall task into sub-tasks (sub-models) and assigning them to different subsets of processes, the influence of clients with large datasets is distributed across multiple models. This prevents any single client from disproportionately affecting the outcome of the federated learning system. Each sub-model specializes in a different aspect of the data, capturing unique patterns and distributions. This specialization promotes more balanced contributions across the ensemble, enhancing the robustness and performance of the overall system.
 
+
 \subsection{\fpgl}
 \label{sys:fpgl}
 
+
+\wajih{I feel like the section should be named something like FL with Categorized Provenance Subgraphs. Use foramlism in this section as well:
+\begin{itemize}
+  \item \( \mathcal{G}_{\text{global}} \): Set of global GNN models initialized by the central server.
+  \item \( \mathcal{G}_i^{(j)} \): Local provenance graph for client \( i \) and category \( j \), where \( i \in \{1, \dots, N\} \) and \( j \in \{1, \dots, k\} \).
+  \item \( \mathcal{W}_{\text{global}} = \{w_1, w_2, \dots, w_k\} \): Parameters of the global GNN models for \( k \) categories.
+  \item \( w_j^{(r)} \): Weight vector of the global model for category \( j \) after FL round \( r \).
+  \item \( w_{i,j}^{(r)} \): Weight vector of the local model for client \( i \), category \( j \), and round \( r \).
+  \item \( N \): Total number of clients participating in the FL process.
+  \item \( k \): Number of predefined process categories.
+  \item \( R \): Total number of FL training rounds.
+\end{itemize}
+}
+
+
 Advanced persistent threats involve multiple causally linked attack steps across various system entities, highlighting the need to capture and model the interactions among these entities for effective detection. Analyzing each system event in isolation does not allow us to capture these interactions properly, as observed in existing log-level systems~\cite{deeplog2017,liu2019log2vec,xia2019loggan}; hence, provenance graphs are being used to effectively model the interaction of system entities. Moreover, Graph Representation Learning is used to learn the patterns present in provenance graphs, as shown in related works~\cite{flash2024,cheng2023kairos,jia2023magic}. We integrate federated learning with graph representation learning to bring privacy and decentralization to intrusion detection while keeping the strong detection performance offered by provenance graph learning technique. 
 
-Our approach includes a central server responsible for initializing the global \gnnshort models denoted by \(\{GNN_1, GNN_2, \ldots, GNN_k\}\) with random weights, which are then sent to all clients. These clients use their local process subgraphs and semantic feature vectors to train the \gnnshort models in an unsupervised way, following a training method similar to \flash. The \gnnshort model's objective is to classify each node entity into its corresponding type. The server then applies the federated averaging algorithm to merge the \gnnshort models into a set of global models (\(GNN_{Globals}\)). These models are then merged according to the process entity categories on which they were trained. This ensures that models with similar distributions are combined together to address the data heterogeneity problem. Specifically, for each submodel, the server aggregates parameters from \(N\) client models to update the global model as follows:
-
-\begin{equation}
-\bar{w} = \frac{1}{N} \sum_{k=1}^{N}w_k
-\end{equation}
-
-where \(\bar{w}\) is the aggregated global model parameter, \(N\) is the number of client models and \(w_k\) is the parameter from the \(k\)-th client model.
+Our approach includes a central server responsible for initializing the global \gnnshort models denoted by \(\{GNN_1, GNN_2, \ldots, GNN_k\}\) with random weights, which are then sent to all clients. These clients use their local process subgraphs and semantic feature vectors to train the \gnnshort models in an unsupervised way, following a training method similar to \flash. The \gnnshort model's objective is to classify each node entity into its corresponding type. The server then applies the federated averaging algorithm to merge the \gnnshort models into a set of global models (\(GNN_{Globals}\)). These models are then merged according to the process entity categories on which they were trained. This ensures that models with similar distributions are combined together to address the data heterogeneity problem. Specifically, for each submodel, the server aggregates parameters from \(N\) client models to update the global model as $\bar{w} = \frac{1}{N} \sum_{k=1}^{N}w_k$, where \(\bar{w}\) is the aggregated global model parameter, \(N\) is the number of client models and \(w_k\) is the parameter from the \(k\)-th client model.
 
 The federated averaging process is repeated for a set number of rounds \(R\), and concludes when there is no further reduction in training loss. Algorithm~\ref{alg:federated_learning} shows the training and aggregation process of \gnnshort for a given process category and one round of FL.
 
