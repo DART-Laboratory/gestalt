@@ -8,35 +8,56 @@
 
 \subsection{Problem Formulation \& Overview}
 
-\wajih{let's use the following table. If you think there are other key notations, then add them to table. Make sure to update this susbsection to refer to table as well. Make sure to use these notations in the rest of the subsections}
+%\wajih{let's use the following table. If you think there are other key notations, then add them to table. Make sure to update this susbsection to refer to table as well. Make sure to use these notations in the rest of the subsections}
 
-\begin{table}[!ht]
-  \centering
-  \scriptsize
-  \caption{Key Notations}
-  \label{tab:keynotations}
-  \begin{tabular}{|c|p{4cm}|}
-  \hline
-  \textbf{Notation} & \textbf{Definition} \\ \hline
-  \( N \) & Total number of clients in federated learning. \\ \hline
-  \( k \) & Number of categories for process entities. \\ \hline
-  \( R \) & Number of federated learning rounds. \\ \hline
-  \( G_{c_i} = (\mathcal{V}_i, \mathcal{E}_i) \) & Provenance graph for client \( i \), with nodes \( \mathcal{V}_i \) and edges \( \mathcal{E}_i \). \\ \hline
-  \( \mathcal{G}_{\text{global}} \) & Set of global GNN models, one per category. \\ \hline
-  \( w_j^{(r)} \) & Weights of global GNN for category \( j \) after round \( r \). \\ \hline
-  \( \mathcal{P}_{\text{global}} \) & Global set of unique process entities. \\ \hline
-  \( \psi(p) \) & Categorization map assigning process \( p \) to category \( \mathcal{C}_j \). \\ \hline
-  \( y_v \) & True label of node \( v \). \\ \hline
-  \( \hat{y}_v^j \) & Predicted label of node \( v \) by submodel \( j \). \\ \hline
-  \( \mathcal{L}^{(r)} \) & Loss function value after round \( r \). \\ \hline
-  \end{tabular}
-  \end{table}
+% \begin{table}[!ht]
+%   \centering
+%   \scriptsize
+%   \caption{Key Notations}
+%   \label{tab:keynotations}
+%   \begin{tabular}{|c|p{4cm}|}
+%   \hline
+%   \textbf{Notation} & \textbf{Definition} \\ \hline
+%   \( N \) & Total number of clients in federated learning. \\ \hline
+%   \( k \) & Number of categories for process entities. \\ \hline
+%   \( R \) & Number of federated learning rounds. \\ \hline
+%   \( G_{c_i} = (\mathcal{V}_i, \mathcal{E}_i) \) & Provenance graph for client \( i \), with nodes \( \mathcal{V}_i \) and edges \( \mathcal{E}_i \). \\ \hline
+%   \( \mathcal{G}_{\text{global}} \) & Set of global GNN models, one per category. \\ \hline
+%   \( w_j^{(r)} \) & Weights of global GNN for category \( j \) after round \( r \). \\ \hline
+%   \( \mathcal{P}_{\text{global}} \) & Global set of unique process entities. \\ \hline
+%   \( \psi(p) \) & Categorization map assigning process \( p \) to category \( \mathcal{C}_j \). \\ \hline
+%   \( y_v \) & True label of node \( v \). \\ \hline
+%   \( \hat{y}_v^j \) & Predicted label of node \( v \) by submodel \( j \). \\ \hline
+%   \( \mathcal{L}^{(r)} \) & Loss function value after round \( r \). \\ \hline
+%   \end{tabular}
+%   \end{table}
   
+  \begin{table}[!ht]
+    \centering
+    \scriptsize
+    \caption{Key Notations}
+    \label{tab:keynotations}
+    \begin{tabular}{|c|p{4cm}|}
+    \hline
+    \textbf{Notation} & \textbf{Definition} \\ \hline
+    \( N \) & Total number of clients in federated learning. \\ \hline
+    \( k \) & Number of categories for process entities. \\ \hline
+    \( C \) & Set of client machines \(\{Client_1, Client_2, \ldots, Client_N\}\). \\ \hline
+    \( G_{c_i} = (\mathcal{V}_i, \mathcal{E}_i) \) & Provenance graph for client \( i \), with nodes \( \mathcal{V}_i \) and edges \( \mathcal{E}_i \). \\ \hline
+    \( \mathcal{G}_{\text{global}} \) & Set of global GNN models, one per category. \\ \hline
+    \( w_j^{(r)} \) & Weights of global GNN for category \( j \) after round \( r \). \\ \hline
+    \( \mathcal{P}_{\text{global}} \) & Global set of unique process entities. \\ \hline
+    \( \psi(p) \) & Categorization map assigning process \( p \) to category \( \mathcal{C}_j \). \\ \hline
+    \( y_v \) & True label of node \( v \). \\ \hline
+    \( \hat{y}_v^j \) & Predicted label of node \( v \) by submodel \( j \). \\ \hline
+    \( \mathcal{E}_{\text{sem}} \) & Global semantic encoder converting contextual attributes into vector space. \\ \hline
+    \( \mathcal{L}^{(r)} \) & Loss function value after round \( r \). \\ \hline
+    \end{tabular}
+  \end{table}
 
-Let \( C = \{Client_1, Client_2, \ldots, Client_k\} \) denote the set of client machines, where each machine \( Client_i \), for \( i = 1, 2, \ldots, k \), locally maintains its \logs to preserve privacy, ensuring that raw logs do not leave the machine. Our objective is to detect anomalous nodes within the client's provenance graphs, \( \{G_{c_1}, G_{c_2}, \ldots, G_{c_P}\} \), generated from these logs. To this end, we propose training a set of global \gnnshort models to model the benign behavior exhibited across all client logs without centralizing the log data.
+We define all mathematical notations in Table~\ref{tab:keynotations}. Each client machine in the set \( C \) locally maintains its logs to preserve privacy, ensuring that raw logs do not leave the machine. Our objective is to detect anomalous nodes within the client's provenance graphs, \( \{G_{c_1}, G_{c_2}, \ldots, G_{c_N}\} \), generated from these logs. To this end, we propose training a set of global GNN models \( \mathcal{G}_{\text{global}} \) to model the benign behavior exhibited across all client logs without centralizing the log data.
 
-Additionally, we aim to develop a global semantic encoder, \( \mathcal{E}_{\text{semantic}} \), capable of converting contextual attributes into vector space, thereby generating feature vectors for training our GNN models. Using these global \gnnshort models, we aim to identify anomalous nodes in provenance graphs constructed from \logs during runtime. These anomalies could be potential threats as their system activity significantly differs from benign patterns.
-
+Additionally, we aim to develop a global semantic encoder \( \mathcal{E}_{\text{sem}} \), capable of converting contextual attributes into vector space, thereby generating feature vectors for training our GNN models. Using \( \mathcal{G}_{\text{global}} \), we aim to identify anomalous nodes in clients provenance graphs \( G_{c_i}\). These anomalies could be potential threats as their system activity significantly differs from benign patterns.
 
 \begin{figure*}[t!]
   \centering
@@ -46,8 +67,23 @@ Additionally, we aim to develop a global semantic encoder, \( \mathcal{E}_{\text
   \label{fig:arch}
 \end{figure*}
 
-% \subsection{Overview}
-\Sys comprises five key modules, starting with the \textit{Provenance Graph Constructor} module on each client machine, which transforms \logs into a provenance graph. While our approach to constructing provenance graphs builds on established methods~\cite{inam2023sok,nodoze2019,mpi+ma,loggc,lpm2015,hossain2017sleuth}, detailed information is provided in Appendix~\ref{sub:provconstruct}. The \textit{Semantic Featurization \& Harmonization} module (Section~\ref{semanfeat}) trains \wordvec models to encode semantic attributes and consolidates individual client models into a cohesive global model using a trusted utility server and encryption techniques. The \textit{Process Entity Categorization Module} (Section~\ref{sys:catg}) standardizes system entities across clients, ensuring uniformity in \gnnshort model training. The \textit{Federated Provenance Graph Learning Module} (Section~\ref{sys:fpgl}) then trains \gnnshort models on each client machine using harmonized semantic features, with the models aggregated on a central server through federated averaging. Finally, the \textit{Anomaly Detection Module} (Section~\ref{sys:anomaly_detection}) applies the unified global models for anomaly detection on each client machine. Figure \ref{fig:arch} illustrates the comprehensive architecture of \Sys, with further details in subsequent sections.
+\Sys comprises five key modules, starting with the \textit{Provenance Graph Constructor} module on each client machine, which transforms logs into a provenance graph. While our approach to constructing provenance graphs builds on established methods~\cite{inam2023sok,nodoze2019,mpi+ma,loggc,lpm2015,hossain2017sleuth}, detailed information is provided in Appendix~\ref{sub:provconstruct}. The \textit{Semantic Featurization \& Harmonization} module (Section~\ref{semanfeat}) trains word2vec models to encode semantic attributes and consolidates individual client models into a cohesive global model using a trusted utility server and encryption techniques. The \textit{Process Entity Categorization Module} (Section~\ref{sys:catg}) standardizes system entities across clients, ensuring uniformity in GNN model training. The \textit{Federated Provenance Graph Learning Module} (Section~\ref{sys:fpgl}) then trains GNN models on each client machine using harmonized semantic features, with the models aggregated on a central server through federated averaging. Finally, the \textit{Anomaly Detection Module} (Section~\ref{sys:anomaly_detection}) applies the unified global models for anomaly detection on each client machine. Figure~\ref{fig:arch} illustrates the comprehensive architecture of \Sys, with further details in subsequent sections.
+  
+% Let \( C = \{Client_1, Client_2, \ldots, Client_k\} \) denote the set of client machines, where each machine \( Client_i \), for \( i = 1, 2, \ldots, k \), locally maintains its \logs to preserve privacy, ensuring that raw logs do not leave the machine. Our objective is to detect anomalous nodes within the client's provenance graphs, \( \{G_{c_1}, G_{c_2}, \ldots, G_{c_P}\} \), generated from these logs. To this end, we propose training a set of global \gnnshort models to model the benign behavior exhibited across all client logs without centralizing the log data.
+
+% Additionally, we aim to develop a global semantic encoder, \( \mathcal{E}_{\text{semantic}} \), capable of converting contextual attributes into vector space, thereby generating feature vectors for training our GNN models. Using these global \gnnshort models, we aim to identify anomalous nodes in provenance graphs constructed from \logs during runtime. These anomalies could be potential threats as their system activity significantly differs from benign patterns.
+
+
+% \begin{figure*}[t!]
+%   \centering
+%   \includegraphics[width=1\textwidth]{fig/archv3.pdf}
+%   \caption{High-level architecture of \Sys. In the training phase, our system builds local provenance graphs for each client and trains an ensemble of \gnnshort models. Prior to this, we aggregate semantic models contextually for feature encoding. The local \gnnshort models participate in federated learning to develop a global \gnnshort model, which is then utilized for anomaly detection. \wajih{Use key notations in this figure.}}
+%   \vspace{-3ex}
+%   \label{fig:arch}
+% \end{figure*}
+
+% % \subsection{Overview}
+% \Sys comprises five key modules, starting with the \textit{Provenance Graph Constructor} module on each client machine, which transforms \logs into a provenance graph. While our approach to constructing provenance graphs builds on established methods~\cite{inam2023sok,nodoze2019,mpi+ma,loggc,lpm2015,hossain2017sleuth}, detailed information is provided in Appendix~\ref{sub:provconstruct}. The \textit{Semantic Featurization \& Harmonization} module (Section~\ref{semanfeat}) trains \wordvec models to encode semantic attributes and consolidates individual client models into a cohesive global model using a trusted utility server and encryption techniques. The \textit{Process Entity Categorization Module} (Section~\ref{sys:catg}) standardizes system entities across clients, ensuring uniformity in \gnnshort model training. The \textit{Federated Provenance Graph Learning Module} (Section~\ref{sys:fpgl}) then trains \gnnshort models on each client machine using harmonized semantic features, with the models aggregated on a central server through federated averaging. Finally, the \textit{Anomaly Detection Module} (Section~\ref{sys:anomaly_detection}) applies the unified global models for anomaly detection on each client machine. Figure \ref{fig:arch} illustrates the comprehensive architecture of \Sys, with further details in subsequent sections.
 
 
 %\wajih{You need to talk about threat detection and alert generation.}
