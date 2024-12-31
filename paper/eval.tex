@@ -1,7 +1,7 @@
  \section{Evaluation}
  \label{sec:eval}
 
- \wajih{Be consistent with datasets in each research question. Sometimes you use OpTC and sometimes you use E3 and you don't even explain why you excluded the other datasets. Rule of thumb is use all the datasets for the experiments unless you have reason or justification why you excluded certain datasets.}
+%  \wajih{Be consistent with datasets in each research question. Sometimes you use OpTC and sometimes you use E3 and you don't even explain why you excluded the other datasets. Rule of thumb is use all the datasets for the experiments unless you have reason or justification why you excluded certain datasets.}
 
  %\mati{Evaluation section has some writing inconsistencies. I will make a pass over it later today to fix it.}
 
@@ -223,7 +223,7 @@ To examine the effectiveness of our process categorization based \gnnshort ensem
 \subsection{Comparison with existing FL solutions for heterogeneity.}
 \label{sec:fedalternatives}
 
-\wajih{Use all the datasets for this experiment. We can't cherry pick certain datasets. It is a very easy way to kill the paper.}
+%\wajih{Use all the datasets for this experiment. We can't cherry pick certain datasets. It is a very easy way to kill the paper.}
 
 We conducted experiments to evaluate the efficacy of existing federated learning solutions that address data heterogeneity and the non-IID problem. Specifically, we examined FedProx~\cite{li2020federated} and FedOpt~\cite{asad2020fedopt}. FedProx mitigates client heterogeneity by adding a proximal term to the local loss function, penalizing deviations from the global model and thereby reducing the impact of statistical heterogeneity. In contrast, FedOpt uses a server-side optimizer to aggregate updates from distributed clients, enhancing convergence. We compared these techniques with standard FedAvg and the \Sys variant of FedAvg, which incorporates semantic harmonization and categorized learning. Table~\ref{fedoptprox} presents the evaluation results. Both FedProx and FedOpt outperform FedAvg; however, neither matches the performance of \Sys.
 
@@ -232,28 +232,46 @@ FedProx's penalty on global and local deviations focuses the model on patterns c
 In contrast, our system employs an ensemble learning framework. First, it categorizes system patterns into standardized bins via process entity categorization. Next, \gnnshort submodels learn the data distribution within each bin. Submodels with similar learned distributions are then averaged, preventing the conflation of unique client patterns and improving precision. Moreover, our semantic vector harmonization reduces heterogeneity in the \gnnshort feature vectors, making the updates less disparate and improving model convergence in comparison to other techniques.
  
 
+% \begin{table}[!t]
+%   \centering
+%   \scriptsize
+%   \setlength{\tabcolsep}{14pt}
+%   \caption{Federated averaging algorithms comparison.}
+%   \begin{tabular}{ | c | c | c | c |}
+%     \hline
+%     \bf Algorithm & \bf Prec. & \bf Rec. & \bf \fscore \\
+%     \hline
+%     \Sys & \TOP & \TOR & \TOF \\
+%     \hline
+%     FedAvg & \VFOP & \VFOR & \VFOF \\ 
+%     \hline
+%     FedProx & 0.64 & 0.95 & 0.76 \\
+%     \hline
+%     FedOpt & 0.63 & 0.90  & 0.74 \\
+%     \hline
+%   \end{tabular}
+%   \label{fedoptprox}
+% \end{table}
+
 \begin{table}[!t]
   \centering
-  \scriptsize
-  \setlength{\tabcolsep}{14pt}
+  \footnotesize
   \caption{Federated averaging algorithms comparison.}
-  \begin{tabular}{ | c | c | c | c |}
-    \hline
-    \bf Algorithm & \bf Prec. & \bf Rec. & \bf \fscore \\
-    \hline
-    \Sys & \TOP & \TOR & \TOF \\
-    \hline
-    FedAvg & \VFOP & \VFOR & \VFOF \\ 
-    \hline
-    FedProx & 0.64 & 0.95 & 0.76 \\
-    \hline
-    FedOpt & 0.63 & 0.90  & 0.74 \\
-    \hline
+  \setlength{\tabcolsep}{1.6pt}
+  \begin{tabular}{cccccccccc}
+    \toprule
+    \multirow{2}{*}{\textbf{Datasets}} & \multicolumn{3}{c }{\textbf{\optc}} & \multicolumn{3}{c }{\textbf{E3}} & \multicolumn{3}{c }{\textbf{E5}} \\
+    \cmidrule(r){2-4} \cmidrule(r){5-7} \cmidrule(r){8-10}
+    & {\bf Prec.} &  {\bf Rec.} & {\bf F-score} & {\bf Prec.}  & {\bf Rec.} & {\bf F-score} & {\bf Prec.}  & {\bf Rec.} & {\bf F-score} \\
+    \midrule
+    \Sys & \TOP & \TOR & \TOF & - & - & - & - & - & - \\
+    FedAvg & \VFOP & \VFOR & \VFOF & - & - & - & - & - & - \\
+    FedProx & 0.64 & 0.95 & 0.76 & - & - & - & - & - & - \\  
+    FedOpt & 0.63 & 0.90  & 0.74 & - & - & - & - & - & - \\
+    \bottomrule
   \end{tabular}
-  \label{fedoptprox}
+\label{fedoptprox}
 \end{table}
-
-
 
 % \subsection{Enterprise settings evaluation}
 % \label{cost_metric}
