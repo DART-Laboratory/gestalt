@@ -200,30 +200,28 @@ The clients use the processes within each bin to generate provenance subgraphs \
 
 This approach ensures a balanced segmentation of data across clients, maintaining consistency in the training datasets for each \( \mathcal{G}_{\text{global}} \) model before federated averaging. By dividing the overall task into sub-tasks (sub-models) and assigning them to different subsets of processes, the influence of clients with large datasets is distributed across multiple models. This prevents any single client from disproportionately affecting the outcome of the federated learning system. Each sub-model specializes in a different aspect of the data, capturing unique patterns and distributions. This specialization promotes more balanced contributions across the ensemble, enhancing the robustness and performance of the overall system.
 
-\subsection{\fpgl}
+\subsection{FL with Categorized Provenance Subgraphs}
 \label{sys:fpgl}
 
 
-\wajih{I feel like the section should be named something like FL with Categorized Provenance Subgraphs. Use foramlism in this section as well:
-\begin{itemize}
-  \item \( \mathcal{G}_{\text{global}} \): Set of global GNN models initialized by the central server.
-  \item \( \mathcal{G}_i^{(j)} \): Local provenance graph for client \( i \) and category \( j \), where \( i \in \{1, \dots, N\} \) and \( j \in \{1, \dots, k\} \).
-  \item \( \mathcal{W}_{\text{global}} = \{w_1, w_2, \dots, w_k\} \): Parameters of the global GNN models for \( k \) categories.
-  \item \( w_j^{(r)} \): Weight vector of the global model for category \( j \) after FL round \( r \).
-  \item \( w_{i,j}^{(r)} \): Weight vector of the local model for client \( i \), category \( j \), and round \( r \).
-  \item \( N \): Total number of clients participating in the FL process.
-  \item \( k \): Number of predefined process categories.
-  \item \( R \): Total number of FL training rounds.
-\end{itemize}
-}
+% \wajih{I feel like the section should be named something like FL with Categorized Provenance Subgraphs. Use foramlism in this section as well:
+% \begin{itemize}
+%   \item \( \mathcal{G}_{\text{global}} \): Set of global GNN models initialized by the central server.
+%   \item \( \mathcal{G}_i^{(j)} \): Local provenance graph for client \( i \) and category \( j \), where \( i \in \{1, \dots, N\} \) and \( j \in \{1, \dots, k\} \).
+%   \item \( \mathcal{W}_{\text{global}} = \{w_1, w_2, \dots, w_k\} \): Parameters of the global GNN models for \( k \) categories.
+%   \item \( w_j^{(r)} \): Weight vector of the global model for category \( j \) after FL round \( r \).
+%   \item \( w_{i,j}^{(r)} \): Weight vector of the local model for client \( i \), category \( j \), and round \( r \).
+%   \item \( N \): Total number of clients participating in the FL process.
+%   \item \( k \): Number of predefined process categories.
+%   \item \( R \): Total number of FL training rounds.
+% \end{itemize}
+% }
 
+Advanced persistent threats involve multiple causally linked attack steps across various system entities, highlighting the need to capture and model the interactions among these entities for effective detection. Analyzing each system event in isolation does not allow us to capture these interactions properly, as observed in existing log-level systems~\cite{deeplog2017,liu2019log2vec,xia2019loggan}; hence, provenance graphs, \( G_{c_i} \), are being used to effectively model the interaction of system entities. Moreover, Graph Representation Learning is used to learn the patterns present in these graphs, as shown in related works~\cite{flash2024,cheng2023kairos,jia2023magic}. We integrate federated learning with graph representation learning to bring privacy and decentralization to intrusion detection while maintaining the strong detection performance offered by the provenance graph learning technique.
 
-Advanced persistent threats involve multiple causally linked attack steps across various system entities, highlighting the need to capture and model the interactions among these entities for effective detection. Analyzing each system event in isolation does not allow us to capture these interactions properly, as observed in existing log-level systems~\cite{deeplog2017,liu2019log2vec,xia2019loggan}; hence, provenance graphs are being used to effectively model the interaction of system entities. Moreover, Graph Representation Learning is used to learn the patterns present in provenance graphs, as shown in related works~\cite{flash2024,cheng2023kairos,jia2023magic}. We integrate federated learning with graph representation learning to bring privacy and decentralization to intrusion detection while keeping the strong detection performance offered by provenance graph learning technique. 
+Our approach includes a central server responsible for initializing the global GNN models, \(\mathcal{G}_{\text{global}}\), with random weights, \( w_j^{(0)} \), which are then sent to all clients in \( C \). These clients use their local process subgraphs, \( G_{c_i} \), and semantic feature vectors to train the GNN models in an unsupervised way, following a training method similar to Flash. The objective of the GNN model is to classify each node \( v \) into its corresponding type, yielding predictions \(\hat{y}_v^j\). The server then applies the federated averaging algorithm to merge the GNN models into a set of global models, \(\mathcal{G}_{\text{global}}\), based on the process entity categories on which they were trained. This ensures that models with similar distributions are combined together to address the data heterogeneity problem. Specifically, the server aggregates parameters from \( N \) client models to update the global model as \(\bar{w} = \frac{1}{N} \sum_{i=1}^{N} w_i\).
 
-Our approach includes a central server responsible for initializing the global \gnnshort models denoted by \(\{GNN_1, GNN_2, \ldots, GNN_k\}\) with random weights, which are then sent to all clients. These clients use their local process subgraphs and semantic feature vectors to train the \gnnshort models in an unsupervised way, following a training method similar to \flash. The \gnnshort model's objective is to classify each node entity into its corresponding type. The server then applies the federated averaging algorithm to merge the \gnnshort models into a set of global models (\(GNN_{Globals}\)). These models are then merged according to the process entity categories on which they were trained. This ensures that models with similar distributions are combined together to address the data heterogeneity problem. Specifically, for each submodel, the server aggregates parameters from \(N\) client models to update the global model as $\bar{w} = \frac{1}{N} \sum_{k=1}^{N}w_k$, where \(\bar{w}\) is the aggregated global model parameter, \(N\) is the number of client models and \(w_k\) is the parameter from the \(k\)-th client model.
-
-The federated averaging process is repeated for a set number of rounds \(R\), and concludes when there is no further reduction in training loss. Algorithm~\ref{alg:federated_learning} shows the training and aggregation process of \gnnshort for a given process category and one round of FL.
-
+The federated averaging process is repeated for a set number of rounds \( R \), and concludes when there is no further reduction in the training loss, \(\mathcal{L}^{(r)}\). Algorithm~\ref{alg:federated_learning} shows the training and aggregation process of GNN for a given process category and one round of FL.
 
 % \begin{algorithm}[!t]
 %   \scriptsize
