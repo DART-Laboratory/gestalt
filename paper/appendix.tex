@@ -232,33 +232,33 @@ Scaling FL to larger enterprise networks introduces potential state explosion is
 
 % Each sub-model specializes in a different aspect of the data, potentially leading to a scenario where clients contribute more evenly across the ensemble. Clients with large datasets still contribute significantly, but their impact is more evenly distributed, enhancing fairness.
 
-\begin{algorithm}[!t]
-  \scriptsize
-  \DontPrintSemicolon
-  \SetKwInOut{Input}{Inputs}
-  \SetKwInOut{Output}{Output}
-  \Input{Set of client models $\{GNN_1, GNN_2, \ldots, GNN_N\}$;\\}
-  \Output{Global GNN model $GNN_{Global}$.}
-  \BlankLine
-  \tcc{Initialize global GNN model with random weights for a given process Category.}
-  %\tcc{This initialization happens for the first FL round only.}
-  $G \leftarrow \text{InitializeRandomWeights}()$\\
-  \tcc{Distribute $GNN$ to all clients.}
-  \ForEach{client}{
-    Send $GNN$ to $Client_i$\\
-    $GNN \leftarrow \text{TrainOnLocalData}(ProcessCategory_i)$
-  }
-  \BlankLine
-  \tcc{Aggregate trained models from clients.}
-  $AggregatedWeights \leftarrow list([])$\\
-  \ForEach{client model $GNN_i$}{
-    $AggregatedWeights.append(\text{ExtractWeights}(GNN_i))$\\
-  }
-  \tcc{Apply federated averaging.}
-  $GNN_{Global} \leftarrow \text{FederatedAveraging}(AggregatedWeights)$\\
-  \BlankLine
-  \Return $GNN_{Global}$\\
-  \BlankLine
-  \caption{Federated Provenance Graph Learning}
-  \label{alg:federated_learning}
-\end{algorithm}
+% \begin{algorithm}[!t]
+%   \scriptsize
+%   \DontPrintSemicolon
+%   \SetKwInOut{Input}{Inputs}
+%   \SetKwInOut{Output}{Output}
+%   \Input{Set of client models $\{GNN_1, GNN_2, \ldots, GNN_N\}$;\\}
+%   \Output{Global GNN model $GNN_{Global}$.}
+%   \BlankLine
+%   \tcc{Initialize global GNN model with random weights for a given process Category.}
+%   %\tcc{This initialization happens for the first FL round only.}
+%   $G \leftarrow \text{InitializeRandomWeights}()$\\
+%   \tcc{Distribute $GNN$ to all clients.}
+%   \ForEach{client}{
+%     Send $GNN$ to $Client_i$\\
+%     $GNN \leftarrow \text{TrainOnLocalData}(ProcessCategory_i)$
+%   }
+%   \BlankLine
+%   \tcc{Aggregate trained models from clients.}
+%   $AggregatedWeights \leftarrow list([])$\\
+%   \ForEach{client model $GNN_i$}{
+%     $AggregatedWeights.append(\text{ExtractWeights}(GNN_i))$\\
+%   }
+%   \tcc{Apply federated averaging.}
+%   $GNN_{Global} \leftarrow \text{FederatedAveraging}(AggregatedWeights)$\\
+%   \BlankLine
+%   \Return $GNN_{Global}$\\
+%   \BlankLine
+%   \caption{Federated Provenance Graph Learning}
+%   \label{alg:federated_learning}
+% \end{algorithm}
