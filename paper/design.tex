@@ -161,28 +161,28 @@ This procedure ensures that neither the central server nor the utility server ca
 \subsection{Process Entity Categorization}
 \label{sys:catg}
 
-\wajih{Use more formalism in this subsection and add an pseudocode/algorithm as well. You should use some notations like this:
-\begin{itemize}
-    \item \( N \): Total number of clients.
-    \item \( P_i \): Set of encrypted process entities from client \( i \), where \( i \in \{1, \dots, N\} \).
-    \item \( \mathcal{P}_{\text{global}} \): Global set of unique process entities, defined as:
-    \[
-    \mathcal{P}_{\text{global}} = \bigcup_{i=1}^{N} P_i
-    \]
-    \item \( k \): Number of predefined categories.
-    \item \( \mathcal{C} = \{\mathcal{C}_1, \mathcal{C}_2, \dots, \mathcal{C}_k\} \): Set of categories.
-    \item \( \psi(p) \): Categorization map that assigns a process \( p \in \mathcal{P}_{\text{global}} \) to a category \( \mathcal{C}_j \), where:
-    \[
-    \psi(p): \mathcal{P}_{\text{global}} \rightarrow \mathcal{C}
-    \]
-\end{itemize}
-}
+% \wajih{Use more formalism in this subsection and add an pseudocode/algorithm as well. You should use some notations like this:
+% \begin{itemize}
+%     \item \( N \): Total number of clients.
+%     \item \( P_i \): Set of encrypted process entities from client \( i \), where \( i \in \{1, \dots, N\} \).
+%     \item \( \mathcal{P}_{\text{global}} \): Global set of unique process entities, defined as:
+%     \[
+%     \mathcal{P}_{\text{global}} = \bigcup_{i=1}^{N} P_i
+%     \]
+%     \item \( k \): Number of predefined categories.
+%     \item \( \mathcal{C} = \{\mathcal{C}_1, \mathcal{C}_2, \dots, \mathcal{C}_k\} \): Set of categories.
+%     \item \( \psi(p) \): Categorization map that assigns a process \( p \in \mathcal{P}_{\text{global}} \) to a category \( \mathcal{C}_j \), where:
+%     \[
+%     \psi(p): \mathcal{P}_{\text{global}} \rightarrow \mathcal{C}
+%     \]
+% \end{itemize}
+% }
 
-Our experimental results, presented in Table~\ref{categorized_gnn}, indicate that a single global \gnnshort model cannot achieve good detection performance in an FL setting due to the diverse and heterogeneous distributions of clients' data. The disparity in data distributions among clients poses a significant challenge in effectively training a unified model that can generalize well across all clients, since the global model struggles to capture the unique characteristics and patterns inherent in each client's data.
+Our experimental results, presented in Table~\ref{categorized_gnn}, indicate that a single \( \mathcal{G}_{\text{global}} \) model cannot achieve good detection performance in an FL setting due to the diverse and heterogeneous distributions of clients' data in the set \( C \). The disparity in data distributions among \( N \) clients poses a significant challenge in effectively training a unified model that can generalize well across all clients, since the global model struggles to capture the unique characteristics and patterns inherent in each client's data.
 
 To address this limitation, we developed a comprehensive framework that organizes process entities across different clients into distinct groups. Each category is modeled by a dedicated submodel, enabling it to focus on the unique distribution and intricate patterns of its assigned category and thereby enhance overall detection performance.
 
-The framework employs a central utility server that plays a pivotal role in the categorization process. Clients transmit lists of encrypted process names to the utility server to ensure privacy. The server aggregates these lists into a global list of process names and then randomly divides them into $k$ global categories, where $k$ is a predefined hyperparameter. Although this split is random, it is performed only once at the global level. Consequently, all occurrences of a given process name are assigned to the same category across every client.
+The framework employs a central utility server that plays a pivotal role in the categorization process. Clients transmit lists of encrypted process names to the utility server to ensure privacy. The server aggregates these lists into a global list of process names \( \mathcal{P}_{\text{global}} \) and then applies the categorization map \( \psi(p) \) to randomly divide them into \( k \) global categories, where \( k \) is a predefined hyperparameter. Although this division is random, it is performed only once at the global level. Consequently, all occurrences of a given process name are mapped consistently across every client, such that \( \psi(p) = j \) assigns process \( p \) to category \( j \).
 
 To illustrate this, consider two clients: \emph{A} and \emph{B}:
 \begin{itemize}
@@ -190,16 +190,15 @@ To illustrate this, consider two clients: \emph{A} and \emph{B}:
     \item \emph{B} has a set of processes \{\texttt{chrome}, \texttt{firefox}, \texttt{ssh}, \texttt{mysql}\}.
 \end{itemize}
 
-Both clients send encrypted lists of these process names to the utility server, which merges them into a single global list of unique names \(\{\texttt{chrome}, \texttt{ssh}, \texttt{mysql}, \texttt{firefox}\}\). The server then randomly assigns each name to one of the $k$ categories, where $k$ is a predefined hyperparameter. For instance, the server might place \(\texttt{chrome}, \texttt{mysql}\) in \(\text{category }1\) and \(\texttt{ssh}, \texttt{firefox}\) in \(\text{category }2\).
+Both clients send encrypted lists of these process names to the utility server, which merges them into a single global list of unique names \(\{\texttt{chrome}, \texttt{ssh}, \texttt{mysql}, \texttt{firefox}\}\). The server then applies \( \psi \) to randomly assign each name to one of the \( k \) categories, where \( k \) is a predefined hyperparameter. For instance, \( \psi(\texttt{chrome}) \) and \( \psi(\texttt{mysql}) \) might map to category 1, while \( \psi(\texttt{ssh}) \) and \( \psi(\texttt{firefox}) \) map to category 2.
 
-This categorization is sent back to both clients. Now all occurrences of \texttt{chrome} and \texttt{mysql} fall under category~1 for both clients, while \texttt{ssh} and \texttt{firefox} fall under category~2. In this way, each category holds similar process names across all clients, guaranteeing consistency even though the initial split was random.
+This categorization is sent back to both clients. Now all occurrences of \texttt{chrome} and \texttt{mysql} fall under category~1 for both clients, while \texttt{ssh} and \texttt{firefox} fall under category~2. In this way, each category holds similar processes across all clients, guaranteeing consistency even though the initial split was random.
 
-We conducted experiments to explore the impact of $k$ on detection accuracy and FL training cost, as detailed in Appendix~\ref{app:ablation}.
+We conducted experiments to explore the impact of \( k \) on detection accuracy and FL training cost, as detailed in Appendix~\ref{app:ablation}.
 
-The clients use the processes within each bin to generate provenance subgraphs. The neighborhood hop length of these subgraphs is set to match the number of graph convolution layers in the \gnnshort. This ensures that the \gnnshort has complete neighborhood information for each node and that no interconnections are lost due to the categorization process. In our experiments, we set the hop length to two, which has been shown by prior works~\cite{wang2022threatrace,flash2024} to offer an optimal balance between efficiency and detection accuracy. These subgraphs serve as training data for an ensemble of \gnnshort models. Each submodel in the ensemble is trained on the subgraphs corresponding to its designated category and participates in federated averaging.
+The clients use the processes within each bin to generate provenance subgraphs \( G_{c_i} \). The neighborhood hop length of these subgraphs is set to match the number of graph convolution layers in the \( \mathcal{G}_{\text{global}} \). This ensures that the \( \mathcal{G}_{\text{global}} \) has complete neighborhood information for each node and that no interconnections are lost due to the categorization process. In our experiments, we set the hop length to two, which has been shown by prior works~\cite{wang2022threatrace,flash2024} to offer an optimal balance between efficiency and detection accuracy. These subgraphs serve as training data for an ensemble of \( \mathcal{G}_{\text{global}} \) models. Each submodel in the ensemble is trained on the subgraphs corresponding to its designated category and participates in federated averaging.
 
-This approach ensures a balanced segmentation of data across clients, maintaining consistency in the training datasets for each \gnnshort model before federated averaging. By dividing the overall task into sub-tasks (sub-models) and assigning them to different subsets of processes, the influence of clients with large datasets is distributed across multiple models. This prevents any single client from disproportionately affecting the outcome of the federated learning system. Each sub-model specializes in a different aspect of the data, capturing unique patterns and distributions. This specialization promotes more balanced contributions across the ensemble, enhancing the robustness and performance of the overall system.
-
+This approach ensures a balanced segmentation of data across clients, maintaining consistency in the training datasets for each \( \mathcal{G}_{\text{global}} \) model before federated averaging. By dividing the overall task into sub-tasks (sub-models) and assigning them to different subsets of processes, the influence of clients with large datasets is distributed across multiple models. This prevents any single client from disproportionately affecting the outcome of the federated learning system. Each sub-model specializes in a different aspect of the data, capturing unique patterns and distributions. This specialization promotes more balanced contributions across the ensemble, enhancing the robustness and performance of the overall system.
 
 \subsection{\fpgl}
 \label{sys:fpgl}
