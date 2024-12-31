@@ -2,9 +2,10 @@
 \label{sec:methodology}
 % \wajih{Do a GLOBAL SEARCH of the paper and replace federated graph learning with federated provenance graph learning and replace anomaly detection with GNN-based anomaly detection where ever appropriate}
 
-\wajih{Througout this section, replace verbose descriptions with concise references to these symbols/notations to streamline the text (e.g., use \( \psi(p) \) instead of "categorization map", \( \mathcal{P}_{\text{global}} \) instead of "the global set of unique process entities).
-}
+% \wajih{Througout this section, replace verbose descriptions with concise references to these symbols/notations to streamline the text (e.g., use \( \psi(p) \) instead of "categorization map", \( \mathcal{P}_{\text{global}} \) instead of "the global set of unique process entities).
+% }
 
+We define all mathematical notations for our system in Table~\ref{tab:keynotations}.
 
 \subsection{Problem Formulation \& Overview}
 
@@ -55,7 +56,7 @@
     \end{tabular}
   \end{table}
 
-We define all mathematical notations in Table~\ref{tab:keynotations}. Each client machine in the set \( C \) locally maintains its logs to preserve privacy, ensuring that raw logs do not leave the machine. Our objective is to detect anomalous nodes within the client's provenance graphs, \( \{G_{c_1}, G_{c_2}, \ldots, G_{c_N}\} \), generated from these logs. To this end, we propose training a set of global GNN models \( \mathcal{G}_{\text{global}} \) to model the benign behavior exhibited across all client logs without centralizing the log data.
+Each client machine in the set \( C \) locally maintains its logs to preserve privacy, ensuring that raw logs do not leave the machine. Our objective is to detect anomalous nodes within the client's provenance graphs, \( \{G_{c_1}, G_{c_2}, \ldots, G_{c_N}\} \), generated from these logs. To this end, we propose training a set of global GNN models \( \mathcal{G}_{\text{global}} \) to model the benign behavior exhibited across all client logs without centralizing the log data.
 
 Additionally, we aim to develop a global semantic encoder \( \mathcal{E}_{\text{sem}} \), capable of converting contextual attributes into vector space, thereby generating feature vectors for training our GNN models. Using \( \mathcal{G}_{\text{global}} \), we aim to identify anomalous nodes in clients provenance graphs \( G_{c_i}\). These anomalies could be potential threats as their system activity significantly differs from benign patterns.
 
