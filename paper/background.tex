@@ -71,7 +71,13 @@
 %         \label{limitations}
 %     \end{table}
 
-\PP{Federated Learning}. Federated learning (FL) trains a global model across decentralized clients without sharing raw data. The global model, parameterized by \(\theta\), minimizes a loss function \(L(\theta)\) across all clients. Each client \(i\) computes a local update \(\Delta \theta_i = -\eta \nabla L_i(\theta)\), where \(L_i(\theta)\) is the local loss and \(\eta\) is the learning rate. The central server aggregates updates as \(\Delta \theta_{global} = \frac{1}{N} \sum_{i=1}^{N} \Delta \theta_i\) and updates the global model: \(\theta_{new} = \theta + \Delta \theta_{global}\). This iterative process preserves data privacy and reduces bandwidth usage while training the model. \wajih{make sure that the notations match what you have in the design section.}
+\PP{Federated Learning}. Federated Learning (FL) is a decentralized training paradigm designed to learn a global model across \(N\) clients in \(C\) without aggregating their raw data. Let \(w^{(r)}\) denote the model’s parameters after round \(r\). At each round, every client \(i \in C\) computes a local update by minimizing its local loss \(\mathcal{L}_i^{(r)}\bigl(w^{(r)}\bigr)\) over private data, producing an update \(\Delta w_i^{(r)}\). The central server aggregates these local updates to form the new global parameters:
+\(
+w^{(r+1)} 
+\;=\; 
+\frac{1}{N} \sum_{i=1}^{N} \Delta w_i^{(r)}.
+\)
+This iterative process preserves data privacy and minimizes communication overhead by keeping data local while continually refining the global model.
 
 
 % \subsection{Why is it challenging to apply FL to \pids?}
