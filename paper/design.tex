@@ -229,6 +229,23 @@ The federated averaging process is repeated for a set number of rounds \( R \), 
 
 \Sys employs a standard node level detection methodology focusing on identifying irregular nodes through the comparison of their expected and observed types. This approach is grounded in a detailed analysis of both the surrounding structures and inherent properties of the nodes, to define normal pattern baselines for various node types. Typically, entities with malicious intentions display neighborhood structures and characteristics deviating from these established norms. In operational phases, the detection of anomalies that diverge from the pre-established node distribution patterns often results in their misclassification. The emergence of nodes misclassified in the system's output is indicative of potential security issues.
 
-\Sys performs threat detection in a decentralized manner on clients' provenance graphs (\( \{PGClient_{1}, PGClient_{2}, \ldots, \\ PGClient_{N}\} \)) in an organization. For a given provenance graph on a client machine containing nodes \(V\) and edges \(E\), \Sys uses the global \gnnshort models \(\{GNN_1, GNN_2, \ldots, GNN_{K_{cat}}\}\) trained using federated learning. Each submodel performs inference on the client's full provenance graph, utilizing the nodes' features \(X_v\) and the graph's adjacency matrix \(A\) to predict each node \(v\)'s label \(\hat{y}_v^j\). A node \(v\) is identified as an anomaly if it is misclassified by all submodels, indicating that none of the submodels recognize the neighborhood structure or features displayed by this node. 
+\Sys performs threat detection in a decentralized manner on clients' provenance graphs (\( \{PGClient_{1}, PGClient_{2}, \ldots, \\ PGClient_{N}\} \)) in an organization. For a given provenance graph \(PGClient_{i}\), \Sys uses the global \gnnshort models \(\{GNN_1, \\ GNN_2, \ldots, GNN_{K_{cat}}\}\) trained using federated learning. Each submodel performs inference on the client's full provenance graph, utilizing the nodes' features \(X_v\) and the graph's adjacency matrix \(A\) to predict each node \(v\)'s label \(\hat{y}_v^j\). Let us define a misclassification indicator \(\mathcal{M}(v, j)\) as
+\[
+\mathcal{M}(v, j) \;=\;
+\begin{cases}
+1, & \text{if } \hat{y}_v^j \neq y_v,\\
+0, & \text{otherwise}.
+\end{cases}
+\]
+Accordingly, a node \(v\) is identified as an anomaly if it is misclassified by \emph{all} submodels, i.e.,
+\[
+\mathcal{A}(v) \;=\;
+\begin{cases}
+1, & \text{if } \sum_{j=1}^{K_{cat}} \mathcal{M}(v, j) \;=\; K_{cat},\\
+0, & \text{otherwise}.
+\end{cases}
+\]
+This indicates that none of the submodels recognize the neighborhood structure or features displayed by \(v\), prompting its classification as an anomaly.
+
 
 To regulate the frequency of alerts, we define a threshold \(T\) similar to \flash. This parameter sets a threshold on the likelihood of a classification being considered valid, with a higher value of \(T\) implying stronger confidence and increasing the probability of identifying anomalies.
