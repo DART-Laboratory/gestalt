@@ -161,66 +161,156 @@ This categorization is sent back to both clients. Now all occurrences of \texttt
 
 We conducted experiments to explore the impact of \( K_{cat} \) on detection accuracy and FL training cost, as detailed in Appendix~\ref{app:ablation}.
 
-The clients use the processes within each bin to generate provenance subgraphs \( PGClient_{i} \). The neighborhood hop length of these subgraphs is set to match the number of graph convolution layers in \( {GNN}_{\text{global}} \). This ensures that the \({GNN}_{\text{global}}\) has complete neighborhood information for each node and that no interconnections are lost due to the categorization process. In our experiments, we set the hop length to two, which has been shown by prior works~\cite{wang2022threatrace,flash2024} to offer an optimal balance between efficiency and detection accuracy. These subgraphs serve as training data for an ensemble of \({GNN}_{\text{global}}\) models. Each submodel in the ensemble is trained on the subgraphs corresponding to its designated category and participates in federated averaging. Algorithm~\ref{alg:federated_provenance} explains this process in detail.
+The clients use the processes within each bin to generate provenance subgraphs \( PGClient_{i} \). The neighborhood hop length of these subgraphs is set to match the number of graph convolution layers in \( {GNN}_{\text{global}} \). This ensures that the \({GNN}_{\text{global}}\) has complete neighborhood information for each node and that no interconnections are lost due to the categorization process. In our experiments, we set the hop length to two, which has been shown by prior works~\cite{wang2022threatrace,flash2024} to offer an optimal balance between efficiency and detection accuracy. These subgraphs serve as training data for an ensemble of \({GNN}_{\text{global}}\) models. Each submodel in the ensemble is trained on the subgraphs corresponding to its designated category and participates in federated averaging. Algorithm~\ref{alg:categories} explains this process in detail.
 
 This approach ensures a balanced segmentation of data across clients, maintaining consistency in the training datasets for each \({GNN}_{\text{global}}\) model before federated averaging. By dividing the overall task into sub-tasks (sub-models) and assigning them to different subsets of processes, the influence of clients with large datasets is distributed across multiple models. This prevents any single client from disproportionately affecting the outcome of the federated learning system. Each sub-model specializes in a different aspect of the data, capturing unique patterns and distributions. This specialization promotes more balanced contributions across the ensemble, enhancing the robustness and performance of the overall system.
 
 
+% \begin{algorithm}[!t]
+%   \scriptsize
+%   \DontPrintSemicolon
+%   \SetKwInOut{Input}{Inputs}
+%   \SetKwInOut{Output}{Output}
+%   \Input{Number of clients $N$, Number of categories $K_{cat}$, Client datasets $\mathcal{C}$}
+%   \Output{Trained global GNN models ${GNN}_{\text{global}}$}
+%   \BlankLine
+%   \tcc{Initialization of utility server and global process list.}
+%   $\mathcal{P}_{\text{global}} \leftarrow \emptyset$\\
+%   \ForEach{client $C_i \in \mathcal{C}$}{
+%       Transmit encrypted process list to utility server\\
+%       \tcc{Utility server operates on encrypted lists to preserve privacy.}
+%       $\mathcal{P}_{\text{global}} \leftarrow \mathcal{P}_{\text{global}} \cup \text{Encrypt}(C_i)$
+%   }
+%   \BlankLine
+%   \tcc{Categorization of processes into $K_{cat}$ categories.}
+%   \For{$p \in \mathcal{P}_{\text{global}}$}{
+%       $\psi(p) \leftarrow \text{RandomCategory}(K_{cat})$
+%   }
+%   \BlankLine
+%   \tcc{Distribute global category assignments to clients.}
+%   \ForEach{client $C_i \in \mathcal{C}$}{
+%       Send categorization $\psi$ to $C_i$
+%   }
+%   \BlankLine
+%   \tcc{Local training of submodels for each category.}
+%   \ForEach{client $C_i \in \mathcal{C}$}{
+%       \ForEach{$p \in C_i$}{
+%           $j \leftarrow \psi(p)$\\
+%           Train GNN submodel on $PGClient_{i}$ using processes in category $j$
+%       }
+%   }
+%   \BlankLine
+%   \tcc{Aggregation and federated averaging of submodels.}
+%   \ForEach{category $j \in \{1, \ldots, K_{cat}\}$}{
+%       $w_j^{(0)} \leftarrow \text{InitializeRandomWeights}()$\\
+%       \ForEach{client $C_i \in \mathcal{C}$}{
+%           $w_j^{(i)} \leftarrow \text{ExtractWeights}(C_i, j)$
+%       }
+%       $w_j^{(r)} \leftarrow \text{FederatedAveraging}(\{w_j^{(i)}\})$
+%   }
+%   \BlankLine
+%   \Return ${GNN}_{\text{global}} \leftarrow \{w_1^{(r)}, w_2^{(r)}, \ldots, w_{K_{cat}}^{(r)}\}$\\
+%   \BlankLine
+%   \caption{FL with system entity categorization.}
+%   \label{alg:federated_provenance}
+% \end{algorithm}  
+
+% ==================================================
+% Algorithm 1: Categorization Process
+% ==================================================
 \begin{algorithm}[!t]
   \scriptsize
   \DontPrintSemicolon
   \SetKwInOut{Input}{Inputs}
   \SetKwInOut{Output}{Output}
-  \Input{Number of clients $N$, Number of categories $K_{cat}$, Client datasets $\mathcal{C}$}
-  \Output{Trained global GNN models ${GNN}_{\text{global}}$}
-  \BlankLine
-  \tcc{Initialization of utility server and global process list.}
-  $\mathcal{P}_{\text{global}} \leftarrow \emptyset$\\
-  \ForEach{client $C_i \in \mathcal{C}$}{
-      Transmit encrypted process list to utility server\\
-      \tcc{Utility server operates on encrypted lists to preserve privacy.}
-      $\mathcal{P}_{\text{global}} \leftarrow \mathcal{P}_{\text{global}} \cup \text{Encrypt}(C_i)$
+  \caption{Categorizing processes into \(\,K_{cat}\) categories.}
+  \label{alg:categorization_process}
+
+  \Input{
+    Number of clients \(N\), \\
+    Number of categories \(K_{cat}\), \\
+    Client datasets \(\mathcal{C}\)
   }
-  \BlankLine
-  \tcc{Categorization of processes into $K_{cat}$ categories.}
-  \For{$p \in \mathcal{P}_{\text{global}}$}{
-      $\psi(p) \leftarrow \text{RandomCategory}(K_{cat})$
+  \Output{
+    Category assignment function \(\psi\)
   }
+
   \BlankLine
-  \tcc{Distribute global category assignments to clients.}
-  \ForEach{client $C_i \in \mathcal{C}$}{
-      Send categorization $\psi$ to $C_i$
+  \tcc{Step 1: Initialization of utility server and global process list.}
+  \(\mathcal{P}_{\text{global}} \leftarrow \emptyset\) \\
+  \ForEach{client \(C_i \in \mathcal{C}\)}{
+      Transmit encrypted process list to utility server \\
+      \(\mathcal{P}_{\text{global}} \leftarrow \mathcal{P}_{\text{global}} \cup \text{Encrypt}(C_i)\)
   }
+
   \BlankLine
-  \tcc{Local training of submodels for each category.}
-  \ForEach{client $C_i \in \mathcal{C}$}{
-      \ForEach{$p \in C_i$}{
-          $j \leftarrow \psi(p)$\\
-          Train GNN submodel on $PGClient_{i}$ using processes in category $j$
+  \tcc{Step 2: Categorization of processes into \(K_{cat}\) categories.}
+  \For{\(p \in \mathcal{P}_{\text{global}}\)}{
+      \(\psi(p) \leftarrow \text{RandomCategory}(K_{cat})\)
+  }
+
+  \BlankLine
+  \tcc{Step 3: Distribute global category assignments to clients.}
+  \ForEach{client \(C_i \in \mathcal{C}\)}{
+      Send categorization \(\psi\) to \(C_i\)
+  }
+
+  \BlankLine
+  \Return \(\psi\)
+  \label{alg:categories}
+\end{algorithm}
+
+% ==================================================
+% Algorithm 2: Submodel Training and Aggregation
+% ==================================================
+\begin{algorithm}[!t]
+  \scriptsize
+  \DontPrintSemicolon
+  \SetKwInOut{Input}{Inputs}
+  \SetKwInOut{Output}{Output}
+  \caption{Training and federated aggregation of category-specific submodels.}
+  \label{alg:training_submodel}
+
+  \Input{
+    Global process list \(\mathcal{P}_{\text{global}}\), \\
+    Category assignment function \(\psi\), \\
+    Number of categories \(K_{cat}\), \\
+    Client datasets \(\mathcal{C}\)
+  }
+  \Output{
+    Trained global GNN models \(\text{GNN}_{\text{global}}\)
+  }
+
+  \BlankLine
+  \tcc{Step 1: Local training of submodels for each category.}
+  \ForEach{client \(C_i \in \mathcal{C}\)}{
+      \ForEach{\(p \in C_i\)}{
+          \(j \leftarrow \psi(p)\) \\
+          Train GNN submodel on processes in category \(j\) from client \(C_i\)
       }
   }
+
   \BlankLine
-  \tcc{Aggregation and federated averaging of submodels.}
-  \ForEach{category $j \in \{1, \ldots, K_{cat}\}$}{
-      $w_j^{(0)} \leftarrow \text{InitializeRandomWeights}()$\\
-      \ForEach{client $C_i \in \mathcal{C}$}{
-          $w_j^{(i)} \leftarrow \text{ExtractWeights}(C_i, j)$
+  \tcc{Step 2: Aggregation and federated averaging of submodels.}
+  \ForEach{category \(j \in \{1, \ldots, K_{cat}\}\)}{
+      \(w_j^{(0)} \leftarrow \text{InitializeRandomWeights}()\) \\
+      \ForEach{client \(C_i \in \mathcal{C}\)}{
+          \(w_j^{(i)} \leftarrow \text{ExtractWeights}(C_i, j)\)
       }
-      $w_j^{(r)} \leftarrow \text{FederatedAveraging}(\{w_j^{(i)}\})$
+      \(\displaystyle w_j^{(r)} \leftarrow \text{FederatedAveraging}\bigl(\{w_j^{(i)}\}\bigr)\)
   }
+
   \BlankLine
-  \Return ${GNN}_{\text{global}} \leftarrow \{w_1^{(r)}, w_2^{(r)}, \ldots, w_{K_{cat}}^{(r)}\}$\\
-  \BlankLine
-  \caption{FL with system entity categorization.}
-  \label{alg:federated_provenance}
-\end{algorithm}  
+  \Return \(\displaystyle \text{GNN}_{\text{global}} \leftarrow \{\,w_1^{(r)},\, w_2^{(r)},\, \ldots,\, w_{K_{cat}}^{(r)}\}\)
+  \label{alg:submodel}
+\end{algorithm}
 
 \subsection{FL with Categorized Provenance Subgraphs}
 \label{sys:fpgl}
 
 Advanced persistent threats involve multiple causally linked attack steps across various system entities, highlighting the need to capture and model the interactions among these entities for effective detection. Analyzing each system event in isolation does not allow us to capture these interactions properly, as observed in existing log-level systems~\cite{deeplog2017,liu2019log2vec,xia2019loggan}; hence, provenance graphs, \( PGClient_{i} \), are being used to effectively model the interaction of system entities. Moreover, Graph Representation Learning is used to learn the patterns present in these graphs, as shown in related works~\cite{flash2024,cheng2023kairos,jia2023magic}. We integrate federated learning with graph representation learning to bring privacy and decentralization to intrusion detection while maintaining the strong detection performance offered by the provenance graph learning technique.
 
-Our approach includes a central server responsible for initializing the global GNN models, \({GNN}_{\text{global}}\), with random weights, \( w_j^{(0)} \), which are then sent to all clients in \( \mathcal{C} \). These clients use their local process subgraphs, \( PGClient_{i} \), and semantic feature vectors to train the GNN models in an unsupervised way, following a training method similar to \flash. The objective of the GNN model is to classify each node \( v \) into its corresponding type, yielding predictions \(\hat{y}_v^j\). The server then applies the federated averaging algorithm to merge the GNN models into a set of global models, \({GNN}_{\text{global}}\), based on the process entity categories on which they were trained. This ensures that models with similar distributions are combined together to address the data heterogeneity problem. Specifically, the server aggregates parameters from \( N \) client models to update each global submodel as \(\bar{w} = \frac{1}{N} \sum_{i=1}^{N} w_i\).
+Our approach includes a central server responsible for initializing the global GNN models, \({GNN}_{\text{global}}\), with random weights, \( w_j^{(0)} \), which are then sent to all clients in \( \mathcal{C} \). These clients use their local process subgraphs, \( PGClient_{i} \), and semantic feature vectors to train the GNN models in an unsupervised way, following a training method similar to \flash. The objective of the GNN model is to classify each node \( v \) into its corresponding type, yielding predictions \(\hat{y}_v^j\). The server then applies the federated averaging algorithm to merge the GNN models into a set of global models, \({GNN}_{\text{global}}\), based on the process entity categories on which they were trained. This ensures that models with similar distributions are combined together to address the data heterogeneity problem. Specifically, the server aggregates parameters from \( N \) client models to update each global submodel as \(\bar{w} = \frac{1}{N} \sum_{i=1}^{N} w_i\). Algorithm~\ref{alg:training_submodel} explains this process in detail.
 
 The federated averaging process is repeated for a set number of rounds \( R \), and concludes when there is no further reduction in the training loss, \(\mathcal{L}^{(r)}\). 
 
