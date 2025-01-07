@@ -17,15 +17,7 @@
 
 %\wajih{make a macro for Provenance-based IDS which is PIDS and use PIDS everywhere where you say intrusion detection. It saves space and also narrows the scope of our paper to PIDS. Use macros for words like \wordvec, etc. because of letter capitalization. Also convert the words like Graph Neural Network into GNN to save space.}
 
-\PP{Data Provenance Graphs}  \Logs are essential for recording system activities, capturing interactions among entities such as processes, files, and sockets. Operating systems like Windows, Linux, and FreeBSD provide built-in tools for log collection, including Event Tracing for Windows (ETW)\cite{windowsaudit}, the Linux Audit system\cite{linuxaudit}, and DTrace~\cite{dtrace}. Each log entry represents a system event, specifying subject and object entities along with contextual attributes like process names, file names, and socket IP addresses. Data provenance leverages these logs to construct a dependency graph that models causal links among system entities. In this graph, nodes represent entities (e.g., processes, files, sockets), and edges denote system syscalls, capturing event relationships. The provenance graph is critical for analyzing system activities and detecting anomalous or malicious entities. Figure~\ref{provexp} shows an example where \textit{Explorer.exe} executes processes like \textit{Notepad.exe} and \textit{Firefox.exe}, which then interact with file and socket nodes.
-
-\begin{figure}[t!]
-  \centering
-  \includegraphics[width=0.4\textwidth]{fig/provexp.pdf}
-  \caption{Data provenance graph example.}
-  \label{provexp}
-  \vspace{-3ex}
-\end{figure}
+% \PP{Data Provenance Graphs}  \Logs are essential for recording system activities, capturing interactions among entities such as processes, files, and sockets. Operating systems like Windows, Linux, and FreeBSD provide built-in tools for log collection, including Event Tracing for Windows (ETW)\cite{windowsaudit}, the Linux Audit system\cite{linuxaudit}, and DTrace~\cite{dtrace}. Each log entry represents a system event, specifying subject and object entities along with contextual attributes like process names, file names, and socket IP addresses. Data provenance leverages these logs to construct a dependency graph that models causal links among system entities. In this graph, nodes represent entities (e.g., processes, files, sockets), and edges denote system syscalls, capturing event relationships. The provenance graph is critical for analyzing system activities and detecting anomalous or malicious entities.
 %\wajih{Since we do not have any provenance graph in the paper, we need to provide a short example of a provenance graph.}
 
 
@@ -71,13 +63,7 @@
 %         \label{limitations}
 %     \end{table}
 
-\PP{Federated Learning}. Federated Learning (FL) is a decentralized training paradigm designed to learn a global model across \(N\) clients in \(C\) without aggregating their raw data. Let \(w^{(r)}\) denote the model’s parameters after round \(r\). At each round, every client \(i \in C\) computes a local update by minimizing its local loss \(\mathcal{L}_i^{(r)}\bigl(w^{(r)}\bigr)\) over private data, producing an update \(\Delta w_i^{(r)}\). The central server aggregates these local updates to form the new global parameters:
-\(
-w^{(r+1)} 
-\;=\; 
-\frac{1}{N} \sum_{i=1}^{N} \Delta w_i^{(r)}.
-\)
-This iterative process preserves data privacy and minimizes communication overhead by keeping data local while continually refining the global model.
+
 
 
 % \subsection{Why is it challenging to apply FL to \pids?}
