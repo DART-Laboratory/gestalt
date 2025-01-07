@@ -1,0 +1,42 @@
+\begin{algorithm}[!t]
+    \scriptsize
+    \DontPrintSemicolon
+    \SetKwInOut{Input}{Inputs}
+    \SetKwInOut{Output}{Output}
+    \caption{Training and federated aggregation of category-specific submodels.}
+    \label{alg:training_submodel}
+  
+    \Input{
+      Global process list \(\mathcal{P}_{\text{global}}\), \\
+      Category assignment function \(\psi\), \\
+      Number of categories \(K_{cat}\), \\
+      Client datasets \(\mathcal{C}\)
+    }
+    \Output{
+      Trained global GNN models \(\text{GNN}_{\text{global}}\)
+    }
+  
+    \BlankLine
+    \tcc{Step 1: Local training of submodels for each category.}
+    \ForEach{client \(C_i \in \mathcal{C}\)}{
+        \ForEach{\(p \in C_i\)}{
+            \(j \leftarrow \psi(p)\) \\
+            Train GNN submodel on processes in category \(j\) from client \(C_i\)
+        }
+    }
+  
+    \BlankLine
+    \tcc{Step 2: Aggregation and federated averaging of submodels.}
+    \ForEach{category \(j \in \{1, \ldots, K_{cat}\}\)}{
+        \(w_j^{(0)} \leftarrow \text{InitializeRandomWeights}()\) \\
+        \ForEach{client \(C_i \in \mathcal{C}\)}{
+            \(w_j^{(i)} \leftarrow \text{ExtractWeights}(C_i, j)\)
+        }
+        \(\displaystyle w_j^{(r)} \leftarrow \text{FederatedAveraging}\bigl(\{w_j^{(i)}\}\bigr)\)
+    }
+  
+    \BlankLine
+    \Return \(\displaystyle \text{GNN}_{\text{global}} \leftarrow \{\,w_1^{(r)},\, w_2^{(r)},\, \ldots,\, w_{K_{cat}}^{(r)}\}\)
+    \label{alg:submodel}
+  \end{algorithm}
+  

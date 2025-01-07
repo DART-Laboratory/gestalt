@@ -1,0 +1,39 @@
+\begin{algorithm}[!t]
+    \scriptsize
+    \DontPrintSemicolon
+    \SetKwInOut{Input}{Inputs}
+    \SetKwInOut{Output}{Output}
+    \caption{Categorizing processes into \(\,K_{cat}\) categories.}
+    \label{alg:categorization_process}
+  
+    \Input{
+      Number of clients \(N\); Number of categories \(K_{cat}\); Client datasets \(\mathcal{C}\)
+    }
+    \Output{
+      Category assignment function \(\psi\)
+    }
+  
+    \BlankLine
+    \tcc{Step 1: Initialization of utility server and global process list.}
+    \(\mathcal{P}_{\text{global}} \leftarrow \emptyset\) \\
+    \ForEach{client \(C_i \in \mathcal{C}\)}{
+        Transmit encrypted process list to utility server \\
+        \(\mathcal{P}_{\text{global}} \leftarrow \mathcal{P}_{\text{global}} \cup \text{Encrypt}(C_i)\)
+    }
+  
+    \BlankLine
+    \tcc{Step 2: Categorization of processes into \(K_{cat}\) categories.}
+    \For{\(p \in \mathcal{P}_{\text{global}}\)}{
+        \(\psi(p) \leftarrow \text{RandomCategory}(K_{cat})\)
+    }
+  
+    \BlankLine
+    \tcc{Step 3: Distribute global category assignments to clients.}
+    \ForEach{client \(C_i \in \mathcal{C}\)}{
+        Send categorization \(\psi\) to \(C_i\)
+    }
+  
+    \BlankLine
+    \Return \(\psi\)
+    \label{alg:categories}
+  \end{algorithm}

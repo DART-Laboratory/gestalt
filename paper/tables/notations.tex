@@ -1,0 +1,23 @@
+\begin{table}[!t]
+    \centering
+    \scriptsize
+    \caption{Key Notations used in \Sys. \wajih{Note that I changed the notation for harmonized model as this one is descriptive. Sometimes you were using "encoder" and sometimes you were using "model". I though model would be better. Make sure that you update this notation everywhere.} }
+    \label{tab:keynotations}
+    \begin{tabular}{|c|p{4cm}|}
+    \hline
+    \textbf{Notation} & \textbf{Definition} \\ \hline
+    \( N \) & Total number of clients in federated learning. \\ \hline
+    \( K_{cat} \) & Number of categories for process entities. \\ \hline
+    \( \mathcal{C} = \{C_1, C_2, \ldots, C_N\} \) & Set of all client machines. \\ \hline
+  
+    \( PGClient_{i} = (\mathcal{V}_i, \mathcal{E}_i) \) & Provenance graph for client \( i \), with nodes \( \mathcal{V}_i \) and edges \( \mathcal{E}_i \). \\ \hline
+    \( {GNN}_{\text{global}} = \{GNN_1, \ldots, GNN_{K_{cat}}\} \) & Set of global GNN models, one per category. \\ \hline
+    \( w_j^{(r)} \) & Weights of global GNN for category \( j \) after round \( r \). \\ \hline
+    \( \mathcal{P}_{\text{global}} \) & Global set of unique process entities. \\ \hline
+    \( \psi(p) \) & Categorization map assigning process \( p \) to category \( \mathcal{C}_j \). \\ \hline
+    \( y_v \) & True label of node \( v \). \\ \hline
+    \( \hat{y}_v^j \) & Predicted label of node \( v \) by submodel \( j \). \\ \hline
+    \( M_{\text{w2v-harm}} \) & Harmonized \wordvec model that converts contextual attributes into vector space. \\ \hline
+    \( \mathcal{L}^{(r)} \) & Loss function value after round \( r \). \\ \hline
+    \end{tabular}
+  \end{table}
