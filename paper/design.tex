@@ -4,7 +4,7 @@
 \begin{figure*}[t!]
   \centering
   \includegraphics[width=1\textwidth]{fig/archv3.pdf}
-  \caption{High-level architecture of \Sys. In the training phase, our system builds local provenance graphs for each client and trains an ensemble of \gnnshort models. Prior to this, we aggregate semantic models contextually for feature encoding. The local \gnnshort models participate in federated learning to develop a global \gnnshort model, which is then utilized for anomaly detection. Notations are defined in Table~\ref{tab:keynotations}. \wajih{lets use some notations in the Client Side Detection as well. Also, please try to use consistent terminologies in the boxes. Also connect Client 1 Client 2 arrows with Word2vec 1 and Word2vec 2. Same goves for GNN 1 and GNN2. }}
+  \caption{High-level architecture of \Sys. In the training phase, our system builds local provenance graphs for each client and trains an ensemble of \gnnshort models. Prior to this, we aggregate semantic models contextually for feature encoding. The local \gnnshort models participate in federated learning to develop a global \gnnshort model, which is then utilized for anomaly detection. Notations are defined in Table~\ref{tab:keynotations}. \wajih{Use consistent terminologies in the boxes.}}
   \vspace{-3ex}
   \label{fig:arch}
 \end{figure*}
@@ -44,16 +44,30 @@ where \( N \) represents the total number of clients. This decentralized approac
 \subsection{\wordvec Model Generation}
 \label{sub:word2vec:model}
 
-\wajih{this is a new subsection. If you can think of better title then use that title for this subsection. }
-\wajih{use key notations if possible below.}
-After provenance graph are generated on each client, the node attributes of these provenance graphs' are converted into feature vectors for the graph learning phase. Existing systems, such as \flash~\cite{flash2024}, have demonstrated the effectiveness of utilizing semantic attributes of nodes to enhance detection performance. System logs are rich in attributes related to various entities, including process names and file paths. These attributes must first be converted into vector space to serve as node features for our GNN model. For this encoding, we employ the \wordvec model.
+After each client machine \(C_i\in \mathcal{C}\) generates its local provenance graph \(PGClient_{i} = (\mathcal{V}_i, \mathcal{E}_i)\), the node attributes in \(\mathcal{V}_i\) are converted into feature vectors for the subsequent graph learning phase. Existing systems, such as \flash~\cite{flash2024}, have demonstrated the effectiveness of leveraging semantic attributes of nodes to enhance detection performance. System logs contain rich attributes associated with various entities, including process names, file paths, network IP addresses, and module names. These attributes must be transformed into vector space to serve as node features for the global GNN models.
 
-\wajih{use key notations if possible below.}
+For this encoding, we employ the harmonized \wordvec~model \(M_{\text{w2v-harm}}\). In particular, \(M_{\text{w2v-harm}}\) processes different semantic attributes based on node types:
+\begin{itemize}
+    \item \textbf{Process:} Process name and command-line arguments.
+    \item \textbf{File:} File path.
+    \item \textbf{Socket:} IP addresses and port.
+\end{itemize}
 
-\wajih{what is "subgraph" below. It is not clear how you generate node subgraph.}
+For each node \(v \in \mathcal{V}_i\), we extract its \emph{node subgraph} by collecting all neighbors of \(v\) in \(\mathcal{E}_i\) and the edges that connect \(v\) to these neighbors. In other words, each node subgraph contains:
+\begin{itemize}
+    \item The target node \(v\).
+    \item All nodes \(u \in \mathcal{V}_i\) that share an edge \((v, u) \in \mathcal{E}_i\).
+    \item The causal events (e.g., system calls) corresponding to edges connecting \(v\) and its neighbors.
+\end{itemize}
 
-The \wordvec model processes different attributes for each type of node: for process type nodes, it considers the process name and command line arguments; for file nodes, the file path; for socket nodes, the network IP address and port; and for module nodes, the module name. We transform the subgraph for each node into a document by combining its semantic attributes with the types of causal events, such as system calls, involving its neighbors. These documents are then transformed into fixed-length vectors using a \wordvec model trained on benign system logs. This approach effectively captures the semantic relationships between terms, producing dense embeddings that enhance the subsequent learning of graph representations.
+We transform this node subgraph into a ``document'' by combining:
+\begin{enumerate}
+    \item The semantic attributes of \(v\).
+    \item The types of causal events captured along the edges.
+    \item The relevant attributes of its neighbor nodes.
+\end{enumerate}
 
+These node-centric documents are then encoded into fixed-length vectors via \(M_{\text{w2v-harm}}\), which is trained on benign system logs. This approach effectively captures the semantic relationships between terms, producing dense embeddings that serve as node features for graph representation learning.
 
 \subsection{Privacy-preserving \wordvec Model Harmonization}
 \label{sub:model:harmonization}
