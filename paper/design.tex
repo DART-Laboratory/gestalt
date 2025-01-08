@@ -15,14 +15,11 @@
 \Sys comprises five key modules, starting with the \textit{Provenance Graph Constructor} module (Section~\ref{sub:provconstruct}) on each client machine, which transforms logs into a provenance graph. The \textit{Semantic Featurization \& Harmonization} module (Section~\ref{semanfeat}) trains word2vec models to encode semantic attributes and consolidates individual client models into a cohesive global model using a trusted utility server and encryption techniques. The \textit{Process Entity Categorization Module} (Section~\ref{sys:catg}) standardizes system entities across clients, ensuring uniformity in GNN model training. The \textit{Federated Provenance Graph Learning Module} (Section~\ref{sys:fpgl}) then trains GNN models on each client machine using harmonized semantic features, with the models aggregated on a central server through federated averaging. Finally, the \textit{Anomaly Detection Module} (Section~\ref{sys:anomaly_detection}) applies the unified global models for anomaly detection on each client machine. Figure~\ref{fig:arch} illustrates the overall architecture of \Sys.
 
 \subsection{Problem Statement}
-\wajih{double check this subsection as I added this.}
+% \wajih{double check this subsection as I added this.}
 
 \Sys aims to detect anomalous nodes in client-specific provenance graphs \( \{PGClient_{1}, PGClient_{2}, \ldots, PGClient_{N}\} \), which are constructed from system logs on a set of decentralized clients \( \mathcal{C} \). These anomalies represent deviations from benign behavior and are indicative of potential security threats.
 
-To achieve this, \Sys employs a novel adaptation of Federated Learning (FL) to collaboratively train a set of global GNN models \( {GNN}_{\text{global}} = \{GNN_1, GNN_2, \ldots, GNN_{K_{cat}}\} \) without requiring raw log data to leave client machines. Each client locally optimizes its model by minimizing a loss function \( \mathcal{L}_i(w) \) and shares only model updates \( \Delta w_i \) with the central server. The global model is updated iteratively through aggregation:
-\[
-w = \frac{1}{N} \sum_{i=1}^{N} \Delta w_i,
-\]
+To achieve this, \Sys employs a novel adaptation of Federated Learning (FL) to collaboratively train a set of global GNN models \( {GNN}_{\text{global}} = \{GNN_1, GNN_2, \ldots, GNN_{K_{cat}}\} \) without requiring raw log data to leave client machines. Each client locally optimizes its model by minimizing a loss function \( \mathcal{L}_i(w) \) and shares only model updates \( \Delta w_i \) with the central server. The global model is updated iteratively through aggregation: \( w = \frac{1}{N} \sum_{i=1}^{N} \Delta w_i, \)
 where \( N \) represents the total number of clients. This decentralized approach preserves privacy while enabling the detection of threats across diverse and distributed system logs. The key notations for our system are summarized in Table~\ref{tab:keynotations}.
 
 \input{tables/notations.tex}
