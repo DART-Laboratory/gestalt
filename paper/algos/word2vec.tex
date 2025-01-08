@@ -4,7 +4,7 @@
     \SetKwInOut{Input}{Inputs}
     \SetKwInOut{Output}{Output}
     \Input{Client Word2Vec models $\{Word2vec_1, Word2vec_2, \ldots, Word2vec_N\}$.}
-    \Output{Harmonized Word2Vec model $\mathcal{E}_{\text{semantic}}$ sent to clients.}
+    \Output{Harmonized Word2Vec model $M_{\text{w2v-harm}}$ sent to clients.}
     \BlankLine
     \tcc{Central server distribute symmetric encryption keys to each client.}
     \ForEach{client $C_i$}{
@@ -35,12 +35,12 @@
     \ForEach{token $t$ in $TokenVectors$.Keys()}{
       $TokenVectors[t] \leftarrow TokenVectors[t] / TokenCounts[t]$\\
     }
-    $\mathcal{E}_{\text{semantic}} \leftarrow$ NewModel($TokenVectors$, $EncryptedTokens$) \tcc*{Constructing a new harmonized model.}
+    $M_{\text{w2v-harm}} \leftarrow$ NewModel($TokenVectors$, $EncryptedTokens$) \tcc*{Constructing a new harmonized model.}
     \ForEach{client $C_i$}{
-      Send $\mathcal{E}_{\text{semantic}}$ to $C_i$\\
+      Send $M_{\text{w2v-harm}}$ to $C_i$\\
     }
     \BlankLine
-    \Return{Harmonized model $\mathcal{E}_{\text{semantic}}$ has been dispatched to all clients.}\\
+    \Return{Harmonized model $M_{\text{w2v-harm}}$ has been dispatched to all clients.}\\
     \BlankLine
     \caption{Privacy-preserving \wordvec Model Harmonization.}
     \label{alg:secure_integration_averaging_word2vec}
