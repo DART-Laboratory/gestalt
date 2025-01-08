@@ -43,22 +43,22 @@ where \( N \) represents the total number of clients. This decentralized approac
 
 After each client machine \(C_i\in \mathcal{C}\) generates its local provenance graph \(PGClient_{i} = (\mathcal{V}_i, \mathcal{E}_i)\), the node attributes in \(\mathcal{V}_i\) are converted into feature vectors for the subsequent graph learning phase. Existing systems, such as \flash~\cite{flash2024}, have demonstrated the effectiveness of leveraging semantic attributes of nodes to enhance detection performance. System logs contain rich attributes associated with various entities, including process names, file paths, network IP addresses, and module names. These attributes must be transformed into vector space to serve as node features for the global GNN models.
 
-For this encoding, we employ the harmonized \wordvec~model \(M_{\text{w2v-harm}}\). In particular, \(M_{\text{w2v-harm}}\) processes different semantic attributes based on node types:
-\begin{itemize}
+For this encoding, we employ the harmonized \wordvec~model \(M_{\text{w2v-harm}}\). In particular, \(M_{\text{w2v-harm}}\) processes different semantic attributes based on node (system entity) types:
+\begin{itemize}[itemsep=0.1em, parsep=0em, topsep=0em, leftmargin=*]
     \item \textbf{Process:} Process name and command-line arguments.
     \item \textbf{File:} File path.
     \item \textbf{Socket:} IP addresses and port.
 \end{itemize}
 
 For each node \(v \in \mathcal{V}_i\), we extract its \emph{node subgraph} by collecting all neighbors of \(v\) in \(\mathcal{E}_i\) and the edges that connect \(v\) to these neighbors. In other words, each node subgraph contains:
-\begin{itemize}
+\begin{itemize}[itemsep=0.1em, parsep=0em, topsep=0em, leftmargin=*]
     \item The target node \(v\).
     \item All nodes \(u \in \mathcal{V}_i\) that share an edge \((v, u) \in \mathcal{E}_i\).
     \item The causal events (e.g., system calls) corresponding to edges connecting \(v\) and its neighbors.
 \end{itemize}
 
 We transform this node subgraph into a ``document'' by combining:
-\begin{enumerate}
+\begin{enumerate}[itemsep=0.1em, parsep=0em, topsep=0em, leftmargin=*]
     \item The semantic attributes of \(v\).
     \item The types of causal events captured along the edges.
     \item The relevant attributes of its neighbor nodes.
@@ -93,7 +93,7 @@ To address this limitation, we developed a comprehensive framework that organize
 
 % \wajih{please refer to algorithm in the whole paragraph. Divide the following paragraph into three steps using latex enumerate macro.}
 As shown in \Fix{Algorithm~\ref{alg:categories}}, the framework leverages a central utility server to orchestrate the categorization of process entities. Specifically, it proceeds in three main steps:
-\begin{enumerate}
+\begin{enumerate}[itemsep=0.1em, parsep=0em, topsep=0em, leftmargin=*]
     \item \textbf{Collection of Encrypted Process Names.} Each client \(C_i \in \mathcal{C}\) transmits an encrypted list of its process names to the utility server. The server merges these into a global list of unique process entities, denoted by \( \mathcal{P}_{\text{global}} \).
 
     \item \textbf{Random Categorization.} The utility server applies the categorization map \( \psi(p) \) to randomly partition all process names in \( \mathcal{P}_{\text{global}} \) into \( K_{cat} \) categories. Although the partitioning is random, it is performed only once at the global level, ensuring that any process name \( p \) is consistently mapped to the same category \( j \) across all clients, i.e., \( \psi(p) = j \).
@@ -165,7 +165,4 @@ Accordingly, a node \(v\) is identified as an anomaly if it is misclassified by 
 0, & \text{otherwise}.
 \end{cases}
 \]
-This indicates that none of the submodels recognize the neighborhood structure or features displayed by \(v\), prompting its classification as an anomaly.
-
-
-To regulate the frequency of alerts, we define a threshold \(T\) similar to \flash. This parameter sets a threshold on the likelihood of a classification being considered valid, with a higher value of \(T\) implying stronger confidence and increasing the probability of identifying anomalies.
+This indicates that none of the submodels recognize the neighborhood structure or features displayed by \(v\), prompting its classification as an anomaly. To regulate the frequency of alerts, we define a threshold \(T\) similar to \flash. This parameter sets a threshold on the likelihood of a classification being considered valid, with a higher value of \(T\) implying stronger confidence and increasing the probability of identifying anomalies.

@@ -13,36 +13,7 @@
 
  %\wajih{Captions need to be lowercase}
 
- {\renewcommand{\arraystretch}{1.2}
- \begin{table*}[!t]
-   \centering
-   \footnotesize
-   \caption{Comparison of \Sys against \flash and \kairos. Prec.: Precision; Rec.: Recall; \flash has slightly better performance than our system, but \Sys preserves user privacy and achieves high scalability through decentralization, unlike \flash and \kairos.}
-   \setlength{\tabcolsep}{0.7pt}
-   \begin{tabular}{ccccccccccccc}
-     \toprule
- 
-   \multirow{2}{*}{\textbf{Datasets}}
-   & \multicolumn{4}{c }{\Norothead{ \bf \Sys}}
-   & \multicolumn{4}{c }{\Norothead{ \bf \flash~\cite{flash2024}}}
-   & \multicolumn{4}{c }{\Norothead{ \bf \kairos~\cite{cheng2023kairos}}}
-   \\ \cmidrule(r{\tbspace}){2-5} \cmidrule(r{\tbspace}){6-9} \cmidrule(r{\tbspace}){10-13}
- 
-     & {\bf Prec.} &  {\bf Rec.} & {\bf \fscore} & {\bf TP}/ {\bf FP}/ {\bf FN}/ {\bf TN} & {\bf Prec.}  & {\bf Rec.} & {\bf \fscore} & {\bf TP}/ {\bf FP}/ {\bf FN}/ {\bf TN} & {\bf Prec.}  & {\bf Rec.} & {\bf \fscore} & {\bf TP}/ {\bf FP}/ {\bf FN}/ {\bf TN} \\
- 
-   \midrule
- 
-   E3-CADETS &  \TCP & \TCR & \TCF & \TCTP/ \TCFP/ \TCFN/ \TCTN &  \FCP & \FCR & \FCF & \FCTP/ \FCFP/ \FCFN/ \FCTN & \KCP & \KCR & \KCF & \KCTP/ \KCFP/ \KCFN/ \KCTN \\
-   E3-TRACE &  \TTP & \TTR & \TTF & \TTTP/ \TTFP/ \TTFN/ \TTTN  & \FTP & \FTR & \FTF & \FTTP/ \FTFP/ \FTFN/ \FTTN & - & - & - & - \\
-   E3-THEIA &  \TTHP & \TTHR & \TTHF & \TTHTP/ \TTHFP/ \TTHFN/ \TTHTN & \FTHP & \FTHR & \FTHF & \FTHTP/ \FTHFP/ \FTHFN/ \FTHTN & \KTHP & \KTHR & \KTHF & \KTHTP/ \KTHFP/ \KTHFN/ \KTHTN \\  
-   \optc & \TOP & \TOR & \TOF & \TOTP/ \TOFP/ \TOFN/ \TOTN & \FOP & \FOR & \FOF & \FOTP/ \FOFP/ \FOFN/ \FOTN & \KOP & \KOR & \KOF & \KOTP/ \KOFP/ \KOFN/ \KOTN \\
-   E5-CADETS &  \ETCP & \ETCR & \ETCF & \ETCTP/ \ETCFP/ \ETCFN/ \ETCTN  & \EKCP & \EKCR & \EKCF & \EKCTP/ \EKCFP/ \EKCFN/ \EKCTN & \EFCP & \EFCR & \EFCF & \EFCTP/ \EFCFP/ \EFCFN/ \EFCTN \\
-   E5-THEIA &  \ETTHP & \ETTHR & \ETTHF & \ETTHTP/ \ETTHFP/ \ETTHFN/ \ETTHTN & \EKTHP & \EKTHR & \EKTHF & \EKTHTP/ \EKTHFP/ \EKTHFN/ \EKTHTN & \EFTHP & \EFTHR & \EFTHF & \EFTHTP/ \EFTHFP/ \EFTHFN/ \EFTHTN \\
-   E5-ClearScope & \ETClP & \ETClR & \ETClF & \ETClTP/ \ETClFP/ \ETClFN/ \ETClTN  & \EKClP & \EKClR & \EKClF & \EKClTP/ \EKClFP/ \EKClFN/ \EKClTN & \EFClP & \EFClR & \EFClF & \EFClTP/ \EFClFP/ \EFClFN/ \EFClTN \\
-   \bottomrule
-   \end{tabular}
- \label{summary:benchmarks:large}
- \end{table*}}
+
 
 %We evaluate \Sys using the open-source datasets \darpa E3 and \optc, which comprise system audit logs that simulate enterprise environments. These logs are collected from both Windows and Linux operating systems.
 
@@ -74,6 +45,8 @@ Furthermore, these datasets incorporate logs of various sizes from Linux, FreeBS
 The low infiltration rate in \optc underscores the system’s capacity for detecting highly stealthy adversaries, whereas the more widespread attacks in E5 highlight the resilience of our approach when confronted with a higher density of malicious nodes. Collectively, these datasets serve as a strong benchmark to evaluate the scalability and adaptability of our system, underscoring its suitability for real-world scenarios where logs are sourced from diverse operating systems and exhibit substantial variation in size and complexity.
 
 Each \darpa dataset is accompanied by ground truth documents that aid in distinguishing benign events from malicious ones. For this evaluation, we employ attack labels from existing systems such as \threatrace, \kairos, and \flash. Further details regarding the datasets appear in Appendix~\ref{sec:dataset:description}. ATLASv2~\cite{riddle2023atlasv2} is another recent dataset containing APT attack traces, but we did not evaluate it because it only includes data from two hosts, making it unrepresentative of a typical federated learning scenario.
+
+\input{tables/main.tex}
 
 \PP{Detectors for comparison} To benchmark our system, we conduct comparisons against existing state-of-the-art \pids. \threatrace~\cite{wang2022threatrace}, a node-level system, employs graph representation learning to identify anomalous nodes within a provenance graph. MAGIC~\cite{jia2023magic} is another recent \pids which uses masked graph representation learning to detect system threats. \flash~\cite{flash2024} is another notable node-level system, which utilizes semantic feature vectors and an embedding recycling database to offer superior detection performance and efficiency. \flash detection results, as shown in Table~\ref{summary:benchmarks:large}, have been shown to surpass both \threatrace and MAGIC. Hence, our comparison primarily focuses on \flash. Additionally, we include \kairos~\cite{cheng2023kairos} in our comparison, which utilizes temporal graph networks to capture the evolution of a system's provenance graph over time. We do not compare against Streamspot~\cite{streamspot} and Unicorn~\cite{han2020unicorn} as they are graph-level detectors, and recent systems like \threatrace and \flash have been shown to surpass them in detection performance. While \disdet~\cite{dong2023distdet}, Prographer~\cite{yangprographer} and Shadewatcher~\cite{shadewatcher} are notable \pids, we exclude them from our comparison because \disdet and Prographer are closed-source and a major component of Shadewatcher is proprietary, which hinders our ability to conduct a thorough comparison. It is important to note that, similar to existing works (e.g., \kairos, Shadewatcher, and Prographer), \Sys considers only three node types in provenance graphs: \emph{processes}, \emph{files}, and \emph{sockets}. However, in the E3 dataset, \flash has also been evaluated using additional node types. Therefore, we executed \flash using these three node types to report the results in Table~\ref{summary:benchmarks:large}.
 
