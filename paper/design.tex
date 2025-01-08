@@ -76,36 +76,34 @@ The \wordvec model functions as a key-value store, with vocabulary tokens as key
 \subsection{Process Entity Categorization}
 \label{sys:catg}
 
-During our initial experiments (Table~\ref{categorized_gnn}), we found that a single \( {GNN}_{\text{global}} \) model cannot achieve good detection performance in an FL setting due to the diverse and heterogeneous distributions of clients' data in the set \( \mathcal{C} \). The disparity in data distributions among \( N \) clients poses a significant challenge in effectively training a unified model that can generalize well across all clients, since the global model struggles to capture the unique characteristics and patterns inherent in each client's data.
+During our initial experiments (Table~\ref{categorized_gnn}), we found that a single \gnnshort global model cannot achieve good detection performance in an FL setting due to the diverse and heterogeneous distributions of clients data. The disparity in data distributions among \( N \) clients poses a significant challenge in effectively training a unified model that can generalize well across all clients, since the global model struggles to capture the unique characteristics and patterns inherent in each client's data.
 
-\wajih{use key notations below if possible.}
+% \wajih{use key notations below if possible.}
 To address this limitation, we developed a comprehensive framework that organizes process entities across different clients into distinct groups. Each category is modeled by a dedicated submodel, enabling it to focus on the unique distribution and intricate patterns of its assigned category and thereby enhance overall detection performance.
 
-\wajih{please refer to algorithm in the whole paragraph. Divide the following paragraph into three steps using latex enumerate macro.}
-The framework employs a central utility server that plays a pivotal role in the categorization process. Clients transmit lists of encrypted process names to the utility server to ensure privacy. The server aggregates these lists into a global list of process names \( \mathcal{P}_{\text{global}} \) and then applies \( \psi(p) \) to randomly divide them into \( K_{cat} \) global categories, where \( K_{cat} \) is a predefined hyperparameter. Although this division is random, it is performed only once at the global level. Consequently, all occurrences of a given process name are mapped consistently across every client, such that \( \psi(p) = j \) assigns process \( p \) to category \( j \).
+% \wajih{please refer to algorithm in the whole paragraph. Divide the following paragraph into three steps using latex enumerate macro.}
+As shown in \Fix{Algorithm~\ref{alg:categories}}, the framework leverages a central utility server to orchestrate the categorization of process entities. Specifically, it proceeds in three main steps:
+\begin{enumerate}
+    \item \textbf{Collection of Encrypted Process Names.} Each client \(C_i \in \mathcal{C}\) transmits an encrypted list of its process names to the utility server. The server merges these into a global list of unique process entities, denoted by \( \mathcal{P}_{\text{global}} \).
 
+    \item \textbf{Random Categorization.} The utility server applies the categorization map \( \psi(p) \) to randomly partition all process names in \( \mathcal{P}_{\text{global}} \) into \( K_{cat} \) categories. Although the partitioning is random, it is performed only once at the global level, ensuring that any process name \( p \) is consistently mapped to the same category \( j \) across all clients, i.e., \( \psi(p) = j \).
+
+    \item \textbf{Distribution of Categories.} Finally, the resulting category assignments are disseminated back to each client, guaranteeing a unified and consistent mapping of processes into categories across the federated network.
+\end{enumerate}
 
 \input{algos/cat.tex}
 
+% Once the categories are established, each client employs the categorized process sets to build provenance subgraphs \( PGClient_{i} \). The neighborhood hop length of these subgraphs is aligned with the number of graph convolution layers in \( {GNN}_{\text{global}} \), ensuring the model has complete neighborhood information for each node. In our experiments, we fix this hop length to two, which past studies~\cite{wang2022threatrace,flash2024} have shown to offer an optimal trade-off between efficiency and accuracy. These subgraphs provide training data for an ensemble of \({GNN}_{\text{global}}\) models in a federated manner. Each submodel specializes in learning the patterns of its assigned category and participates in federated averaging. This ensures a balanced segmentation of data across clients and maintains consistency in the training datasets for each submodel before federated averaging.
 
-\wajih{move this example at the of this subsection. Make sure that transitions among all the paragraphs is smooth.}
-To illustrate this, consider two clients: \emph{A} and \emph{B}:
+% \wajih{move this example at the of this subsection. Make sure that transitions among all the paragraphs is smooth.}
+To illustrate this process, consider two clients: \emph{A} and \emph{B}:
 \begin{itemize}[itemsep=0.1em, parsep=0em, topsep=0em, leftmargin=*]
     \item \emph{A} has a set of processes \{\texttt{chrome}, \texttt{ssh}, \texttt{mysql}\}.
     \item \emph{B} has a set of processes \{\texttt{chrome}, \texttt{firefox}, \texttt{ssh}, \texttt{mysql}\}.
 \end{itemize}
+Both clients send encrypted lists of these process names to the utility server, which combines them into a single global list of unique names \{\texttt{chrome}, \texttt{ssh}, \texttt{mysql}, \texttt{firefox}\}. The server then applies \( \psi \) to randomly assign each name to one of the \( K_{cat} \) categories. For example, \( \psi(\texttt{chrome}) \) and \( \psi(\texttt{mysql}) \) may map to category~1, while \( \psi(\texttt{ssh}) \) and \( \psi(\texttt{firefox}) \) map to category~2.
 
-Both clients send encrypted lists of these process names to the utility server, which merges them into a single global list of unique names \{\texttt{chrome}, \texttt{ssh}, \texttt{mysql}, \texttt{firefox}\}. The server then applies \( \psi \) to randomly assign each name to one of the \( K_{cat} \) categories. For instance, \( \psi(\texttt{chrome}) \) and \( \psi(\texttt{mysql}) \) might map to category~1, while \( \psi(\texttt{ssh}) \) and \( \psi(\texttt{firefox}) \) map to category~2.
-
-This categorization is sent back to both clients. Now all occurrences of \texttt{chrome} and \texttt{mysql} fall under category~1 for both clients, while \texttt{ssh} and \texttt{firefox} fall under category~2. In this way, each category holds similar processes across all clients, guaranteeing consistency even though the initial split was random.
-
-The clients use the processes within each bin to generate provenance subgraphs \( PGClient_{i} \). The neighborhood hop length of these subgraphs is set to match the number of graph convolution layers in \( {GNN}_{\text{global}} \). This ensures that the \({GNN}_{\text{global}}\) has complete neighborhood information for each node and that no interconnections are lost due to the categorization process. In our experiments, we set the hop length to two, which has been shown by prior works~\cite{wang2022threatrace,flash2024} to offer an optimal balance between efficiency and detection accuracy. These subgraphs serve as training data for an ensemble of \({GNN}_{\text{global}}\) models. Each submodel in the ensemble is trained on the subgraphs corresponding to its designated category and participates in federated averaging. \Fix{Algorithm~\ref{alg:categories} explains this process in detail.}
-
-\wajih{Use notations if possible.}
-This approach ensures a balanced segmentation of data across clients, maintaining consistency in the training datasets for each \({GNN}_{\text{global}}\) model before federated averaging. By dividing the overall task into sub-tasks (sub-models) and assigning them to different subsets of processes, the influence of clients with large datasets is distributed across multiple models. This prevents any single client from disproportionately affecting the outcome of the federated learning system. Each sub-model specializes in a different aspect of the data, capturing unique patterns and distributions. This specialization promotes more balanced contributions across the ensemble, enhancing the robustness and performance of the overall system.
-
-
-
+This assignment is transmitted back to both clients, ensuring that \texttt{chrome} and \texttt{mysql} are consistently grouped under category~1, and \texttt{ssh} and \texttt{firefox} under category~2. As a result, each category gathers similar processes across all clients, even though the initial split is random. By dividing the overall task into sub-tasks (submodels) and distributing them to different subsets of processes, the influence of clients with larger datasets is shared among multiple models. This approach reduces the risk of any single client dominating the federated training process and facilitates more balanced contributions from all participants, ultimately improving the robustness and performance of the system.
 
 \subsection{FL using Categorized Process Entities}
 \label{sys:fpgl}
@@ -123,7 +121,7 @@ This approach ensures a balanced segmentation of data across clients, maintainin
 % Our approach includes a central server responsible for initializing the global GNN models, \({GNN}_{\text{global}}\), with random weights, \( w_j^{(0)} \), which are then sent to all clients in \( \mathcal{C} \). These clients use their local process subgraphs, \( PGClient_{i} \), and semantic feature vectors to train the GNN models in an unsupervised way, following a training method similar to \flash. The objective of the GNN model is to classify each node \( v \) into its corresponding type, yielding predictions \(\hat{y}_v^j\). The server then applies the federated averaging algorithm to merge the GNN models into a set of global models, \({GNN}_{\text{global}}\), based on the process entity categories on which they were trained. This ensures that models with similar distributions are combined together to address the data heterogeneity problem. Specifically, the server aggregates parameters from \( N \) client models to update each global submodel as \(\bar{w} = \frac{1}{N} \sum_{i=1}^{N} w_i\). Algorithm~\ref{alg:training_submodel} explains this process in detail.
 
 % The federated averaging process is repeated for a set number of rounds \( R \), and concludes when there is no further reduction in the training loss, \(\mathcal{L}^{(r)}\). 
-Once the categorized sets of processes have been generated, we train specialized GNN models for each bin. Each \({GNN}_{\text{global}}\) submodel focuses on a standardized subset of processes across clients, identified through entity categorization. This approach effectively captures distinct patterns and structures while reducing data heterogeneity. Our method proceeds in three main steps, as detailed in Algorithm~\ref{alg:training_submodel}.
+Once the categorized bins of processes have been generated, we train specialized GNN models for each bin. Each \({GNN}_{\text{global}}\) submodel focuses on a standardized subset of processes across clients, identified through entity categorization. This approach effectively captures distinct patterns and structures while reducing data heterogeneity. Our method proceeds in three main steps, as detailed in Algorithm~\ref{alg:training_submodel}.
 
 \textbf{Step 1: Initialization.} As in Step~1 of Algorithm~\ref{alg:training_submodel}, the central server initializes the global GNN models, \({GNN}_{\text{global}}\), with random weights \( w_j^{(0)} \). The server then transmits these initial weights \( w_j^{(0)} \) to all clients in \(\mathcal{C}\).
 
