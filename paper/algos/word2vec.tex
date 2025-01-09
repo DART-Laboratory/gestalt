@@ -36,6 +36,7 @@
       $TokenVectors[t] \leftarrow TokenVectors[t] / TokenCounts[t]$\\
     }
     $M_{\text{w2v-harm}} \leftarrow$ NewModel($TokenVectors$, $EncryptedTokens$) \tcc*{Constructing a new harmonized model.}
+    
     \ForEach{client $C_i$}{
       Send $M_{\text{w2v-harm}}$ to $C_i$\\
     }
