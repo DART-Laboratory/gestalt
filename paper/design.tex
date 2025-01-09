@@ -4,7 +4,7 @@
 \begin{figure*}[t!]
   \centering
   \includegraphics[width=1\textwidth]{fig/archv5.pdf}
-  \caption{High-level architecture of \Sys. In the training phase, our system builds local provenance graphs for each client and trains an ensemble of \gnnshort models. Prior to this, we aggregate semantic models contextually for feature encoding. The local \gnnshort models participate in federated learning to develop a global \gnnshort model, which is then utilized for anomaly detection. Notations are defined in Table~\ref{tab:keynotations}. \wajih{In the training phase, I would like to word2vec 1 , word2vec 2, ... being generated at the client side. Second, is anything missing on the server side, please add that too in the Central server box. Third, during the detection on the client side box, what is featurization? Also, don't we use GNNglobal for anamaly detection? lets use that notation along with all the other notations we use for detection. }}
+  \caption{High-level architecture of \Sys. In the training phase, our system builds local provenance graphs for each client and trains an ensemble of \gnnshort models. Prior to this, we aggregate semantic models contextually for feature encoding. The local \gnnshort models participate in federated learning to develop a global \gnnshort model, which is then utilized for anomaly detection. Notations are defined in Table~\ref{tab:keynotations}.}
   \vspace{-3ex}
   \label{fig:arch}
 \end{figure*}
