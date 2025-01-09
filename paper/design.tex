@@ -13,7 +13,7 @@
 \subsection{Overview}
 %\wajih{Make sure that subsection titles/headings match in the following paragraph. }
 \Sys comprises six key modules, starting with the \textit{Provenance Graph Constructor} module (Section~\ref{sub:provconstruct}) on each client machine, which transforms logs into a provenance graph. The \textit{\wordvec Model Generation} module (Section~\ref{sub:word2vec:model}) trains client-specific \wordvec models to encode semantic attributes.
-The \textit{Privacy-preserving \wordvec Model Harmonization} module (Section~\ref{sub:model:harmonization}) combines individual client models into a cohesive global model in a privacy-preserving manner using a trusted utility server and encryption techniques. The \textit{Process Entity Categorization} module (Section~\ref{sys:catg}) categorizes system entities across clients, ensuring uniformity in GNN model training. The \textit{FL using Categorized Process Entities} (Section~\ref{sys:fpgl}) then trains GNN models on each client machine using harmonized semantic features, with the models aggregated on a central server through federated averaging. Finally, the \textit{GNN-based Anomaly Detection} (Section~\ref{sys:anomaly_detection}) applies the unified global models for anomaly detection on each client machine. Figure~\ref{fig:arch} illustrates the overall architecture of \Sys.
+The \textit{Privacy-preserving \wordvec Model Harmonization} module (Section~\ref{sub:model:harmonization}) combines individual client \wordvec models into a cohesive global model in a privacy-preserving manner using a utility server and encryption techniques. The \textit{Process Entity Categorization} module (Section~\ref{sys:catg}) categorizes system entities across clients, ensuring uniformity in GNN model training. The \textit{FL with Categorized GNN Ensemble Learning} (Section~\ref{sys:fpgl}) then trains GNN models on each client machine using harmonized semantic features, with the models aggregated on a central server through federated averaging. Finally, the \textit{GNN-based Anomaly Detection} (Section~\ref{sys:anomaly_detection}) applies the unified global models for anomaly detection on each client machine. Figure~\ref{fig:arch} illustrates the overall architecture of \Sys.
 
 \subsection{Problem Statement}
 % \wajih{double check this subsection as I added this.}
@@ -42,30 +42,23 @@ where \( N \) represents the total number of clients. This decentralized approac
 \subsection{\wordvec Model Generation}
 \label{sub:word2vec:model}
 
-After each client machine \(C_i\in \mathcal{C}\) generates its local provenance graph \(PGClient_{i} = (\mathcal{V}_i, \mathcal{E}_i)\), the node attributes in \(\mathcal{V}_i\) are converted into feature vectors for the subsequent graph learning phase. Existing systems, such as \flash~\cite{flash2024}, have demonstrated the effectiveness of leveraging semantic attributes of nodes to enhance detection performance. System logs contain rich attributes associated with various entities, including process names, file paths, network IP addresses, and module names. These attributes must be transformed into vector space to serve as node features for the global GNN models.
+After each client machine \(C_i\in \mathcal{C}\) generates its local provenance graph \(PGClient_{i} = (\mathcal{V}_i, \mathcal{E}_i)\), the node attributes in \(\mathcal{V}_i\) are converted into feature vectors for the subsequent graph learning phase. Existing systems, such as \flash~\cite{flash2024}, have demonstrated the effectiveness of leveraging semantic attributes of nodes to enhance detection performance. System logs contain rich attributes associated with various entities, including process names, file paths, and network IP addresses. These attributes must be transformed into vector space to serve as node features for the global GNN models.
 
-For this encoding, we employ the harmonized \wordvec~model \(M_{\text{w2v-harm}}\). In particular, \(M_{\text{w2v-harm}}\) processes different semantic attributes based on node (system entity) types:
+For this encoding, we employ the \wordvec~model which processes different semantic attributes based on node types:
 \begin{itemize}[itemsep=0.1em, parsep=0em, topsep=0em, leftmargin=*]
     \item \textbf{Process:} Process name and command-line arguments.
     \item \textbf{File:} File path.
     \item \textbf{Socket:} IP addresses and port.
 \end{itemize}
 
-For each node \(v \in \mathcal{V}_i\), we extract its \emph{node subgraph} by collecting all neighbors of \(v\) in \(\mathcal{E}_i\) and the edges that connect \(v\) to these neighbors. In other words, each node subgraph contains:
-\begin{itemize}[itemsep=0.1em, parsep=0em, topsep=0em, leftmargin=*]
-    \item The target node \(v\).
-    \item All nodes \(u \in \mathcal{V}_i\) that share an edge \((v, u) \in \mathcal{E}_i\).
-    \item The causal events (e.g., system calls) corresponding to edges connecting \(v\) and its neighbors.
-\end{itemize}
-
-We transform this node subgraph into a ``document'' by combining:
+For each node \(v \in \mathcal{V}_i\), we extract its 1-hop subgraph by collecting all neighbors of \(v\). We transform this node subgraph into a ``document'' by combining:
 \begin{enumerate}[itemsep=0.1em, parsep=0em, topsep=0em, leftmargin=*]
     \item The semantic attributes of \(v\).
     \item The types of causal events captured along the edges.
     \item The relevant attributes of its neighbor nodes.
 \end{enumerate}
 
-These node-centric documents are then encoded into fixed-length vectors via \(M_{\text{w2v-harm}}\), which is trained on benign system logs. This approach effectively captures the semantic relationships between terms, producing dense embeddings that serve as node features for graph representation learning.
+These node-centric documents are then encoded into fixed-length vectors via \wordvec, which is trained on benign system logs. This approach effectively captures the semantic relationships between terms, producing dense embeddings that serve as node features for graph representation learning.
 
 \subsection{Privacy-preserving Model Harmonization}
 \label{sub:model:harmonization}
@@ -116,7 +109,7 @@ Both clients send encrypted lists of these process names to the utility server, 
 
 This assignment is transmitted back to both clients, ensuring that \texttt{chrome} and \texttt{mysql} are consistently grouped under category~1, and \texttt{ssh} and \texttt{firefox} under category~2. As a result, each category gathers similar processes across all clients, even though the initial split is random. By dividing the overall task into sub-tasks (submodels) and distributing them to different subsets of processes, the influence of clients with larger datasets is shared among multiple models. This approach reduces the risk of any single client dominating the federated training process and facilitates more balanced contributions from all participants, ultimately improving the robustness and performance of the system.
 
-\subsection{FL with Categorized Ensemble Learning}
+\subsection{FL with Categorized GNN Ensemble Learning}
 \label{sys:fpgl}
 
 \input{algos/submodel-training.tex}
