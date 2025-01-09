@@ -64,7 +64,7 @@ In this ablation study, we analyze the impact of key parameters within \Sys. Spe
 \subsection{Effect of federated averaging rounds}
 \label{app:fedrounds}
 
-We employed the \darpa E3 dataset to examine the impact of federated averaging rounds on detection performance. Our methodology involved training the model over a range of federated averaging rounds and subsequently evaluating the model's detection capabilities. The outcomes are depicted in Figure~\ref{roundsvsscore}, which shows that detection performance improves up to a certain number of rounds before declining due to overfitting. Notably, this inflection point is also characterized by a minimal decrease in training loss, suggesting that the model has reached its learning capacity. This observation proves to be a valuable metric for determining the optimal moment to stop training, thereby preventing overfitting and ensuring optimal model performance.
+We employed the \darpa E3 dataset to examine the impact of federated averaging rounds on detection performance. Our methodology involved training the model over a range of federated averaging rounds and subsequently evaluating the model's detection capabilities. The outcomes are depicted in Figure~\ref{roundsvsscore}, which shows that detection performance improves up to a certain number of rounds before declining due to overfitting. Notably, this inflection point is also characterized by a minimal decrease in training loss, suggesting that the model has reached its learning capacity. This observation proves to be a valuable metric for determining the optimal moment to stop training, thereby preventing overfitting and ensuring optimal model performance. 
 
 \begin{figure}[!t]
   \centering
@@ -73,7 +73,6 @@ We employed the \darpa E3 dataset to examine the impact of federated averaging r
   \label{roundsvsscore}
   \vspace{-2ex}
 \end{figure}
-
 
 \subsection{Effect number of categories vs detection}
 \label{app:categories}

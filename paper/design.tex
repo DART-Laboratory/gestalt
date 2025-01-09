@@ -93,7 +93,7 @@ During our initial experiments (Table~\ref{categorized_gnn}), we found that a si
 To address this limitation, we developed a comprehensive framework that organizes process entities across different clients into distinct groups. Each category is modeled by a dedicated submodel, enabling it to focus on the unique distribution and intricate patterns of its assigned category and thereby enhance overall detection performance.
 
 % \wajih{please refer to algorithm in the whole paragraph. Divide the following paragraph into three steps using latex enumerate macro.}
-As shown in \Fix{Algorithm~\ref{alg:categories}}, the framework leverages a central utility server to orchestrate the categorization of process entities. Specifically, it proceeds in three main steps:
+As shown in Algorithm~\ref{alg:categories}, the framework leverages a central utility server to orchestrate the categorization of process entities. Specifically, it proceeds in three main steps:
 \begin{enumerate}[itemsep=0.1em, parsep=0em, topsep=0em, leftmargin=*]
     \item \textbf{Collection of Encrypted Process Names.} Each client \(C_i \in \mathcal{C}\) transmits an encrypted list of its process names to the utility server. The server merges these into a global list of unique process entities, denoted by \( \mathcal{P}_{\text{global}} \).
 

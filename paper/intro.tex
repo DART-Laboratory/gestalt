@@ -2,36 +2,36 @@
 \label{s:intro}
 
 
-\wajih{I see some inconsistent Notations in this section. Please make sure that in this section all notations are up to date.}
+% \wajih{I see some inconsistent Notations in this section. Please make sure that in this section all notations are up to date.}
 
 
-\wajih{Is there a difference between Semantic Harmonization or \wordvec Harmonization? You use \wordvec harmonization here and Semantic Harmonization in Design section. Let's use consistent terminology throughout the paper. }
+% \wajih{Is there a difference between Semantic Harmonization or \wordvec Harmonization? You use \wordvec harmonization here and Semantic Harmonization in Design section. Let's use consistent terminology throughout the paper. }
 
-\wajih{There is a word "categorized ensemble learning" in the evaluation paragraph that is never described before in the intro. Let's use consistent wording througout the intro and throughout the paper. Also, in the Design section if you need to change the headings/titles to match with the intro, please do that. It is really hard to match the Intro section with the Design section.}
+% \wajih{There is a word "categorized ensemble learning" in the evaluation paragraph that is never described before in the intro. Let's use consistent wording througout the intro and throughout the paper. Also, in the Design section if you need to change the headings/titles to match with the intro, please do that. It is really hard to match the Intro section with the Design section.}
 
-\wajih{Terminology discrepancies are shown in green color throughout the paper.}
+% \wajih{Terminology discrepancies are shown in green color throughout the paper.}
 
-\wajih{"Semantic Harmonization" vs. "Word2vec Harmonization"}
+% \wajih{"Semantic Harmonization" vs. "Word2vec Harmonization"}
 
-\wajih{"Categorized Ensemble Learning" vs. "Categorization-based GNN Ensemble"}
+% \wajih{"Categorized Ensemble Learning" vs. "Categorization-based GNN Ensemble"}
 
-\wajih{"encoder" vs. "model"}
+% \wajih{"encoder" vs. "model"}
 
-\wajih{"GNNglobal" vs. "GNNGlobal":}
+% \wajih{"GNNglobal" vs. "GNNGlobal":}
 
-\wajih{Categorized Provenance Subgraph" vs. "Process Entity Categorization"}
+% \wajih{Categorized Provenance Subgraph" vs. "Process Entity Categorization"}
 
-\wajih{"FL using Categorized Process Entities" vs. "Categorized GNN-based Federated Learning"}
+% \wajih{"FL using Categorized Process Entities" vs. "Categorized GNN-based Federated Learning"}
 
-\wajih{"Featurization" vs. "Semantic Encoding"}
+% \wajih{"Featurization" vs. "Semantic Encoding"}
 
-\wajih{"Central Server" vs. "Main Server"}
+% \wajih{"Central Server" vs. "Main Server"}
 
-\wajih{"Utility Server" vs. "Trusted Utility Server"}
+% \wajih{"Utility Server" vs. "Trusted Utility Server"}
 
-\wajih{"Semantic Attribute Vectors" vs. "Feature Vectors"}
+% \wajih{"Semantic Attribute Vectors" vs. "Feature Vectors"}
 
-\wajih{"Dual-server Architecture" vs. "Two-server Architecture"}
+% \wajih{"Dual-server Architecture" vs. "Two-server Architecture"}
 
 
 
@@ -86,11 +86,11 @@ We introduce \Sys, a novel privacy-preserving \pids that integrates provenance g
 However, applying FL to \pids introduces several significant challenges, as summarized below:
 
 \begin{enumerate}[itemsep=0.1em, parsep=0em, topsep=0em, leftmargin=*]
-  \labitem{C1}{itm:c1}{\it Data Imbalance \& Heterogeneity Among Clients.} Variations in data distribution and volume across clients, often non-IID~\cite{zhao2018federated}, pose challenges in training a global model \( GNN_{Global} \) that performs uniformly well. Heterogeneous data resulting from different client applications can lead to suboptimal performance~\cite{qu2022rethinking}, and data imbalances can cause models to be biased towards clients with more extensive datasets, potentially overlooking unique patterns in less-represented clients~\cite{duan2020self}. This issue is critical for \pids, as a biased \( GNN_{Global} \) may result in high false alarms, undermining detection accuracy.
+  \labitem{C1}{itm:c1}{\it Data Imbalance \& Heterogeneity Among Clients.} Variations in data distribution and volume across clients, often non-IID~\cite{zhao2018federated}, pose challenges in training a global model \( \text{GNN}_{\text{global}} \) that performs uniformly well. Heterogeneous data resulting from different client applications can lead to suboptimal performance~\cite{qu2022rethinking}, and data imbalances can cause models to be biased towards clients with more extensive datasets, potentially overlooking unique patterns in less-represented clients~\cite{duan2020self}. This issue is critical for \pids, as a biased \( \text{GNN}_{\text{global}} \) may result in high false alarms, undermining detection accuracy.
 
-  \labitem{C2}{itm:c2}{\it Feature Space Heterogeneity.} Inconsistent encoding of identical features across clients leads to difficulties in model convergence and reduces the effectiveness of federated averaging. \pids, such as \flash~\cite{cheng2023kairos}, utilize a \wordvec model to encode semantic attributes within a provenance graph. Due to the inherent randomness of the \wordvec algorithm, identical tokens \( t \) are encoded into different vectors \( v_i(t) \) by each client \( i \), using their local feature sets \( \mathcal{F}_i \). This variability disrupts the convergence and efficacy of local \gnn models \( \text{GNN}_{i} \) and complicates federated averaging for the global \gnn model \( \text{GNN}_{\text{Global}} \), leading to suboptimal anomaly detection performance, as detailed in \cite{zhou2023fedfa}.
+  \labitem{C2}{itm:c2}{\it Feature Space Heterogeneity.} Inconsistent encoding of identical features across clients leads to difficulties in model convergence and reduces the effectiveness of federated averaging. \pids, such as \flash~\cite{cheng2023kairos}, utilize a \wordvec model to encode semantic attributes within a provenance graph. Due to the inherent randomness of the \wordvec algorithm, identical tokens \( t \) are encoded into different vectors \( v_i(t) \) by each client \( i \), using their local feature sets \( \mathcal{F}_i \). This variability disrupts the convergence and efficacy of local \gnn models \( \text{GNN}_{i} \) and complicates federated averaging for the global \gnn model \( \text{GNN}_{\text{global}} \), leading to suboptimal anomaly detection performance, as detailed in \cite{zhou2023fedfa}.
 
-  \labitem{C3}{itm:c3} {\it Temporal Misalignment.} Aggregating temporal graph models from clients with temporally misaligned data challenges the creation of a cohesive global model. Systems like \kairos \cite{cheng2023kairos} employ temporal graph neural networks (TGN) to trace the evolution of system provenance graphs. However, federated learning's application across fragmented and misaligned client data impedes effective federated averaging, leading to improper alignment when aggregating models trained on diverse temporal datasets. This results in a loss of temporal information and hinders the formation of a cohesive global model \( GNN_{Global} \).
+  \labitem{C3}{itm:c3} {\it Temporal Misalignment.} Aggregating temporal graph models from clients with temporally misaligned data challenges the creation of a cohesive global model. Systems like \kairos \cite{cheng2023kairos} employ temporal graph neural networks (TGN) to trace the evolution of system provenance graphs. However, federated learning's application across fragmented and misaligned client data impedes effective federated averaging, leading to improper alignment when aggregating models trained on diverse temporal datasets. This results in a loss of temporal information and hinders the formation of a cohesive global model \( \text{GNN}_{\text{global}} \).
   
   % \labitem{C4}{itm:c4} {\bf Non-Privacy-Preserving Data Structure.} Existing \pids frameworks often use data structures that do not preserve privacy, making them unsuitable for integration with FL.
 \end{enumerate}
@@ -101,7 +101,7 @@ However, applying FL to \pids introduces several significant challenges, as summ
 
 %\wajih{Use consistent terminology with the Design section.}
 
-To address ~\ref{itm:c1}, we have designed a novel \gnnshort ensemble learning framework (Section~\ref{sys:fpgl}). In this framework, each submodel is trained to specialize in learning system activities associated with specific process entities, which are standardized across all clients. This standardization is facilitated by a sophisticated process entity categorization scheme enabled by our dual-server architecture. Through this system, process entities from all clients are organized into  \( K_{cat} \) privacy-preserving bins. Each client then aligns its process nodes with these bins, constructs a provenance subgraph for each bin, and trains a \gnnshort model on these graphs. The models from all clients are then aggregated into  \( K_{cat} \) model pairs, forming a comprehensive global ensemble model set \( {GNN}_{\text{global}} \). This strategic approach ensures that models with similar data distributions are merged effectively, thereby maintaining the integrity of unique activity patterns across diverse client environments. We compared our methods with existing solutions including FedProx~\cite{li2020federated} and FedOpt~\cite{asad2020fedopt} for addressing heterogeneity in FL settings and found that our techniques outperform these existing solutions, as detailed in Section~\ref{sec:fedalternatives}.
+To address ~\ref{itm:c1}, we have designed a novel \gnnshort ensemble learning framework (Section~\ref{sys:fpgl}). In this framework, each submodel is trained to specialize in learning system activities associated with specific process entities, which are standardized across all clients. This standardization is facilitated by a sophisticated process entity categorization scheme enabled by our dual-server architecture. Through this system, process entities from all clients are organized into  \( K_{cat} \) privacy-preserving bins. Each client then aligns its process nodes with these bins, constructs a provenance subgraph for each bin, and trains a \gnnshort model on these graphs. The models from all clients are then aggregated into  \( K_{cat} \) model pairs, forming a comprehensive global ensemble model set \( \text{GNN}_{\text{global}} \). This strategic approach ensures that models with similar data distributions are merged effectively, thereby maintaining the integrity of unique activity patterns across diverse client environments. We compared our methods with existing solutions including FedProx~\cite{li2020federated} and FedOpt~\cite{asad2020fedopt} for addressing heterogeneity in FL settings and found that our techniques outperform these existing solutions, as detailed in Section~\ref{sec:fedalternatives}.
 
 %\wajih{In the following paragraph, make sure that you use consistent terminology that you used in the design section like harmonization, featurization, categorization. This paragraph one of the important paragraphs. make sure you highlight all the features of your systems in this paragraph.}
 
@@ -109,7 +109,7 @@ To address ~\ref{itm:c1}, we have designed a novel \gnnshort ensemble learning f
 To tackle ~\ref{itm:c2}, we implement a \wordvec harmonization scheme utilizing a dual-server architecture (Section~\ref{sub:model:harmonization}). In this setup, a central server issues encryption keys to clients, allowing them to securely encode \wordvec tokens. Subsequently, a utility server processes these encrypted tokens to achieve a unified, privacy-preserving vector representation. This method ensures that sensitive data remains protected while facilitating accurate and consistent \wordvec encoding across different clients. To avoid the problem of \ref{itm:c3} arising from the use of temporal graph networks, \Sys employs an inductive graph neural network model~\cite{hamilton2017inductive}, which has been shown by prior work~\cite{flash2024,shadewatcher,wang2022threatrace} to offer good performance and is not affected by temporal dependencies. 
 
 
-We evaluated \Sys using open-source datasets from \darpa, including E3~\cite{error3}, E5~\cite{bug5}, and \optc~\cite{anjum2021analyzing}, which cover a wide range of attack scenarios and system behaviors. Since existing state-of-the-art \pids already achieve near-perfect detection accuracy, {\bf the primary goal of \Sys is to demonstrate that a privacy-preserving \pids can be built while maintaining similar performance.} Our results show that \Sys achieves detection performance with an average precision of 96\% and recall of 97\%, matching the accuracy of state-of-the-art \pids. What distinguishes \Sys is its ability to deliver this accuracy while significantly reducing privacy risks and providing decentralization in enterprise settings. Experiments were conducted to investigate the effectiveness of \wordvec harmonization and \Fix{categorized ensemble learning} in addressing the data heterogeneity issue. These methods were found to significantly enhance detection performance compared to the vanilla approach.
+We evaluated \Sys using open-source datasets from \darpa, including E3~\cite{error3}, E5~\cite{bug5}, and \optc~\cite{anjum2021analyzing}, which cover a wide range of attack scenarios and system behaviors. Since existing state-of-the-art \pids already achieve near-perfect detection accuracy, {\bf the primary goal of \Sys is to demonstrate that a privacy-preserving \pids can be built while maintaining similar performance.} Our results show that \Sys achieves detection performance with an average precision of 96\% and recall of 97\%, matching the accuracy of state-of-the-art \pids. What distinguishes \Sys is its ability to deliver this accuracy while significantly reducing privacy risks and providing decentralization in enterprise settings. Experiments were conducted to investigate the effectiveness of \wordvec harmonization and categorization based ensemble learning in addressing the data heterogeneity issue. These methods were found to significantly enhance detection performance compared to the vanilla approach.
 
 
 \Sys achieves a 170-fold reduction in network communication costs compared to existing centralized systems. Moreover, the decentralized nature of \Sys allows for much faster inference times, bounded only by the client with the most data, completing the full \optc dataset in a few minutes, whereas existing \pids, such as \flash and \kairos, require several hours. In Section~\ref{sec:fedalternatives}, we show that our technique performs better than existing solutions for dealing with heterogeneity in the FL settings. Furthermore, we provide an extensive ablation study, comparison of our approach to alternate privacy techniques, such as differential privacy and benchmark of various encryption methods for use in our system in Appendix~\ref{app:ablation}. We present a comprehensive analysis of our system's resilience against various adversarial attacks in Section~\ref{sec:adversarial}. Additionally, we provide a detailed analysis of the privacy protection offered by our system in Section~\ref{sec:privacy}.
