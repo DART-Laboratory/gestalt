@@ -4,7 +4,7 @@
 \begin{figure*}[t!]
   \centering
   \includegraphics[width=1\textwidth]{fig/archv5.pdf}
-  \caption{High-level architecture of \Sys. In the training phase, our system builds local provenance graphs for each client and trains an ensemble of \gnnshort models. Prior to this, we aggregate semantic models contextually for feature encoding. The local \gnnshort models participate in federated learning to develop a global \gnnshort model, which is then utilized for anomaly detection. Notations are defined in Table~\ref{tab:keynotations}.}
+  \caption{High-level architecture of \Sys. In the training phase, our system builds local provenance graphs for each client and trains an ensemble of \gnnshort models. Prior to this, we harmonize \wordvec models in a privacy preserving manner using encryption and dual-server architecture for semantic encoding. The local \gnnshort models participate in federated learning to develop a global \( {\text{GNN}}_{\text{global}} \) model, which is then utilized for anomaly detection. Notations are defined in Table~\ref{tab:keynotations}.}
   \vspace{-3ex}
   \label{fig:arch}
 \end{figure*}
