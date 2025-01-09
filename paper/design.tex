@@ -116,7 +116,7 @@ Both clients send encrypted lists of these process names to the utility server, 
 
 This assignment is transmitted back to both clients, ensuring that \texttt{chrome} and \texttt{mysql} are consistently grouped under category~1, and \texttt{ssh} and \texttt{firefox} under category~2. As a result, each category gathers similar processes across all clients, even though the initial split is random. By dividing the overall task into sub-tasks (submodels) and distributing them to different subsets of processes, the influence of clients with larger datasets is shared among multiple models. This approach reduces the risk of any single client dominating the federated training process and facilitates more balanced contributions from all participants, ultimately improving the robustness and performance of the system.
 
-\subsection{FL using Categorized Process Entities}
+\subsection{FL with Categorized Ensemble Learning}
 \label{sys:fpgl}
 
 \input{algos/submodel-training.tex}
