@@ -19,22 +19,22 @@
 
 Our evaluation experiments are conducted on a machine running Ubuntu 18.04.6 LTS, equipped with a 10-core Intel CPU, NVIDIA RTX 2080 GPU, and 120 GB of memory. In our experiments, we set the federated learning rounds and the number of categorized \gnnshort to 10 per host. Each model is trained for 20 epochs per round. We use regularization and dropout layers in our models to avoid overfitting. To evaluate \Sys, we address the following research questions:
 
-\wajih{RQ6 is not in this section. so please remove it. }
+%\wajih{RQ6 is not in this section. so please remove it. }
 
-\wajih{Add section references like I added for RQ1}
+%\wajih{Add section references like I added for RQ1}
 
 % \Fix{There are eight subsection in the evaluation while we have six research question. Make them consistent. This can confuse reader. Also, if you moved something to Appendix, refer them below. }
 
 % \wajih{These are just too many research question. You need to combine similar RQs into one. If you think something is an ablation study then move it to the ablation study section. }
 \begin{itemize}[leftmargin=*,itemsep=0.1em, parsep=0em, topsep=0em]
   \item \textbf{RQ1.} How does \Sys compare to existing systems in terms of detection performance? (Section~\ref{sub:detect:perf})
-  \item \textbf{RQ2.} How effective is the Word2vec harmonization scheme for handling feature heterogeneity?
-  \item \textbf{RQ3.} How effective is the categorization-based \gnnshort ensemble for handling data heterogeneity?
-  \item \textbf{RQ4.} How does \Sys compare to existing FL solutions in addressing data heterogeneity and non-IID challenges?
-  \item \textbf{RQ5.} How scalable is \Sys in an enterprise-level setting with multiple host machines?
-  \item \textbf{RQ6.} How robust is \Sys against adversarial mimicry attacks?
-  \item \textbf{RQ7.} What is the resource consumption of various components of \Sys and its end-to-end processing time on a client machine?
-  \item \textbf{RQ8.} What does the ablation study reveal about \Sys's scalability and effectiveness across key factors like \gnnshort submodels, averaging rounds, federated averaging rounds, etc.?
+  \item \textbf{RQ2.} How effective is the Word2vec harmonization scheme for handling feature heterogeneity? (Section~\ref{sub:word2vec:harmonization:efficacy})
+  \item \textbf{RQ3.} How effective is the categorization-based \gnnshort ensemble for handling data heterogeneity? (Section~\ref{sub:categorized:learning:efficacy})
+  \item \textbf{RQ4.} How does \Sys compare to existing FL solutions in addressing data heterogeneity and non-IID challenges? (Section~\ref{sec:fedalternatives})
+  \item \textbf{RQ5.} How scalable is \Sys in an enterprise-level setting with multiple host machines? (Section~\ref{cost_metric})
+  % \item \textbf{RQ6.} How robust is \Sys against adversarial mimicry attacks?
+  \item \textbf{RQ6.} What is the resource consumption of various components of \Sys and its end-to-end processing time on a client machine? (Appendix~\ref{sec:resource_consumption})
+  \item \textbf{RQ7.} What does the ablation study reveal about \Sys's scalability and effectiveness across key factors like \gnnshort submodels, averaging rounds, federated averaging rounds, etc.? (Appendix~\ref{app:ablation})
   
   \end{itemize}  
 
@@ -56,6 +56,7 @@ Our evaluation experiments are conducted on a machine running Ubuntu 18.04.6 LTS
  Table~\ref{summary:benchmarks:large} reveals that \Sys's performance on these datasets is comparable to that of \flash, despite the data heterogeneity, diverse log patterns, and data imbalance contained within each E3, E5, and \optc datasets. This underscores \Sys's capability to maintain robust detection performance amidst such heterogeneity. \kairos's evaluation, based on a coarser time-window granularity compared to the node-level granularity of \flash and \Sys, poses a challenge for direct comparison. Nevertheless, our results remain competitive with \kairos. Beyond detection performance, we also highlight \Sys's qualitative advantages, including its privacy-preserving features and decentralized, scalable operation. These aspects underscore the value of \Sys in contrast to centralized systems, emphasizing its high practicality in real-world deployments. Since \kairos was not originally evaluated on the DARPA E3 Trace, we did not compare \kairos on this dataset for fairness because unlike \flash extensive hyperparameter tuning might be needed for \kairos to produce the best results.
 
  \subsection{Effectiveness of \wordvec harmonization}
+ \label{sub:word2vec:harmonization:efficacy}
 
  We evaluated the effectiveness of our \wordvec vector harmonization scheme through two experiments using the \optc, E3 and E5 datasets. In the first experiment, each client utilized its locally trained \wordvec model to encode semantic features during the training process. In the second experiment, we harmonized the individually trained models into a central \wordvec model using the utility server architecture, as explained in Section~\ref{sec:methodology}. Then each client used this centralized model for generating semantic features. Table~\ref{local:wordvec} presents the average results for the \darpa E3, E5 and \optc datasets. By employing the harmonized models, we achieved significantly better detection outcomes. This is because these local models encode different information for identical tokens across hosts. Such variability leads to heterogeneity in the feature space for the \gnnshort model, impairing the model's ability to generalize and converge effectively during the federated learning process, thereby yielding suboptimal results. However, through our novel, privacy-preserving aggregation of these semantic models, we have addressed this issue by merging the information in these models together to give the \gnnshort more generalized input vectors.
 
@@ -86,6 +87,7 @@ Our evaluation experiments are conducted on a machine running Ubuntu 18.04.6 LTS
 \end{table}
 
 \subsection{Effectiveness of categorized graph learning}
+\label{sub:categorized:learning:efficacy}
 
 %\wajih{let's divide this RQ into two RQs and update the first paragraph of the evalution section. Also, please move Word2vec harmonization before Categorization as they are in the design seection.}
 
