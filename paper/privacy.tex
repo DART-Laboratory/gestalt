@@ -14,7 +14,7 @@ In this section, we analyze the preservation of user privacy within \Sys, which 
 Consider an attacker's objective to ascertain whether a system entity \(x\) with attributes \(y\) was utilized in training a client model \(m\). This necessitates the generation of multiple candidate node features for \(x\), taking into account various graph structures and interactions with other entities while considering diverse attributes. The search space for this task, \(S\), is extensive, spanning all conceivable processes, files, and network IPs.
 
 Assuming the server generates multiple candidate structures, it then requires access to the specific client's \(\texttt{\wordvec}\) model to generate feature vectors for these structures---a step prevented by the model's unavailability and inherent algorithmic randomness, rendering each training iteration of the \(\texttt{\wordvec}\) model distinct:
-\[ F(x) = \texttt{\wordvec}(s_x) \]
+\( F(x) = \texttt{\wordvec}(s_x) \)
 where \(F(x)\) is the feature vector of structure \(x\) and \(s_x\) is the candidate sequence.
 
 Formally, the system \Sys is designed to ensure that the probability that an adversary can distinguish between two arbitrary system log datasets based on the observed updates is negligible:
