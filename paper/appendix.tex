@@ -149,7 +149,7 @@ Our design ensures privacy without resorting to Homomorphic Encryption (HE). Alt
 \section{State Explosion in Massive Networks}
 \label{state:explosion}
 
-\wajih{we never referenced this subsection in the paper. Find a place in design or evaluation or discussion to reference this.}
+%\wajih{we never referenced this subsection in the paper. Find a place in design or evaluation or discussion to reference this.}
 
 Scaling FL to larger enterprise networks introduces potential state explosion issues, primarily due to the increasing complexity in managing and integrating updates from a growing number of clients. As more clients participate, each contributing their local model updates, the volume of data to be processed and aggregated can increase significantly. This escalation can strain communication channels, leading to higher bandwidth requirements and increased latency. Furthermore, the aggregation process itself becomes more computationally demanding as the number of updates grows. \Sys addresses these challenges by utilizing an ensemble learning approach and categorizing system activities, which simplifies the aggregation by processing more uniform data segments. Moreover, our system uses models with small network overhead to prevent bandwidth challenges. To further enhance efficiency, additional techniques such as model compression~\cite{choudhary2020comprehensive}, selective update aggregation~\cite{ye2020federated} and the implementation of more robust communication protocols~\cite{laclau2020robust} can significantly improve handling large volumes of updates, thus preventing state explosion and maintaining system performance in large-scale federated learning environments.
 
