@@ -3,7 +3,7 @@
 
 \begin{figure*}[t!]
   \centering
-  \includegraphics[width=1\textwidth]{fig/archv5.pdf}
+  \includegraphics[width=1\textwidth]{fig/archv7.pdf}
   \caption{High-level architecture of \Sys. In the training phase, our system builds local provenance graphs for each client and trains an ensemble of \gnnshort models. Prior to this, we harmonize \wordvec models in a privacy preserving manner using encryption and dual-server architecture for semantic encoding. The local \gnnshort models participate in federated learning to develop a global \( {\text{GNN}}_{\text{global}} \) model, which is then utilized for anomaly detection. Notations are defined in Table~\ref{tab:keynotations}.}
   \vspace{-3ex}
   \label{fig:arch}
@@ -28,15 +28,10 @@ where \( N \) represents the total number of clients. This decentralized approac
 \subsection{Provenance Graph Constructor}
 \label{sub:provconstruct}
 
-\Sys utilizes \logs to construct a system provenance graph. It operates on each client machine, using their local system logs to build the graph. Major operating systems, including Linux and Windows, come equipped with built-in mechanisms for log collection -- specifically, the Linux Audit system~\cite{linuxaudit} and Windows Event Tracing~\cite{windowsaudit}. These logs provide detailed insights into the interactions among various system entities, capturing activities, such as process executions, file operations, and network connections. Using this data, \Sys forms a graph where nodes represent system entities including processes, files, and sockets. The edges of this graph denote events, identified by syscalls, that occur between these entities. Moreover, \Sys enhances each node with comprehensive attributes, including process names, command lines, file names, and network IP addresses. As demonstrated by prior works~\cite{flash2024,cheng2023kairos}, these contextual attributes enable the model to develop a robust understanding of system behavior. Figure~\ref{provexp} shows an example graph where \textit{Explorer.exe} executes processes like \textit{Notepad.exe} and \textit{Firefox.exe}, which then interact with file and socket nodes.
+\Sys utilizes \logs to construct a system provenance graph. It operates on each client machine, using their local system logs to build the graph. Major operating systems, including Linux and Windows, come equipped with built-in mechanisms for log collection -- specifically, the Linux Audit system~\cite{linuxaudit} and Windows Event Tracing~\cite{windowsaudit}. These logs provide detailed insights into the interactions among various system entities, capturing activities, such as process executions, file operations, and network connections. Using this data, \Sys forms a graph where nodes represent system entities including processes, files, and sockets. The edges of this graph denote events, identified by syscalls, that occur between these entities. Moreover, \Sys enhances each node with comprehensive attributes, including process names, command lines, file names, and network IP addresses.
 
-\begin{figure}[t!]
-  \centering
-  \includegraphics[width=0.4\textwidth]{fig/provexp.pdf}
-  \caption{Data provenance graph example.}
-  \label{provexp}
-  \vspace{-3ex}
-\end{figure}
+As demonstrated by prior works~\cite{flash2024,cheng2023kairos}, these contextual attributes enable the model to develop a robust understanding of system behavior. Figure~\ref{provexp} shows an example graph where \textit{Explorer.exe} executes processes like \textit{Notepad.exe} and \textit{Firefox.exe}, which then interact with file and socket nodes.
+
 
 
 \subsection{\wordvec Model Generation}
@@ -51,6 +46,15 @@ For this encoding, we employ the \wordvec~model which processes different semant
     \item \textbf{Socket:} IP addresses and port.
 \end{itemize}
 
+\begin{figure}[t!]
+    \centering
+    \includegraphics[width=0.4\textwidth]{fig/provexp.pdf}
+    \caption{Data provenance graph example.}
+    \label{provexp}
+    \vspace{-3ex}
+  \end{figure}
+  
+
 For each node \(v \in \mathcal{V}_i\), we extract its 1-hop subgraph by collecting all neighbors of \(v\). We transform this node subgraph into a ``document'' by combining:
 \begin{enumerate}[itemsep=0.1em, parsep=0em, topsep=0em, leftmargin=*]
     \item The semantic attributes of \(v\).
@@ -62,6 +66,9 @@ These node-centric documents are then encoded into fixed-length vectors via \wor
 
 \subsection{Privacy-preserving Model Harmonization}
 \label{sub:model:harmonization}
+
+\input{algos/word2vec.tex}
+
 \PP{Addressing Token Variability Across Clients}
 Each client independently trains a \wordvec model using their local logs for feature encoding. However, before these models can be utilized to encode text attributes effectively, it is essential to contextually merge individual client \wordvec models into a unified model \( M_{\text{w2v-harm}} \) for use across all clients. This unification is crucial; without it, each client would produce a different encoding, \(v_a^i\), for identical inputs, where \(i\) denotes the client. The variability in feature vectors, \(\{v_a^1, v_a^2, \ldots, v_a^N\}\), for the same attribute \(a\) across \(N\) clients, would compromise the consistency of client-based \gnnshort models. To ensure uniformity, the feature vectors for overlapping attributes must be averaged across clients. Such averaging ensures consistency in the feature representation, enhancing the effectiveness of the downstream federated averaging technique by maintaining uniformity in the input space for the \gnnshort models across all clients.
 
@@ -75,15 +82,12 @@ Our experiments with the \optc dataset revealed that, on average, different host
 \PP{Harmonization with Encryption \& Utility Server}
 Transferring tokens -- containing sensitive data like process names, file names, and IP addresses -- to a central server could breach user privacy. To mitigate this, we employ a trusted utility server. Initially, the central server uses Fernet symmetric key encryption~\cite{ismail2020fernet,bokhari2016review} to generate an encryption key, which is distributed to clients. Clients then encrypt their \wordvec model tokens using the encryption key: \(E(v_{k}) = v_{k}^{'}\) and send them to the utility server. This server merges the encrypted models and dispatches the unified semantic vectors back to the respective clients, who decrypt them back: \(D(v_{k}^{'}) = v_{k}.\) This procedure ensures that neither the central server nor the utility server can access the actual token information, assuming no collusion between the two servers. The process is detailed in Algorithm~\ref{alg:secure_integration_averaging_word2vec}.
 
-\input{algos/word2vec.tex}
+
 
 \subsection{Process Entity Categorization}
 \label{sys:catg}
 
-During our initial experiments (Table~\ref{categorized_gnn}), we found that a single \( {GNN}_{\text{global}} \) cannot achieve good detection performance in an FL setting due to the diverse and heterogeneous distributions of clients data. The disparity in data distributions among \( N \) clients poses a significant challenge in effectively training a unified model that can generalize well across all clients, since the global model struggles to capture the unique characteristics and patterns inherent in each client's data.
-
-% \wajih{use key notations below if possible.}
-To address this limitation, we developed a comprehensive framework that organizes process entities across different clients into distinct groups. Each category is modeled by a dedicated submodel, enabling it to focus on the unique distribution and intricate patterns of its assigned category and thereby enhance overall detection performance.
+During our initial experiments (Table~\ref{categorized_gnn}), we found that a single \( {GNN}_{\text{global}} \) cannot achieve good detection performance in an FL setting due to the diverse and heterogeneous distributions of clients data. The disparity in data distributions among \( N \) clients poses a significant challenge in effectively training a unified model that can generalize well across all clients, since the global model struggles to capture the unique characteristics and patterns inherent in each client's data. To address this limitation, we developed a comprehensive framework that organizes process entities across different clients into distinct groups. Each category is modeled by a dedicated submodel, enabling it to focus on the unique distribution and intricate patterns of its assigned category and thereby enhance overall detection performance.
 
 % \wajih{please refer to algorithm in the whole paragraph. Divide the following paragraph into three steps using latex enumerate macro.}
 As shown in Algorithm~\ref{alg:categories}, the framework leverages a central utility server to orchestrate the categorization of process entities. Specifically, it proceeds in three main steps:
@@ -95,7 +99,7 @@ As shown in Algorithm~\ref{alg:categories}, the framework leverages a central ut
     \item \textbf{Distribution of Categories.} Finally, the resulting category assignments are disseminated back to each client, guaranteeing a unified and consistent mapping of processes into categories across the federated network.
 \end{enumerate}
 
-\input{algos/cat.tex}
+
 
 % Once the categories are established, each client employs the categorized process sets to build provenance subgraphs \( PGClient_{i} \). The neighborhood hop length of these subgraphs is aligned with the number of graph convolution layers in \( {GNN}_{\text{global}} \), ensuring the model has complete neighborhood information for each node. In our experiments, we fix this hop length to two, which past studies~\cite{wang2022threatrace,flash2024} have shown to offer an optimal trade-off between efficiency and accuracy. These subgraphs provide training data for an ensemble of \({GNN}_{\text{global}}\) models in a federated manner. Each submodel specializes in learning the patterns of its assigned category and participates in federated averaging. This ensures a balanced segmentation of data across clients and maintains consistency in the training datasets for each submodel before federated averaging.
 
@@ -109,10 +113,12 @@ Both clients send encrypted lists of these process names to the utility server, 
 
 This assignment is transmitted back to both clients, ensuring that \texttt{chrome} and \texttt{mysql} are consistently grouped under category~1, and \texttt{ssh} and \texttt{firefox} under category~2. As a result, each category gathers similar processes across all clients, even though the initial split is random. By dividing the overall task into sub-tasks (submodels) and distributing them to different subsets of processes, the influence of clients with larger datasets is shared among multiple models. This approach reduces the risk of any single client dominating the federated training process and facilitates more balanced contributions from all participants, ultimately improving the robustness and performance of the system.
 
+\input{algos/cat.tex}
+
 \subsection{FL with Categorized GNN Ensemble Learning}
 \label{sys:fpgl}
 
-\input{algos/submodel-training.tex}
+
 
 % \wajih{First paragraph should connect this subsection with the previous subsection. Say something like "Once the blah blah is generated in the previous module (Section{}), we can use these blah blah for blah blah. However, blah blah is not possible without blah blah.}
 
@@ -136,6 +142,7 @@ for each category’s global submodel. Because every submodel is trained on proc
 
 The federated averaging process (Step~3 of Algorithm~\ref{alg:training_submodel}) is repeated for \( R \) rounds, concluding once there is no further reduction in the training loss \(\mathcal{L}^{(r)}\). The resulting ensemble of global submodels, each attuned to a distinct process category, provides a comprehensive solution that balances the diverse data distributions across clients while preserving privacy.
 
+\input{algos/submodel-training.tex}
 \subsection{GNN-based Anomaly Detection}
 \label{sys:anomaly_detection}
 
