@@ -1,18 +1,21 @@
 import pandas as pd
-import numpy as np
+import numpy as np  # <-- Still here, even if unused
 import os
 import json
 import tarfile
 import argparse
 
-def extract_json_from_tar_gz(directory):
-    for filename in os.listdir(directory):
-        file_path = os.path.join(directory, filename)
+def extract_json_from_tar_gz(folder_path):
+    """
+    Extract all .json.tar.gz files under 'folder_path'.
+    """
+    for filename in os.listdir(folder_path):
+        file_path = os.path.join(folder_path, filename)
 
         if filename.endswith('.json.tar.gz'):
             try:
                 with tarfile.open(file_path, 'r:gz') as tar:
-                    tar.extractall(path=directory)
+                    tar.extractall(path=folder_path)
             except Exception as e:
                 print(f"Failed to extract {filename}: {str(e)}")
         else:
@@ -20,6 +23,10 @@ def extract_json_from_tar_gz(directory):
 
 
 def json_file_iterator(folder_path):
+    """
+    Yields each JSON record (line) from all .json or .json.* files 
+    under 'folder_path', sorted by filename.
+    """
     for file_name in sorted(os.listdir(folder_path)):
         if file_name.endswith('.json') or '.json.' in file_name:
             file_path = os.path.join(folder_path, file_name)
@@ -36,17 +43,24 @@ def json_file_iterator(folder_path):
             except IOError as e:
                 print(f"Error opening file {file_path}: {e}")
 
+
 def prepare_id_files(folder_path):
-    global title, scene, cdm
+    """
+    Iterates over all JSON lines in 'folder_path' and writes two files:
+      1. *_id_to_type.json
+      2. *_net2prop.json
+    into a subdirectory {folder_path}/{title}_data.
+    """
+    global title, scene, cdm, output_dir
 
-    id_to_type_file = f'{directory}/{title}_data/{scene}_id_to_type.json'
-    net2prop_file = f'{directory}/{title}_data/{scene}_net2prop.json'
+    id_to_type_file = f'{output_dir}/{scene}_id_to_type.json'
+    net2prop_file   = f'{output_dir}/{scene}_net2prop.json'
 
-    os.makedirs(f'{directory}/{title}_data/', exist_ok=True) 
+    os.makedirs(f'{output_dir}', exist_ok=True) 
 
     net2prop_buffer = []
     id_to_type_buffer = []
-    buffer_size = 100000  
+    buffer_size = 100000
 
     def append_to_file(file_path, data):
         with open(file_path, 'a') as file:
@@ -78,7 +92,7 @@ def prepare_id_files(folder_path):
                 id_to_type_data = {nodeid: 'NETFLOW'}
                 net2prop_buffer.append(net2prop_data)
                 id_to_type_buffer.append(id_to_type_data)
-            except: 
+            except:
                 pass
 
         if f"schema.avro.cdm{cdm}.Subject" in str_line:
@@ -100,7 +114,11 @@ def prepare_id_files(folder_path):
     append_to_file(net2prop_file, net2prop_buffer)
     append_to_file(id_to_type_file, id_to_type_buffer)
 
+
 def load_dict_from_jsonl(file_path):
+    """
+    Loads line-delimited JSON from 'file_path' into a single dict (merged).
+    """
     result = {}
     with open(file_path, 'r') as file:
         for line in file:
@@ -108,15 +126,20 @@ def load_dict_from_jsonl(file_path):
             result.update(data)
     return result
 
-def stitch(data_buffer):
-    global title, scene, cdm, output_dir 
 
-    id_to_type_file = f'{directory}/{title}_data/{scene}_id_to_type.json'
-    net2prop_file = f'{directory}/{title}_data/{scene}_net2prop.json' 
+def stitch(data_buffer):
+    """
+    Uses the ID-to-type and net2prop files in {folder_path}/{title}_data 
+    to add object type and netflow attributes to 'data_buffer'.
+    """
+    global title, scene, cdm, output_dir
+
+    id_to_type_file = f'{output_dir}/{scene}_id_to_type.json'
+    net2prop_file   = f'{output_dir}/{scene}_net2prop.json'
     
     id_to_type = load_dict_from_jsonl(id_to_type_file)
-    net2prop = load_dict_from_jsonl(net2prop_file)
-    info = data_buffer
+    net2prop   = load_dict_from_jsonl(net2prop_file)
+    info       = data_buffer
     
     for i in range(len(info)):
         try:
@@ -125,7 +148,7 @@ def stitch(data_buffer):
             info[i]['actor_type'] = id_to_type[info[i]['actorID']]
             if typ == 'NETFLOW':
                 attr = net2prop[info[i]['objectID']]
-                info[i]['path'] = attr[0]+' '+str(attr[1])+' '+attr[2]+' '+str(attr[3])
+                info[i]['path'] = attr[0] + ' ' + str(attr[1]) + ' ' + attr[2] + ' ' + str(attr[3])
         except:
             info[i]['object'] = None
             info[i]['actor_type'] = None
@@ -133,56 +156,56 @@ def stitch(data_buffer):
     df = pd.DataFrame.from_records(info)
     df = df.dropna()
 
+    os.remove(id_to_type_file)
+    os.remove(net2prop_file)
+
     output_file = os.path.join(output_dir, f"{title}_{scene}.json")
     df.to_json(output_file, orient='records', lines=True)  
 
-def query_json(folder_path):
-    global title, scene, cdm 
 
-    edge_types = set([
-        'EVENT_CLOSE', 'EVENT_OPEN', 'EVENT_READ', 'EVENT_WRITE', 'EVENT_EXECUTE',
-        'EVENT_RECVFROM', 'EVENT_RECVMSG', 'EVENT_SENDMSG', 'EVENT_SENDTO',
-    ])
+def query_json(folder_path):
+    """
+    Reads .json files in 'folder_path', filters events, 
+    and then stitches them together into the final output.
+    """
+    global title, scene, cdm
+
+    edge_types = {
+        'EVENT_CLOSE', 'EVENT_OPEN', 'EVENT_READ', 'EVENT_WRITE',
+        'EVENT_EXECUTE', 'EVENT_RECVFROM', 'EVENT_RECVMSG',
+        'EVENT_SENDMSG', 'EVENT_SENDTO'
+    }
 
     info_buffer = []
 
     for line in json_file_iterator(folder_path):
-        
-        x = line            
-
         try:
-            action = x['datum'][f'com.bbn.tc.schema.avro.cdm{cdm}.Event']['type']
+            action = line['datum'][f'com.bbn.tc.schema.avro.cdm{cdm}.Event']['type']
         except:
             action = ''
-
         try:
-            hostid = x['datum'][f'com.bbn.tc.schema.avro.cdm{cdm}.Event']['hostId']
+            hostid = line['datum'][f'com.bbn.tc.schema.avro.cdm{cdm}.Event']['hostId']
         except:
             hostid = ''
-
         try:
-            actor = x['datum'][f'com.bbn.tc.schema.avro.cdm{cdm}.Event']['subject'][f'com.bbn.tc.schema.avro.cdm{cdm}.UUID']
+            actor = line['datum'][f'com.bbn.tc.schema.avro.cdm{cdm}.Event']['subject'][f'com.bbn.tc.schema.avro.cdm{cdm}.UUID']
         except:
             actor = ''
-
         try:
-            obj = x['datum'][f'com.bbn.tc.schema.avro.cdm{cdm}.Event']['predicateObject'][f'com.bbn.tc.schema.avro.cdm{cdm}.UUID']
+            obj = line['datum'][f'com.bbn.tc.schema.avro.cdm{cdm}.Event']['predicateObject'][f'com.bbn.tc.schema.avro.cdm{cdm}.UUID']
         except:
             obj = ''
-
         try:
-            cmd = x['datum'][f'com.bbn.tc.schema.avro.cdm{cdm}.Event']['properties']['map']['exec']
+            cmd = line['datum'][f'com.bbn.tc.schema.avro.cdm{cdm}.Event']['properties']['map']['exec']
         except:
             cmd = ''
-
         try:
-            path = x['datum'][f'com.bbn.tc.schema.avro.cdm{cdm}.Event']['predicateObjectPath']['string']
+            path = line['datum'][f'com.bbn.tc.schema.avro.cdm{cdm}.Event']['predicateObjectPath']['string']
         except:
             path = ''
-
         try:
-            timestampnano = x['datum'][f'com.bbn.tc.schema.avro.cdm{cdm}.Event']['timestampNanos']
-            timestamp = x['@timestamp']
+            timestampnano = line['datum'][f'com.bbn.tc.schema.avro.cdm{cdm}.Event']['timestampNanos']
+            timestamp = line['@timestamp']
         except:
             timestamp = ''
             timestampnano = ''
@@ -201,7 +224,8 @@ def query_json(folder_path):
             info_buffer.append(info_data)
     
     if info_buffer:
-        stitch(info_buffer)
+        stitch(info_buffer, folder_path)
+
 
 def main():
     parser = argparse.ArgumentParser(description="Process JSON.tar.gz CDM files and generate JSON output.")
@@ -212,22 +236,22 @@ def main():
 
     args = parser.parse_args()
 
-    global directory, title, scene, cdm, output_dir  # <-- output_dir global
+    # We still rely on some globals, but 'directory' is used as a local var here
+    global title, scene, cdm, output_dir
     directory = args.directory
     title = args.title
     scene = args.scene
-    output_dir = args.output_dir  
-    os.makedirs(output_dir, exist_ok=True) 
+    output_dir = args.output_dir
+    os.makedirs(output_dir, exist_ok=True)
 
+    # Simple logic for cdm version
     cdm = "18" if title == 'E3' else "20"
 
-    try:
-        extract_json_from_tar_gz(directory)
-    except ValueError as ve:
-        print(ve)
-
+    # Extract, then generate ID files, then query/stitch
+    extract_json_from_tar_gz(directory)
     prepare_id_files(directory)
     query_json(directory)
+
 
 if __name__ == '__main__':
     main()
