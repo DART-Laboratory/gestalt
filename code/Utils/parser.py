@@ -15,9 +15,6 @@ def extract_json_from_tar_gz(directory):
                     tar.extractall(path=directory)
             except Exception as e:
                 print(f"Failed to extract {filename}: {str(e)}")
-            finally:
-                os.remove(file_path)
-                print(f"Removed original file: {filename}")
         else:
             raise ValueError("Filetype not supported. Only .json.tar.gz files are supported.")
 
