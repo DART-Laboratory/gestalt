@@ -1,5 +1,5 @@
 import pandas as pd
-import numpy as np 
+import numpy as np  # <-- Still here, even if unused
 import os
 import json
 import tarfile
@@ -205,10 +205,12 @@ def query_json(folder_path):
             path = ''
         try:
             timestampnano = line['datum'][f'com.bbn.tc.schema.avro.cdm{cdm}.Event']['timestampNanos']
+        except:
+            timestampnano = ''
+        try:
             timestamp = line['@timestamp']
         except:
             timestamp = ''
-            timestampnano = ''
 
         if action in edge_types:
             info_data = {
