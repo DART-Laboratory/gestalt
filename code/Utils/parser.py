@@ -16,7 +16,7 @@ def extract_json_from_tar_gz(directory):
             except Exception as e:
                 print(f"Failed to extract {filename}: {str(e)}")
         else:
-            raise ValueError("Filetype not supported. Only .json.tar.gz files are supported.")
+            pass
 
 
 def json_file_iterator(folder_path):
