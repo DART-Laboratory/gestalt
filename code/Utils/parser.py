@@ -45,8 +45,8 @@ def prepare_id_files(folder_path):
     id_to_type_file = f'{directory}/{title}_data/{scene}_id_to_type.json'
     net2prop_file = f'{directory}/{title}_data/{scene}_net2prop.json'
 
-    os.makedirs(f'{directory}/{title}_data/')
-    
+    os.makedirs(f'{directory}/{title}_data/', exist_ok=True) 
+
     net2prop_buffer = []
     id_to_type_buffer = []
     buffer_size = 100000  
@@ -112,8 +112,8 @@ def load_dict_from_jsonl(file_path):
     return result
 
 def stitch(data_buffer):
-    global title, scene, cdm
-    
+    global title, scene, cdm, output_dir 
+
     id_to_type_file = f'{directory}/{title}_data/{scene}_id_to_type.json'
     net2prop_file = f'{directory}/{title}_data/{scene}_net2prop.json' 
     
@@ -135,7 +135,9 @@ def stitch(data_buffer):
             
     df = pd.DataFrame.from_records(info)
     df = df.dropna()
-    df.to_parquet(f"{directory}/{title}_data/{scene}.parquet", index=False)
+
+    output_file = os.path.join(output_dir, f"{title}_{scene}.json")
+    df.to_json(output_file, orient='records', lines=True)  
 
 def query_json(folder_path):
     global title, scene, cdm 
@@ -205,19 +207,21 @@ def query_json(folder_path):
         stitch(info_buffer)
 
 def main():
-    parser = argparse.ArgumentParser(description="Process JSON.tar.gz CDM files and generate parquet output.")
+    parser = argparse.ArgumentParser(description="Process JSON.tar.gz CDM files and generate JSON output.")
     parser.add_argument('--directory', required=True, help="Directory containing the .json.tar.gz files.")
     parser.add_argument('--title', required=True, help="Title name (e.g., E3 or E5).")
     parser.add_argument('--scene', required=True, help="Scene name (e.g., theia, cadets, etc.).")
+    parser.add_argument('--output_dir', required=True, help="Directory where the final JSON results will be stored.")
 
     args = parser.parse_args()
 
-    # Use global variables so the original function references remain valid
-    global directory, title, scene, cdm
-
+    global directory, title, scene, cdm, output_dir  # <-- output_dir global
     directory = args.directory
     title = args.title
     scene = args.scene
+    output_dir = args.output_dir  
+    os.makedirs(output_dir, exist_ok=True) 
+
     cdm = "18" if title == 'E3' else "20"
 
     try:
