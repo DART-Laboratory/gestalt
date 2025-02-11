@@ -1,5 +1,5 @@
 import pandas as pd
-import numpy as np  # <-- Still here, even if unused
+import numpy as np 
 import os
 import json
 import tarfile
@@ -184,7 +184,7 @@ def query_json(folder_path):
         except:
             action = ''
         try:
-            hostid = line['datum'][f'com.bbn.tc.schema.avro.cdm{cdm}.Event']['hostId']
+            hostid = line['hostId']
         except:
             hostid = ''
         try:
@@ -224,7 +224,7 @@ def query_json(folder_path):
             info_buffer.append(info_data)
     
     if info_buffer:
-        stitch(info_buffer, folder_path)
+        stitch(info_buffer)
 
 
 def main():
