@@ -171,11 +171,11 @@ def query_json(folder_path):
     """
     global title, scene, cdm
 
-    edge_types = {
-        'EVENT_CLOSE', 'EVENT_OPEN', 'EVENT_READ', 'EVENT_WRITE',
-        'EVENT_EXECUTE', 'EVENT_RECVFROM', 'EVENT_RECVMSG',
-        'EVENT_SENDMSG', 'EVENT_SENDTO'
-    }
+    # edge_types = {
+    #     'EVENT_CLOSE', 'EVENT_OPEN', 'EVENT_READ', 'EVENT_WRITE',
+    #     'EVENT_EXECUTE', 'EVENT_RECVFROM', 'EVENT_RECVMSG',
+    #     'EVENT_SENDMSG', 'EVENT_SENDTO'
+    # }
 
     info_buffer = []
 
@@ -213,25 +213,21 @@ def query_json(folder_path):
         except:
             timestamp = ''
 
-        if action in edge_types:
-            info_data = {
-                'actorID': actor,
-                'objectID': obj,
-                'action': action,
-                'timestampNanos': timestampnano,
-                'timestamp': timestamp,
-                'exec': cmd,
-                'path': path,
-                'hostid': hostid
-            }
-            info_buffer.append(info_data)
+        info_data = {
+            'actorID': actor,
+            'objectID': obj,
+            'action': action,
+            'timestampNanos': timestampnano,
+            'timestamp': timestamp,
+            'exec': cmd,
+            'path': path,
+            'hostid': hostid
+        }
+        info_buffer.append(info_data)
     
     if info_buffer:
         stitch(info_buffer)
 
-
-import pandas as pd
-import os
 
 def count_missing_semantics():
     global title, scene, output_dir
@@ -239,33 +235,28 @@ def count_missing_semantics():
     input_file = os.path.join(output_dir, f"{title}_{scene}.json")
     df = pd.read_json(input_file, orient='records', lines=True)
     
-    count_actorID_with_empty_exec = df[df['exec'] == ''].shape[0]
-    count_objectID_with_empty_path = df[df['path'] == ''].shape[0]
+    output_content = ""
     
-    total_actorIDs = df['actorID'].count()
-    total_objectIDs = df['objectID'].count()
+    for actor_type, group in df.groupby('actor_type'):
+        count_with_empty_exec = group[group['exec'] == ''].shape[0]
+        total = group.shape[0]
+        percent_missing_exec = (count_with_empty_exec / total * 100) if total > 0 else 0
+        output_content += (f"Actor Type: {actor_type}\n"
+                           f"Count of actorIDs with missing exec: {count_with_empty_exec}\n"
+                           f"Percentage with missing exec: {percent_missing_exec:.2f}%\n\n")
     
-    if total_actorIDs > 0:
-        percent_missing_exec = (count_actorID_with_empty_exec / total_actorIDs) * 100
-    else:
-        percent_missing_exec = 0
-    
-    if total_objectIDs > 0:
-        percent_missing_path = (count_objectID_with_empty_path / total_objectIDs) * 100
-    else:
-        percent_missing_path = 0
-    
-    output_content = (
-        f"Count of subject entities with missing semantics: {count_actorID_with_empty_exec}\n"
-        f"Percentage of subject entities with missing semantics: {percent_missing_exec:.2f}%\n"
-        f"Count of object entities with missing semantics: {count_objectID_with_empty_path}\n"
-        f"Percentage of object entities with missing semantics: {percent_missing_path:.2f}%\n"
-    )
+    for object_type, group in df.groupby('object'):
+        count_with_empty_path = group[group['path'] == ''].shape[0]
+        total = group.shape[0]
+        percent_missing_path = (count_with_empty_path / total * 100) if total > 0 else 0
+        output_content += (f"Object Type: {object_type}\n"
+                           f"Count of objectIDs with missing path: {count_with_empty_path}\n"
+                           f"Percentage with missing path: {percent_missing_path:.2f}%\n\n")
     
     outfile = os.path.join(output_dir, f"{title}_{scene}_meta.txt")
+    
     with open(outfile, "w") as file:
         file.write(output_content)
-
 
 def main():
     parser = argparse.ArgumentParser(description="Process JSON.tar.gz CDM files and generate JSON output.")
