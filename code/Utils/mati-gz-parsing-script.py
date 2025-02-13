@@ -1,5 +1,5 @@
 import pandas as pd
-import numpy as np 
+import numpy as np  
 import os
 import json
 import tarfile
@@ -30,6 +30,7 @@ def json_file_iterator(folder_path):
     for file_name in sorted(os.listdir(folder_path)):
         if file_name.endswith('.json') or '.json.' in file_name:
             file_path = os.path.join(folder_path, file_name)
+            print("Reading File: " + file_path)
             try:
                 with open(file_path, 'r', encoding='utf-8') as file:
                     for line in file:
@@ -229,6 +230,43 @@ def query_json(folder_path):
         stitch(info_buffer)
 
 
+import pandas as pd
+import os
+
+def count_missing_semantics():
+    global title, scene, output_dir
+    
+    input_file = os.path.join(output_dir, f"{title}_{scene}.json")
+    df = pd.read_json(input_file, orient='records', lines=True)
+    
+    count_actorID_with_empty_exec = df[df['exec'] == ''].shape[0]
+    count_objectID_with_empty_path = df[df['path'] == ''].shape[0]
+    
+    total_actorIDs = df['actorID'].count()
+    total_objectIDs = df['objectID'].count()
+    
+    if total_actorIDs > 0:
+        percent_missing_exec = (count_actorID_with_empty_exec / total_actorIDs) * 100
+    else:
+        percent_missing_exec = 0
+    
+    if total_objectIDs > 0:
+        percent_missing_path = (count_objectID_with_empty_path / total_objectIDs) * 100
+    else:
+        percent_missing_path = 0
+    
+    output_content = (
+        f"Count of subject entities with missing semantics: {count_actorID_with_empty_exec}\n"
+        f"Percentage of subject entities with missing semantics: {percent_missing_exec:.2f}%\n"
+        f"Count of object entities with missing semantics: {count_objectID_with_empty_path}\n"
+        f"Percentage of object entities with missing semantics: {percent_missing_path:.2f}%\n"
+    )
+    
+    outfile = os.path.join(output_dir, f"{title}_{scene}_meta.txt")
+    with open(outfile, "w") as file:
+        file.write(output_content)
+
+
 def main():
     parser = argparse.ArgumentParser(description="Process JSON.tar.gz CDM files and generate JSON output.")
     parser.add_argument('--directory', required=True, help="Directory containing the .json.tar.gz files.")
@@ -238,7 +276,6 @@ def main():
 
     args = parser.parse_args()
 
-    # We still rely on some globals, but 'directory' is used as a local var here
     global title, scene, cdm, output_dir
     directory = args.directory
     title = args.title
@@ -246,13 +283,12 @@ def main():
     output_dir = args.output_dir
     os.makedirs(output_dir, exist_ok=True)
 
-    # Simple logic for cdm version
     cdm = "18" if title == 'E3' else "20"
 
-    # Extract, then generate ID files, then query/stitch
     extract_json_from_tar_gz(directory)
     prepare_id_files(directory)
     query_json(directory)
+    count_missing_semantics()
 
 
 if __name__ == '__main__':
