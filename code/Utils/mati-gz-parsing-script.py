@@ -4,6 +4,7 @@ import os
 import json
 import tarfile
 import argparse
+import re
 
 def extract_json_from_tar_gz(folder_path):
     """
@@ -22,23 +23,46 @@ def extract_json_from_tar_gz(folder_path):
             pass
 
 
+def set_username(path):
+    global uid, uname
+
+    with open(path, 'r', encoding='utf-8') as file:
+        content = file.read()
+
+    user_id_match = re.search(r'"userId":"([^"]+)"', content)
+    username_match = re.search(r'"username":\{"string":"([^"]+)"\}', content)
+
+    user_id = user_id_match.group(1) if user_id_match else None
+    username = username_match.group(1) if username_match else None
+    
+    if user_id is not None:
+        uid = user_id
+    
+    if username is not None:
+        uname = username
+
 def json_file_iterator(folder_path):
     """
     Yields each JSON record (line) from all .json or .json.* files 
     under 'folder_path', sorted by filename.
     """
+    global cdm
+
     for file_name in sorted(os.listdir(folder_path)):
         if file_name.endswith('.json') or '.json.' in file_name:
             file_path = os.path.join(folder_path, file_name)
             print("Reading File: " + file_path)
+            set_username(file_path)
             try:
                 with open(file_path, 'r', encoding='utf-8') as file:
                     for line in file:
-                        try:
-                            record = json.loads(line.strip())
-                            yield record
-                        except json.JSONDecodeError as e:
-                            print(f"Error decoding JSON from {file_name}: {e}")
+                        if f"{cdm}.FileObject" in line or f"{cdm}.Event" in line or f"{cdm}.Subject" in line or f"{cdm}.NetFlowObject" in line:
+                            if not ("FILE_OBJECT_UNIX_SOCKET" in line or "FILE_OBJECT_DIR" in line):
+                                try:
+                                    record = json.loads(line.strip())
+                                    yield record
+                                except json.JSONDecodeError as e:
+                                    print(f"Error decoding JSON from {file_name}: {e}")
             except FileNotFoundError:
                 print(f"File not found: {file_path}")
             except IOError as e:
@@ -135,13 +159,13 @@ def fill_missing_paths_for_subject_process(df):
           .values
     )
     
-    mask = (df['object'] == 'SUBJECT_PROCESS') & (df['path'] == '')
+    mask = (df['object'] == 'SUBJECT_PROCESS') & (df['properties'] == '')
     rows_to_update = df[mask].index
 
     for idx in rows_to_update:
         object_id = df.at[idx, 'objectID']
         if object_id in actorID_exec_map:
-            df.at[idx, 'path'] = actorID_exec_map[object_id]
+            df.at[idx, 'properties'] = {'objectpath':actorID_exec_map[object_id]}
 
     return df
 
@@ -166,7 +190,12 @@ def stitch(data_buffer):
             info[i]['actor_type'] = id_to_type[info[i]['actorID']]
             if typ == 'NETFLOW':
                 attr = net2prop[info[i]['objectID']]
-                info[i]['path'] = attr[0] + ' ' + str(attr[1]) + ' ' + attr[2] + ' ' + str(attr[3])
+                info[i]['properties'] = {
+                        'localAddress': attr[0],
+                        'localPort': str(attr[1]),
+                        'remoteAddress': attr[2],
+                        'remotePort': str(attr[3])
+                    }
         except:
             info[i]['object'] = None
             info[i]['actor_type'] = None
@@ -183,7 +212,7 @@ def stitch(data_buffer):
 
 
 def query_json(folder_path):
-    global title, scene, cdm
+    global title, scene, cdm, uid, uname
 
     info_buffer = []
 
@@ -209,7 +238,7 @@ def query_json(folder_path):
         except:
             cmd = ''
         try:
-            path = line['datum'][f'com.bbn.tc.schema.avro.cdm{cdm}.Event']['predicateObjectPath']['string']
+            path = {'objectpath': line['datum'][f'com.bbn.tc.schema.avro.cdm{cdm}.Event']['predicateObjectPath']['string']}
         except:
             path = ''
         try:
@@ -220,6 +249,10 @@ def query_json(folder_path):
             timestamp = line['@timestamp']
         except:
             timestamp = ''
+        try:
+            cmdline = line['datum'][f'com.bbn.tc.schema.avro.cdm{cdm}.Event']['properties']['map']['cmdLine']
+        except:
+            cmdline = ''
 
         info_data = {
             'actorID': actor,
@@ -228,8 +261,11 @@ def query_json(folder_path):
             'timestampNanos': timestampnano,
             'timestamp': timestamp,
             'exec': cmd,
-            'path': path,
-            'hostid': hostid
+            'properties': path,
+            'cmdline': cmdline,
+            'hostid': hostid,
+            'username':uname,
+            'userid':uid
         }
         info_buffer.append(info_data)
     
@@ -254,12 +290,12 @@ def count_missing_semantics():
                            f"Percentage with missing exec: {percent_missing_exec:.2f}%\n\n")
     
     for object_type, group in df.groupby('object'):
-        count_with_empty_path = group[group['path'] == ''].shape[0]
+        count_with_empty_path = group[group['properties'] == ''].shape[0]
         total = group.shape[0]
         percent_missing_path = (count_with_empty_path / total * 100) if total > 0 else 0
         output_content += (f"Object Type: {object_type}\n"
-                           f"Count of objectIDs with missing path: {count_with_empty_path}\n"
-                           f"Percentage with missing path: {percent_missing_path:.2f}%\n\n")
+                           f"Count of objectIDs with missing properties: {count_with_empty_path}\n"
+                           f"Percentage with missing properties: {percent_missing_path:.2f}%\n\n")
     
     outfile = os.path.join(output_dir, f"{title}_{scene}_meta.txt")
     
@@ -275,7 +311,7 @@ def main():
 
     args = parser.parse_args()
 
-    global title, scene, cdm, output_dir
+    global title, scene, cdm, output_dir, uid, uname
     directory = args.directory
     title = args.title
     scene = args.scene
