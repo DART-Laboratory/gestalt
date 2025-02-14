@@ -128,6 +128,23 @@ def load_dict_from_jsonl(file_path):
     return result
 
 
+def fill_missing_paths_for_subject_process(df):
+    actorID_exec_map = dict(
+        df.loc[df['exec'] != '', ['actorID', 'exec']]
+          .drop_duplicates(subset=['actorID'])  
+          .values
+    )
+    
+    mask = (df['object'] == 'SUBJECT_PROCESS') & (df['path'] == '')
+    rows_to_update = df[mask].index
+
+    for idx in rows_to_update:
+        object_id = df.at[idx, 'objectID']
+        if object_id in actorID_exec_map:
+            df.at[idx, 'path'] = actorID_exec_map[object_id]
+
+    return df
+
 def stitch(data_buffer):
     """
     Uses the ID-to-type and net2prop files in {folder_path}/{title}_data 
@@ -161,21 +178,12 @@ def stitch(data_buffer):
     os.remove(net2prop_file)
 
     output_file = os.path.join(output_dir, f"{title}_{scene}.json")
+    df = fill_missing_paths_for_subject_process(df)
     df.to_json(output_file, orient='records', lines=True)  
 
 
 def query_json(folder_path):
-    """
-    Reads .json files in 'folder_path', filters events, 
-    and then stitches them together into the final output.
-    """
     global title, scene, cdm
-
-    # edge_types = {
-    #     'EVENT_CLOSE', 'EVENT_OPEN', 'EVENT_READ', 'EVENT_WRITE',
-    #     'EVENT_EXECUTE', 'EVENT_RECVFROM', 'EVENT_RECVMSG',
-    #     'EVENT_SENDMSG', 'EVENT_SENDTO'
-    # }
 
     info_buffer = []
 
