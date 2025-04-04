@@ -1,30 +1,44 @@
-{\renewcommand{\arraystretch}{1.2}
+\renewcommand{\arraystretch}{1.2}
 \begin{table*}[!t]
   \centering
   \small
   \caption{Comparison of \Sys against \flash and \kairos. Prec.: Precision; Rec.: Recall; \flash has slightly better performance than our system, but \Sys preserves user privacy and achieves high scalability through decentralization, unlike \flash and \kairos.}
   \setlength{\tabcolsep}{0.7pt}
-  \begin{tabular}{ccccccccccccc}
-    \toprule
-
-  \multirow{2}{*}{\textbf{Datasets}}
-  & \multicolumn{4}{c }{\Norothead{ \bf \Sys}}
-  & \multicolumn{4}{c }{\Norothead{ \bf \flash~\cite{flash2024}}}
-  & \multicolumn{4}{c }{\Norothead{ \bf \kairos~\cite{cheng2023kairos}}}
-  \\ \cmidrule(r{\tbspace}){2-5} \cmidrule(r{\tbspace}){6-9} \cmidrule(r{\tbspace}){10-13}
-
-    & {\bf Prec.} &  {\bf Rec.} & {\bf \fscore} & {\bf TP}/ {\bf FP}/ {\bf FN}/ {\bf TN} & {\bf Prec.}  & {\bf Rec.} & {\bf \fscore} & {\bf TP}/ {\bf FP}/ {\bf FN}/ {\bf TN} & {\bf Prec.}  & {\bf Rec.} & {\bf \fscore} & {\bf TP}/ {\bf FP}/ {\bf FN}/ {\bf TN} \\
-
-  \midrule
-
-  E3-CADETS &  \TCP & \TCR & \TCF & \TCTP/ \TCFP/ \TCFN/ \TCTN &  \FCP & \FCR & \FCF & \FCTP/ \FCFP/ \FCFN/ \FCTN & \KCP & \KCR & \KCF & \KCTP/ \KCFP/ \KCFN/ \KCTN \\
-  E3-TRACE &  \TTP & \TTR & \TTF & \TTTP/ \TTFP/ \TTFN/ \TTTN  & \FTP & \FTR & \FTF & \FTTP/ \FTFP/ \FTFN/ \FTTN & - & - & - & - \\
-  E3-THEIA &  \TTHP & \TTHR & \TTHF & \TTHTP/ \TTHFP/ \TTHFN/ \TTHTN & \FTHP & \FTHR & \FTHF & \FTHTP/ \FTHFP/ \FTHFN/ \FTHTN & \KTHP & \KTHR & \KTHF & \KTHTP/ \KTHFP/ \KTHFN/ \KTHTN \\
-  \optc & \TOP & \TOR & \TOF & \TOTP/ \TOFP/ \TOFN/ \TOTN & \FOP & \FOR & \FOF & \FOTP/ \FOFP/ \FOFN/ \FOTN & \KOP & \KOR & \KOF & \KOTP/ \KOFP/ \KOFN/ \KOTN \\
-  E5-CADETS &  \ETCP & \ETCR & \ETCF & \ETCTP/ \ETCFP/ \ETCFN/ \ETCTN  & \EKCP & \EKCR & \EKCF & \EKCTP/ \EKCFP/ \EKCFN/ \EKCTN & \EFCP & \EFCR & \EFCF & \EFCTP/ \EFCFP/ \EFCFN/ \EFCTN \\
-  E5-THEIA &  \ETTHP & \ETTHR & \ETTHF & \ETTHTP/ \ETTHFP/ \ETTHFN/ \ETTHTN & \EKTHP & \EKTHR & \EKTHF & \EKTHTP/ \EKTHFP/ \EKTHFN/ \EKTHTN & \EFTHP & \EFTHR & \EFTHF & \EFTHTP/ \EFTHFP/ \EFTHFN/ \EFTHTN \\
-  E5-ClearScope & \ETClP & \ETClR & \ETClF & \ETClTP/ \ETClFP/ \ETClFN/ \ETClTN  & \EKClP & \EKClR & \EKClF & \EKClTP/ \EKClFP/ \EKClFN/ \EKClTN & \EFClP & \EFClR & \EFClF & \EFClTP/ \EFClFP/ \EFClFN/ \EFClTN \\
-  \bottomrule
-  \end{tabular}
-\label{summary:benchmarks:large}
-\end{table*}}
+  \resizebox{\textwidth}{!}{%
+    \begin{tabular}{ccccccccccccc}
+      \toprule
+      \multirow{2}{*}{\textbf{Datasets}} 
+      & \multicolumn{4}{c}{\Norothead{\bf \Sys}}
+      & \multicolumn{4}{c}{\Norothead{\bf \flash~\cite{flash2024}}}
+      & \multicolumn{4}{c}{\Norothead{\bf \kairos~\cite{cheng2023kairos}}} \\
+      \cmidrule(r{\tbspace}){2-5} \cmidrule(r{\tbspace}){6-9} \cmidrule(r{\tbspace}){10-13}
+      & {\bf Prec.} & {\bf Rec.} & {\bf \fscore} & {\bf TP}/{\bf FP}/{\bf FN}/{\bf TN} 
+      & {\bf Prec.} & {\bf Rec.} & {\bf \fscore} & {\bf TP}/{\bf FP}/{\bf FN}/{\bf TN} 
+      & {\bf Prec.} & {\bf Rec.} & {\bf \fscore} & {\bf TP}/{\bf FP}/{\bf FN}/{\bf TN} \\
+      \midrule
+      E3-CADETS   & \TCP   & \TCR   & \TCF   & \TCTP/ \TCFP/ \TCFN/ \TCTN 
+                  & \FCP   & \FCR   & \FCF   & \FCTP/ \FCFP/ \FCFN/ \FCTN 
+                  & \KCP   & \KCR   & \KCF   & \KCTP/ \KCFP/ \KCFN/ \KCTN \\
+      E3-TRACE    & \TTP   & \TTR   & \TTF   & \TTTP/ \TTFP/ \TTFN/ \TTTN  
+                  & \FTP   & \FTR   & \FTF   & \FTTP/ \FTFP/ \FTFN/ \FTTN 
+                  & -      & -      & -      & - \\
+      E3-THEIA    & \TTHP  & \TTHR  & \TTHF  & \TTHTP/ \TTHFP/ \TTHFN/ \TTHTN 
+                  & \FTHP  & \FTHR  & \FTHF  & \FTHTP/ \FTHFP/ \FTHFN/ \FTHTN 
+                  & \KTHP  & \KTHR  & \KTHF  & \KTHTP/ \KTHFP/ \KTHFN/ \KTHTN \\
+      \optc       & \TOP   & \TOR   & \TOF   & \TOTP/ \TOFP/ \TOFN/ \TOTN 
+                  & \FOP   & \FOR   & \FOF   & \FOTP/ \FOFP/ \FOFN/ \FOTN 
+                  & \KOP   & \KOR   & \KOF   & \KOTP/ \KOFP/ \KOFN/ \KOTN \\
+      E5-CADETS   & \ETCP  & \ETCR  & \ETCF  & \ETCTP/ \ETCFP/ \ETCFN/ \ETCTN  
+                  & \EKCP  & \EKCR  & \EKCF  & \EKCTP/ \EKCFP/ \EKCFN/ \EKCTN 
+                  & \EFCP  & \EFCR  & \EFCF  & \EFCTP/ \EFCFP/ \EFCFN/ \EFCTN \\
+      E5-THEIA    & \ETTHP & \ETTHR & \ETTHF & \ETTHTP/ \ETTHFP/ \ETTHFN/ \ETTHTN 
+                  & \EKTHP & \EKTHR & \EKTHF & \EKTHTP/ \EKTHFP/ \EKTHFN/ \EKTHTN 
+                  & \EFTHP & \EFTHR & \EFTHF & \EFTHTP/ \EFTHFP/ \EFTHFN/ \EFTHTN \\
+      E5-ClearScope & \ETClP & \ETClR & \ETClF & \ETClTP/ \ETClFP/ \ETClFN/ \ETClTN  
+                  & \EKClP & \EKClR & \EKClF & \EKClTP/ \EKClFP/ \EKClFN/ \EKClTN 
+                  & \EFClP & \EFClR & \EFClF & \EFClTP/ \EFClFP/ \EFClFN/ \EFClTN \\
+      \bottomrule
+    \end{tabular}%
+  }
+  \label{summary:benchmarks:large}
+\end{table*}

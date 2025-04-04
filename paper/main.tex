@@ -1,24 +1,39 @@
 
 %\documentclass[letterpaper,twocolumn,10pt]{article}
 %\usepackage{sty/usenix}
-\documentclass[sigconf]{sty/acmart}
+%\documentclass[sigconf]{sty/acmart}
+\documentclass[conference]{IEEEtran}
+\pagestyle{plain}
+
+%\IEEEoverridecommandlockouts
+%\makeatletter\def\@IEEEpubidpullup{6.5\baselineskip}\makeatother
+%\IEEEpubid{\parbox{\columnwidth}{
+%    Network and Distributed System Security (NDSS) Symposium 2026\\
+%     23–28 February 2025, San Diego, CA, USA\\
+%    ISBN 1-891562-93-2\\
+%    https://dx.doi.org/10.14722/ndss.2025.23xxx\\
+%    www.ndss-symposium.org
+%}
+%\hspace{\columnsep}\makebox[\columnwidth]{}}
+
 
 % common packages
 \include{macros}
 \include{table-macros/exp}
 
 % Enable page numbers
-\settopmatter{printfolios=true}
+%\settopmatter{printfolios=true}
 
 
 \begin{document}
 
 \title{Seeing Without Seeing: A Privacy-Aware Approach to System Intrusion Detection}
 
+\maketitle
+
 \input{abstract}
 % \input{concepts}
 % \input{keyword}
-\maketitle
 \input{intro}
 \input{relwk}
 % \input{background}
@@ -44,8 +59,10 @@
 % \input{appendix}
 
 \balance
-\bibliographystyle{sty/ACM-Reference-Format}
-\bibliography{bib-files/hassan,bib-files/hassan-misc}
-
+\bibliographystyle{IEEEtranS}
+{
+\footnotesize
+\setlength{\bibsep}{3pt}
+\bibliography{bib-files/hassan,bib-files/hassan-misc}}
 \input{appendix}
 \end{document}
