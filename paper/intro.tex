@@ -73,6 +73,18 @@
 
 \wajih{Highlight in the intro that as contribution that we provide formal privacy analysis our system. }
 
+\wajih{Use consistent terminology throughout the paper "categorization-based GNN ensemble" vs "personalized submodel GNN ensemble"}
+
+\wajih{Algorithm 2 (categorization) is cited as Algorithm 12 in some parts.}
+
+\wajih{ We claim that the categorization-based ensemble improves convergence. But there is no empirical convergence analysis in the evaluation section e.g., training loss curves or number of FL rounds, etc. }
+
+\wajih{Is there a risk of bin-level inference. I think one reviewer said something about that. For example, if an attacker observes which bin a process was mapped to (e.g., “bin 3 → sshd-like processes”), this could still leak meta-information even without raw data. Can we discuss this attack in the privacy analysis section as well.}
+
+\wajih{In the limitation section, discuss that the utility server still receives encrypted token data from all clients, which could become a throughput bottleneck. So we will explore hierarchical federation techniques [citations] in the future.}
+
+\wajih{To give more confidence into that the dual server architecture is realistic, cite more papers. I think this paper also uses https://eprint.iacr.org/2024/081, Also see how they justify dual server.}
+
 
 Intrusion Detection Systems (\ids) are crucial for countering Advanced Persistent Threats (APTs) in enterprises, as evidenced by major attacks, such as Solar Winds~\cite{solarwinds} and NotPetya~\cite{notpetya}. Given their stealth and persistence, many enterprises rely on Managed Security Service Providers (MSSPs) to improve their defenses. A survey~\cite{msspsurvey} involving over 5,000 IT professionals reported that about 75\% of companies use MSSPs. These providers integrate their security systems with clients' systems to manage \logs, typically configuring the clients' systems to transmit \logs to the cloud for analysis. Figure~\ref{mssp} illustrates this MSSP operational architecture.
 
