@@ -1,7 +1,4 @@
-\appendix
-
-%\wajih{Make sections A, B, C like this.}
-
+\appendices
 
 \section{Dataset Description}
 \label{sec:dataset:description}
@@ -61,6 +58,100 @@ In this ablation study, we analyze the impact of key parameters within \Sys. Spe
 %   \vspace{-2ex}
 % \end{figure}
 
+
+\subsection{Effectiveness of \wordvec harmonization}
+\label{sub:word2vec:harmonization:efficacy}
+
+We evaluated the effectiveness of our \wordvec vector harmonization scheme through two experiments using the \optc, E3 and E5 datasets. In the first experiment, each client utilized its locally trained \wordvec model to encode semantic features during the training process. In the second experiment, we harmonized the individually trained models into a central \wordvec model using the utility server architecture, as explained in Section~\ref{sec:methodology}. Then each client used this centralized model for generating semantic features. Table~\ref{local:wordvec} presents the average results for the \darpa E3, E5 and \optc datasets. By employing the harmonized models, we achieved significantly better detection outcomes. This is because these local models encode different information for identical tokens across hosts. Such variability leads to heterogeneity in the feature space for the \gnnshort model, impairing the model's ability to generalize and converge effectively during the federated learning process, thereby yielding suboptimal results. However, through our novel, privacy-preserving aggregation of these semantic models, we have addressed this issue by merging the information in these models together to give the \gnnshort more generalized input vectors.
+
+
+\begin{table}[!t]
+ \centering
+ \footnotesize
+ \setlength{\tabcolsep}{10pt}
+ \caption{Effectiveness of \wordvec harmonization.}
+ \begin{tabular}{ | c | c | c | c | c |}
+   \hline
+   \bf Dataset & \bf Type & \bf Prec. & \bf Rec. & \bf \fscore \\
+   \hline
+   \multirow{2}{*}{\optc} & Local & \VFOP & \VFOR & \VFOF \\
+   \cline{2-5}
+   & Harmonized & \TOP & \TOR & \TOF \\
+   \hline
+   \multirow{2}{*}{E3} & Local & 0.83 & 0.96 & 0.89 \\
+   \cline{2-5}
+   & Harmonized & 0.96 & 0.99 & 0.97 \\
+   \hline
+   \multirow{2}{*}{E5} & Local & 0.81 & 0.94 & 0.87 \\
+   \cline{2-5}
+   & Harmonized & 0.99 & 0.96 & 0.97 \\
+   \hline
+ \end{tabular}
+ \label{local:wordvec}
+\end{table}
+
+\subsection{Effectiveness of categorized graph learning}
+\label{sub:categorized:learning:efficacy}
+
+%\wajih{let's divide this RQ into two RQs and update the first paragraph of the evalution section. Also, please move Word2vec harmonization before Categorization as they are in the design seection.}
+
+To examine the effectiveness of our process categorization based \gnnshort ensemble technique, we conducted experiments comparing our ensemble technique against a single model approach in a federated setting. Specifically, for the ensemble method, we designated the number of categories to be 10. This approach standardizes all processes across various hosts into 10 distinct categories, ensuring that the \gnnshort models learn similar distributions regardless of the host. Such standardization is crucial for mitigating the impact of heterogeneous distributions and data imbalance during the federated averaging process. Table~\ref{categorized_gnn} reports the average results for the \darpa E3, E5 and \optc datasets. The results indicate that utilizing categorized ensemble models yields superior performance. This improvement is attributed to each sub-model's enhanced ability to concentrate on different patterns of system activity from different clients, thereby reducing the likelihood of these patterns becoming conflated during the federated averaging process. We also studied the effect of different number of categories on detection accuracy in Appendix~\ref{app:categories}.%\wajih{Explain the reason that why you ignored E5 here. This is a simple way a reviewer can kill your paper as you are trying to hide information.}
+
+% \begin{table}[!t]
+%   \centering
+%   \small
+%   \setlength{\tabcolsep}{10pt}
+%   \caption{Effectiveness of categorized \gnnshort learning.}
+%   \begin{tabular}{ | c | c | c | c | c |}
+%     \hline
+%     \bf Dataset & \bf Type & \bf Prec. & \bf Rec. & \bf \fscore \\
+%     \hline
+%     \multirow{2}{*}{E3-Cadets} & Single & \STCP & \STCR & \STCF \\
+%     \cline{2-5}
+%     & Ensemble & \TCP & \TCR & \TCF \\
+%     \hline
+%     \multirow{2}{*}{E3-Trace} & Single & \STTP & \STTR & \STTF \\
+%     \cline{2-5}
+%     & Ensemble & \TTP & \TTR & \TTF \\
+%     \hline
+%     \multirow{2}{*}{E3-Theia} & Single & \STTHP & \STTHR & \STTHF \\
+%     \cline{2-5}
+%     & Ensemble & \TTHP & \TTHR & \TTHF \\
+%     \hline
+%     \multirow{2}{*}{\optc} & Single & \STOP & \STOR & \STOF \\
+%     \cline{2-5}
+%     & Ensemble & \TOP & \TOR & \TOF \\
+%     \hline
+%   \end{tabular}
+%   \label{categorized_gnn}
+% \end{table}
+
+\begin{table}[!t]
+ \centering
+ \footnotesize
+ \setlength{\tabcolsep}{10pt}
+ \caption{Effectiveness of categorization-based ensemble learning.}
+ \begin{tabular}{ | c | c | c | c | c |}
+   \hline
+   \bf Dataset & \bf Type & \bf Prec. & \bf Rec. & \bf \fscore \\
+   \hline
+   \multirow{2}{*}{\optc} & Single & \STOP & \STOR & \STOF \\
+   \cline{2-5}
+   & Ensemble & \TOP & \TOR & \TOF \\
+   \hline
+   \multirow{2}{*}{E3} & Single & 0.89 & 0.99 & 0.94 \\
+   \cline{2-5}
+   & Ensemble & 0.96 & 0.99 & 0.97 \\
+   \hline
+   \multirow{2}{*}{E5} & Single & 0.92 & 0.96 & 0.94 \\
+   \cline{2-5}
+   & Ensemble & 0.99 & 0.96 & 0.97 \\
+   \hline
+ \end{tabular}
+ \label{categorized_gnn}
+\end{table}
+
+
 \subsection{Effect of federated averaging rounds}
 \label{app:fedrounds}
 
@@ -111,28 +202,41 @@ This hyperparameter controls the number of alerts generated by \Sys. It determin
   \vspace{-2ex}
 \end{figure}
 
-\subsection{Effect of differential privacy on accuracy}
-\label{app:dp}
 
-In Section~\ref{sec:privacy}, we analyze how our system design offers strong guarantees against model inference attacks. Here we discuss another alternative technique for preserving privacy through the use of Differential Privacy (DP). It can be integrated with federated learning to protect against inference attacks~\cite{lyu2020threats,nasr2019comprehensive,zari2021efficient}, though it comes at the cost of detection accuracy. 
 
-Differential privacy safeguards the model by injecting a controlled amount of Gaussian noise into its parameters, thereby concealing the influence of any individual data point. In our work, we adopt a node-level DP strategy, which ensures that each node’s features and labels are protected when noise is added to the gradient updates. As a result, individual node contributions remain obscured in the aggregated model parameters, reducing the likelihood of identifying specific nodes or their features. We conduct experiments to examine how varying levels of differential privacy noise affect the detection performance of \Sys. The noise is adjusted based on a privacy budget defined by~$\epsilon$. This noise is applied to local \gnnshort model updates before they are aggregated at the central server during federated averaging, as described in Section~\ref{sec:methodology}.
+\section{Comparison with existing FL solutions for heterogeneity.}
+\label{sec:fedalternatives}
 
-\begin{figure}[!h]
+We conducted experiments to evaluate the efficacy of existing federated learning solutions that address data heterogeneity and the non-IID problem. Specifically, we examined FedProx~\cite{li2020federated} and FedOpt~\cite{asad2020fedopt}. FedProx mitigates client heterogeneity by adding a proximal term to the local loss function, penalizing deviations from the global model and thereby reducing the impact of statistical heterogeneity. In contrast, FedOpt uses a server-side optimizer to aggregate updates from distributed clients, enhancing convergence. We compared these techniques with standard FedAvg and the \Sys variant of FedAvg, which incorporates semantic harmonization and categorization based gnn ensemble learning. Table~\ref{fedoptprox} presents the evaluation results. Both FedProx and FedOpt outperform FedAvg; however, neither matches the performance of \Sys.
+
+FedProx's penalty on global and local deviations focuses the model on patterns common across all clients, preventing it from learning client-specific patterns. Consequently, using this global model for anomaly detection on individual clients often yields numerous false alarms and poor detection performance. Moreover, while FedOpt can effectively aggregate model updates using an optimizer rather than simple averaging, updates that are highly disparate—a common scenario in system logs due to diverse client activities—cause FedOpt to fail in harmonizing the updates. As a result, it loses information on important benign patterns, leading to low precision and recall.
+
+In contrast, our system employs an ensemble learning framework. First, it categorizes system patterns into standardized bins via process entity categorization. Next, \gnnshort submodels learn the data distribution within each bin. Submodels with similar learned distributions are then averaged, preventing the conflation of unique client patterns and improving precision. Moreover, our semantic vector harmonization reduces heterogeneity in the \gnnshort feature vectors, making the updates less disparate and improving model convergence in comparison to other techniques.
+ 
+
+\begin{table}[!t]
   \centering
-  \includegraphics[width=0.3\textwidth]{fig/epsvsscore.pdf}
-  \caption{Effect of differential privacy noise on detection using E3 dataset. Note that we observed similar results on the other datasets.}
-  \label{epsvsscore}
-  \vspace{-2ex}
-\end{figure}
+  \footnotesize
+  \caption{Federated averaging algorithms comparison.}
+  \setlength{\tabcolsep}{1.6pt}
+  \begin{tabular}{cccccccccc}
+    \toprule
+    \multirow{2}{*}{\textbf{Methods}} & \multicolumn{3}{c }{\textbf{\optc}} & \multicolumn{3}{c }{\textbf{E3}} & \multicolumn{3}{c }{\textbf{E5}} \\
+    \cmidrule(r){2-4} \cmidrule(r){5-7} \cmidrule(r){8-10}
+    & {\bf Prec.} &  {\bf Rec.} & {\bf F-score} & {\bf Prec.}  & {\bf Rec.} & {\bf F-score} & {\bf Prec.}  & {\bf Rec.} & {\bf F-score} \\
+    \midrule
+
+    FedAvg & \VFOP & \VFOR & \VFOF & 0.83 & 0.96 & 0.89 & 0.81 & 0.94 & 0.87 \\
+    FedProx & 0.64 & 0.95 & 0.76 & 0.87 & 0.98 & 0.92 & 0.86 & 0.95 & 0.90 \\
+    FedOpt & 0.63 & 0.90  & 0.74 & 0.85 & 0.97 & 0.91 & 0.87 & 0.92 & 0.89 \\
+    {\bf \Sys} & \TOP & \TOR & \TOF & 0.96 & 0.99 & 0.97 & 0.99 & 0.96 & 0.97 \\
+    \bottomrule
+  \end{tabular}
+\label{fedoptprox}
+\end{table}
 
 
-The privacy budget~$\epsilon$ plays a pivotal role. Lower values of $\epsilon$ increase the noise injected into the model, which enhances privacy at the expense of detection performance. Conversely, higher values of $\epsilon$ inject less noise, improving detection accuracy but offering weaker privacy guarantees. By tuning $\epsilon$ during training, we explore the balance between privacy and detection effectiveness across various settings. As shown in Figure~\ref{epsvsscore}, increasing the noise level (i.e., reducing $\epsilon$) degrades the model’s utility, thereby providing more privacy at the cost of lower accuracy.
-
-Hence, although DP is a valid solution for protecting privacy, the accuracy deterioration that comes with it reduces its utility in the domain of intrusion detection, where high detection performance is needed. Due to these reasons, we do not use DP in \Sys and instead design a dual-server architecture to offer privacy guarantees without adding noise to the model updates.
-
-
-\subsection{Comparison of encryption methods}
+\section{Comparison of encryption methods}
 \label{app:encrypt}
 
 We chose Fernet symmetric key encryption for its ability to efficiently handle large datasets while ensuring confidentiality and integrity. Fernet employs AES-based symmetric encryption along with an HMAC for authenticity. Because the HMAC relies on efficient hash functions rather than expensive asymmetric operations~\cite{raj2023performance}, Fernet is computationally more efficient for processing large volumes of data.
@@ -151,6 +255,7 @@ Our design ensures privacy without resorting to Homomorphic Encryption (HE). Alt
 %\wajih{we never referenced this subsection in the paper. Find a place in design or evaluation or discussion to reference this.}
 
 Scaling FL to larger enterprise networks introduces potential state explosion issues, primarily due to the increasing complexity in managing and integrating updates from a growing number of clients. As more clients participate, each contributing their local model updates, the volume of data to be processed and aggregated can increase significantly. This escalation can strain communication channels, leading to higher bandwidth requirements and increased latency. Furthermore, the aggregation process itself becomes more computationally demanding as the number of updates grows. \Sys addresses these challenges by utilizing an ensemble learning approach and categorizing system activities, which simplifies the aggregation by processing more uniform data segments. Moreover, our system uses models with small network overhead to prevent bandwidth challenges. To further enhance efficiency, additional techniques such as model compression~\cite{choudhary2020comprehensive}, selective update aggregation~\cite{ye2020federated} and the implementation of more robust communication protocols~\cite{laclau2020robust} can significantly improve handling large volumes of updates, thus preventing state explosion and maintaining system performance in large-scale federated learning environments.
+
 
 % \section{Word2vec Semantic Featurization}
 % \label{app:Word2vec:Semantic:Featurization}
