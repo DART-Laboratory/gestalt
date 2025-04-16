@@ -1,26 +1,20 @@
-\section{Discussion \& Limitations}
+\section{Discussion \& Future Work}
 \label{sec:discussion}
-
-%\wajih{Use macros for common words in this whole section.}
-
-%\wajih{Be consistent with the terminology that you used in the abstract/intro.}
-
-%\wajih{Move adversarial attacks in a separate section.}
-
-%\input{adversarial.tex}
-
-\wajih{In the limitation section, discuss that the utility server still receives encrypted token data from all clients, which could become a throughput bottleneck. So we will explore hierarchical federation techniques [citations] in the future.}
 
 \wajih{Explain in the discussion section why we chose GraphSage over GCN and TGN and then in the design section you "say the detailed disscussion on why we chose GraphSage blah blah"}
 
-\PP{Combining FL with \gnnshort} APTs involve multiple causally linked attack steps across system entities, requiring provenance graphs to effectively model these interactions. Existing log-level systems~\cite{deeplog2017,liu2019log2vec,xia2019loggan} fail to capture such interactions, while graph representation learning excels at identifying patterns in these graphs~\cite{flash2024,cheng2023kairos,jia2023magic}. By integrating federated learning with graph representation learning, \Sys enables privacy-preserving, decentralized intrusion detection without compromising detection performance.
+\PP{Combining FL with \gnnshort} APTs involve causally linked steps across system entities, best modeled by provenance graphs~\cite{inam2023sok}. Traditional log-level systems~\cite{deeplog2017,liu2019log2vec,xia2019loggan} fail to capture these relationships, whereas graph learning techniques~\cite{flash2024,cheng2023kairos,jia2023magic} effectively detect such patterns. By integrating FL with graph representation learning, \Sys enables decentralized, privacy-preserving intrusion detection without sacrificing accuracy.
+
+
 
 \PP{Alert Investigation} Validating alerts in systems like \Sys is critical for reliability and avoiding alert fatigue~\cite{nodoze2019}. Traditionally, security analysts manually review alerts based on activities within local provenance graphs, but this process is time-consuming, error-prone, and lacks scalability and privacy. Privacy-preserving techniques such as Secure Multi-party Computation (SMC)~\cite{goldreich1998secure}, Homomorphic Encryption (HE)~\cite{yi2014homomorphic}, and Zero-Knowledge Proofs (ZKP)~\cite{fiege1987zero} can address these challenges. SMC enables collaborative alert validation while preserving input privacy, HE ensures confidentiality during encrypted data analysis, and ZKP allows one party to prove an alert's validity without revealing additional information. We identify privacy-preserving alert verification as a promising research direction. We leave it to future work to develop methods for privately sharing alert data with a central server, enabling security analysts to perform more in-depth attack analysis.
 
 \PP{Explainability} Deep learning models used in \pids, including \Sys, function as black-box systems, making it challenging to interpret their decision-making processes. Like other \pids~\cite{flash2024,cheng2023kairos,yangprographer}, \Sys faces this interpretability issue, which hampers its adoption compared to rule-based systems. Existing explainability techniques~\cite{antwarg2021explaining,brown2018recurrent,ardito2021revisiting,hwang2021sfd} primarily focus on metrics like feature importance. However, modern \pids employ complex feature engineering, such as \flash's use of \wordvec for textual attribute processing and subsequent anomaly detection via \gnn models. This multi-model approach limits the applicability of existing explainable AI techniques. We identify explainable \pids as a critical area for future research. Recent advancements in LLMs~\cite{chang2024survey} offer potential solutions. Future research can leverage LLMs' reasoning capabilities to develop methods for interpreting \pids outputs effectively.
 
 
-\PP{Log Retention} Effective log retention \cite{wilbert2012log,rapsheet2020} is essential for \pids performance and reliability, particularly for investigating APTs that span months. Decentralized systems like \Sys and \disdet store raw logs on client machines with limited storage, constraining retention periods based on the deployment domain. To address this, \Sys can integrate secure, tamper-resistant cloud storage solutions~\cite{kumar2018secure,hardlog} for backing up logs. During attack investigations, logs related to alerts raised by \Sys can be retrieved, processed to remove sensitive attributes for privacy preservation \cite{portillo2019towards}, and used for detailed analysis.
+\PP{Log Retention} Effective retention~\cite{wilbert2012log,rapsheet2020} is essential for investigating long-running APTs. In decentralized systems like \Sys and \disdet, local storage constraints limit log history. To mitigate this, \Sys can integrate secure, tamper-resistant cloud storage~\cite{kumar2018secure,hardlog} for backups. During investigations, logs linked to alerts can be retrieved and sanitized~\cite{portillo2019towards} to preserve privacy while enabling detailed analysis.
+
+
 
 \PP{Concept Drift} Concept drift occurs when the data distribution of the system evolves over time, potentially invalidating the patterns learned by \Sys during training. Emerging system activities can result in new benign behaviors being misclassified as anomalies. To address this, periodic retraining with recent data is essential to update the models. Strategies from recent works~\cite{lu2018learning, barbero2022transcending,jordaney2017transcend} provide effective approaches for mitigating concept drift.
 
@@ -28,6 +22,8 @@
 
 \PP{Unseen Tokens in Semantic Encoder} \Sys relies on \wordvec models to encode semantic attributes, but \wordvec only generates embeddings for tokens it has previously encountered, which can degrade the quality of feature vectors for new nodes with unseen tokens. To construct node representations, we combine semantic attributes with neighboring nodes' system calls, but for nodes with unseen tokens, the representation is predominantly based on system calls, as seen in systems like \threatrace~\cite{wang2022threatrace}. To address this limitation, retraining the \wordvec model more frequently or adopting subword-level embedding models like fastText~\cite{joulin2016bag}, which generate embeddings from subword units, can improve coverage. Tokenization methods such as Byte-Pair Encoding~\cite{araabi2022effective} further enhance new token representation by breaking unknown words into smaller subword components.
 
+\PP{Scalability Bottlenecks}
+As \Sys scales to large enterprise networks, two key bottlenecks emerge: (i) the utility server may face throughput limits due to processing encrypted tokens from all clients, and (ii) aggregating frequent model updates from many clients risks state explosion, increasing bandwidth and computational costs. \Sys mitigates these via lightweight models, ensemble learning over categorized system activities, and submodel aggregation. To further scale, we plan to explore hierarchical federation~\cite{zhong2022flee}, model compression~\cite{choudhary2020comprehensive}, selective update aggregation~\cite{ye2020federated}, and robust communication protocols~\cite{laclau2020robust}.
 
 
 % \wajih{add citations for different techniques (SMC, HE, etc.) below}

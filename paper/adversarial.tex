@@ -10,7 +10,7 @@
 \begin{figure}[!t]
   \centering
   \includegraphics[width=0.34\textwidth]{fig/adversarial.pdf}
-  \caption{Adversarial mimicry attack analysis. }
+  \caption{Adversarial mimicry attack analysis. \wajih{remove grid from the background.} }
   \label{mimicryattack}
   \vspace{-2ex}
 \end{figure}
@@ -32,7 +32,7 @@ Multi-Krum compares each client’s gradient with those of other clients, retain
     \hfill
     \subfloat[Multi-Krum aggregation ]{\includegraphics[width=0.23\textwidth]{fig/multi-krum.pdf}\label{multikrumpoison}}
     \hfill
-    \caption{Model poisoning attack analysis.}
+    \caption{Model poisoning attack analysis. \wajih{remove grid from the background.}}
     \label{fig:poison}
     \vspace{-3ex}
   \end{figure}
@@ -46,10 +46,10 @@ In Section~\ref{sec:privacy}, we analyze how our system design offers strong gua
 
 Differential privacy safeguards the model by injecting a controlled amount of Gaussian noise into its parameters, thereby concealing the influence of any individual data point. In our work, we adopt a node-level DP strategy, which ensures that each node’s features and labels are protected when noise is added to the gradient updates. As a result, individual node contributions remain obscured in the aggregated model parameters, reducing the likelihood of identifying specific nodes or their features. We conduct experiments to examine how varying levels of differential privacy noise affect the detection performance of \Sys. The noise is adjusted based on a privacy budget defined by~$\epsilon$. This noise is applied to local \gnnshort model updates before they are aggregated at the central server during federated averaging, as described in Section~\ref{sec:methodology}.
 
-\begin{figure}[!h]
+\begin{figure}[!t]
   \centering
   \includegraphics[width=0.3\textwidth]{fig/epsvsscore.pdf}
-  \caption{Effect of differential privacy noise on detection using E3 dataset. Note that we observed similar results on the other datasets.}
+  \caption{Effect of differential privacy noise on detection using E3 dataset. Note that we observed similar results on the other datasets. \wajih{remove grid from the background.}}
   \label{epsvsscore}
   \vspace{-2ex}
 \end{figure}

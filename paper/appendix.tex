@@ -27,7 +27,7 @@ The \optc dataset, another open-source resource from \darpa, encompasses a compr
   \subfloat[CPU utilization utility server.]{\includegraphics[width=0.20\textwidth]{fig/cpu_utility.pdf}\label{cpu_utility}}
   \hfill
   \subfloat[RAM utilization utility server]{\includegraphics[width=0.20\textwidth]{fig/ram_utility.pdf}\label{ram_utility}}
-  \caption{Resource consumption of various components of \Sys.}
+  \caption{Resource consumption of various components of \Sys. \wajih{remove grid from the background. Also there is o much space between two figures.}}
   \label{fig:resource}
   \vspace{-2ex}
 \end{figure}
@@ -160,7 +160,7 @@ We employed the \darpa E3 dataset to examine the impact of federated averaging r
 \begin{figure}[!t]
   \centering
   \includegraphics[width=0.3\textwidth]{fig/roundsvsscore.pdf}
-  \caption{Federated averaging rounds vs detection performance using E3 dataset. }
+  \caption{Federated averaging rounds vs detection performance using E3 dataset. \wajih{remove grid from the background.}}
   \label{roundsvsscore}
   \vspace{-2ex}
 \end{figure}
@@ -173,7 +173,7 @@ We studied the impact of varying the number of categories ($k$) on the detection
 \begin{figure}[!h]
   \centering
   \includegraphics[width=0.3\textwidth]{fig/kvsscore.pdf}
-  \caption{Effect of number of categories vs detection performance using E3 dataset.}
+  \caption{Effect of number of categories vs detection performance using E3 dataset. \wajih{remove grid from the backgroud.}}
   \label{catgvsscore}
   \vspace{-2ex}
 \end{figure}
@@ -249,12 +249,10 @@ After encryption, the utility server harmonizes these encrypted models by perfor
 
 Our design ensures privacy without resorting to Homomorphic Encryption (HE). Although HE allows computations directly on encrypted data, it imposes a significant performance penalty~\cite{naehrig2011can}. Its mathematically complex operations reduce throughput and scalability. By avoiding HE, we maintain strong privacy protections without incurring the prohibitive computational costs that would impede efficient real-time model updates.
 
-\section{State Explosion in Massive Networks}
-\label{state:explosion}
+% \section{State Explosion in Massive Networks}
+% \label{state:explosion}
 
-%\wajih{we never referenced this subsection in the paper. Find a place in design or evaluation or discussion to reference this.}
-
-Scaling FL to larger enterprise networks introduces potential state explosion issues, primarily due to the increasing complexity in managing and integrating updates from a growing number of clients. As more clients participate, each contributing their local model updates, the volume of data to be processed and aggregated can increase significantly. This escalation can strain communication channels, leading to higher bandwidth requirements and increased latency. Furthermore, the aggregation process itself becomes more computationally demanding as the number of updates grows. \Sys addresses these challenges by utilizing an ensemble learning approach and categorizing system activities, which simplifies the aggregation by processing more uniform data segments. Moreover, our system uses models with small network overhead to prevent bandwidth challenges. To further enhance efficiency, additional techniques such as model compression~\cite{choudhary2020comprehensive}, selective update aggregation~\cite{ye2020federated} and the implementation of more robust communication protocols~\cite{laclau2020robust} can significantly improve handling large volumes of updates, thus preventing state explosion and maintaining system performance in large-scale federated learning environments.
+% Scaling FL to larger enterprise networks introduces potential state explosion issues, primarily due to the increasing complexity in managing and integrating updates from a growing number of clients. As more clients participate, each contributing their local model updates, the volume of data to be processed and aggregated can increase significantly. This escalation can strain communication channels, leading to higher bandwidth requirements and increased latency. Furthermore, the aggregation process itself becomes more computationally demanding as the number of updates grows. \Sys addresses these challenges by utilizing an ensemble learning approach and categorizing system activities, which simplifies the aggregation by processing more uniform data segments. Moreover, our system uses models with small network overhead to prevent bandwidth challenges. To further enhance efficiency, additional techniques such as model compression~\cite{choudhary2020comprehensive}, selective update aggregation~\cite{ye2020federated} and the implementation of more robust communication protocols~\cite{laclau2020robust} can significantly improve handling large volumes of updates, thus preventing state explosion and maintaining system performance in large-scale federated learning environments.
 
 
 % \section{Word2vec Semantic Featurization}
