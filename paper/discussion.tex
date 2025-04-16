@@ -9,6 +9,10 @@
 
 %\input{adversarial.tex}
 
+\wajih{In the limitation section, discuss that the utility server still receives encrypted token data from all clients, which could become a throughput bottleneck. So we will explore hierarchical federation techniques [citations] in the future.}
+
+\wajih{Explain in the discussion section why we chose GraphSage over GCN and TGN and then in the design section you "say the detailed disscussion on why we chose GraphSage blah blah"}
+
 \PP{Combining FL with \gnnshort} APTs involve multiple causally linked attack steps across system entities, requiring provenance graphs to effectively model these interactions. Existing log-level systems~\cite{deeplog2017,liu2019log2vec,xia2019loggan} fail to capture such interactions, while graph representation learning excels at identifying patterns in these graphs~\cite{flash2024,cheng2023kairos,jia2023magic}. By integrating federated learning with graph representation learning, \Sys enables privacy-preserving, decentralized intrusion detection without compromising detection performance.
 
 \PP{Alert Investigation} Validating alerts in systems like \Sys is critical for reliability and avoiding alert fatigue~\cite{nodoze2019}. Traditionally, security analysts manually review alerts based on activities within local provenance graphs, but this process is time-consuming, error-prone, and lacks scalability and privacy. Privacy-preserving techniques such as Secure Multi-party Computation (SMC)~\cite{goldreich1998secure}, Homomorphic Encryption (HE)~\cite{yi2014homomorphic}, and Zero-Knowledge Proofs (ZKP)~\cite{fiege1987zero} can address these challenges. SMC enables collaborative alert validation while preserving input privacy, HE ensures confidentiality during encrypted data analysis, and ZKP allows one party to prove an alert's validity without revealing additional information. We identify privacy-preserving alert verification as a promising research direction. We leave it to future work to develop methods for privately sharing alert data with a central server, enabling security analysts to perform more in-depth attack analysis.

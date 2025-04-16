@@ -17,6 +17,21 @@
 
 %We evaluate \Sys using the open-source datasets \darpa E3 and \optc, which comprise system audit logs that simulate enterprise environments. These logs are collected from both Windows and Linux operating systems.
 
+\wajih{Add MAGIC results in the Appendix and mention in the evaluation section that results related to MAGIC are in the evaluation}
+
+
+
+\wajih{We also need to handle as ORTHRUS in the related or evaluation section as well. I would love to hear creative way we can handle that.}
+
+\wajih{Handle this comment in the evaluation section: "I'm quite concerned about the evaluation results in Table 2. It doesn't look right to me that the number of malicious nodes in DARPA TC datasets can be sometimes around 20\%!"}
+
+\wajih{ We claim that the categorization-based ensemble improves convergence. But there is no empirical convergence analysis in the evaluation section e.g., training loss curves or number of FL rounds, etc. }
+
+\wajih{Add in the evaluation section how many clients we have in each dataset. "I can't find the number of FL clients in your text" }
+
+\wajih{ Add a New Evaluation Subsection:
+“Comparison Against Vanilla Privacy-Preserving PIDS”}
+
 Our evaluation experiments are conducted on a machine running Ubuntu 18.04.6 LTS, equipped with a 10-core Intel CPU, NVIDIA RTX 2080 GPU, and 120 GB of memory. In our experiments, we set the federated learning rounds and the number of categorized \gnnshort to 10 per host. Each model is trained for 20 epochs per round. We use regularization and dropout layers in our models to avoid overfitting. To evaluate \Sys, we address the following research questions:
 
 %\wajih{RQ6 is not in this section. so please remove it. }

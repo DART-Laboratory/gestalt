@@ -1,6 +1,10 @@
 
 \section{Threat Model \& Assumptions}
 
+\wajih{To give more confidence into that the dual server architecture is realistic, cite more papers. I think this paper also uses https://eprint.iacr.org/2024/081, Also see how they justify dual server.}
+
+\wajih{Add a separate paragraph with a heading "Why Dual-Server Architecture is Realistic" and move all the arguments into that paragraph.}
+
 Our threat model assumes that the central server operates with integrity, conducting the federated averaging process without malicious objectives. However, we recognize the risk that the central server could compromise the privacy of client logs if raw \logs is transmitted to it~\cite{man2021intelligent,li2023efficient}. We also consider the possibility of a curious central server attempting membership inference attacks by utilizing the model weights.
 
 Similar to other works in cryptography and federated learning~\cite{roy2020crypte,wu2022federated}, we assume that the utility server is trusted and that there is no collusion between the central and utility servers, meaning they do not exchange information. To further ensure non-collusion, the utility server can be deployed within a trusted execution environment (TEE)~\cite{mckeen2016intel} or monitored by a trusted mediator overseeing communications between the servers~\cite{alwen2009collusion}. Alternatively, since the utility server's role is limited to processing encrypted data, it can be implemented as a secure cloud compute instance~\cite{cloudinstance} managed by the organization, while the MSSP manages the central server. In this architecture, the central server is responsible for aggregating and coordinating tasks, while the utility server remains under the organization's control. This separation allows the utility server to be operated by trusted internal IT teams, specialized third-party security firms, or a dedicated cloud provider, all of whom prioritize data privacy and encryption. Non-collusion could also be ensured through strict legal agreements.

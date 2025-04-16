@@ -1,6 +1,12 @@
 \section{Related work}
 \label{s:relwk}
 
+\wajih{Check NDSS 2025 and USENIX 2024 and IEEE S\&P 2024 to see if there is a paper that we have not cited in the related. If there is provenance related paper or IDS we need to cite it in the Related Work.}
+
+
+\wajih{Google scholar search FL+IDS and see if there are some new papers we can cite in the related work.}
+
+
 %\wajih{ Make sure to cite this paper: https://www.usenix.org/system/files/sec23winter-prepub-490-jia.pdf}
 
 \PP{ML-based IDS} Machine Learning (ML) techniques are widely employed for threat detection. ProvDetector~\cite{provdetector2020} encodes attack paths in provenance graphs into embeddings using Doc2Vec\cite{le2014distributed} for outlier detection. Attack2Vec~\cite{shen2019attack2vec} employs a temporally aware word-to-embedding encoding to identify attack entities. For network anomaly detection, DeepAid~\cite{deepaid} uses deep neural networks to classify anomalous traffic, while ProGrapher~\cite{yangprographer} combines Graph2Vec~\cite{narayanan2017graph2vec} and TextRCNN~\cite{lai2015recurrent} to generate embeddings for anomalous graph identification. StreamSpot~\cite{streamspot} employs clustering algorithms on graph features for anomaly detection, and \unicorn~\cite{han2020unicorn} utilizes graph kernels for graph-level threat detection. Other systems~\cite{aljawarneh2018anomaly, maseer2021benchmarking, gyanchandani2012taxonomy, atlas} leverage diverse embedding techniques, while studies, such as \cite{zolkipli2011approach, chakkaravarthy2019survey, isohara2011kernel} focus on malware detection. Specific techniques like DeepLog~\cite{deeplog2017} apply recurrent neural networks to log data, and SIGL~\cite{sigl} targets malicious software installations. Euler~\cite{king2022euler} integrates GNN and RNN models for lateral movement detection, while MAGIC~\cite{jia2023magic} employs masked graph representation learning for detecting system threats. Unlike these systems, \Sys is the first to utilize federated learning, addressing associated challenges to enable privacy-preserving and scalable threat detection. \disdet~\cite{dong2023distdet} detects APTs using Hierarchical System Event Trees (HST) in a decentralized manner. \disdet reduces network costs by summarizing system events in the form of HST but compromises privacy because HSTs must be sent to the server in plain text. Additionally, \disdet identifies anomalies as events simply missing from the benign HST, a method prone to high false alarms in dynamically changing system environments.

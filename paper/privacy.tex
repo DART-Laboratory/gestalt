@@ -11,7 +11,9 @@
 
 \wajih{Also we need a theorem for your Privacy Against Model Update Inference. There are two parts here. Define Theorem and then provide proof for that theorem.}
 
-\wajih{}
+\wajih{The privacy analysis seemed too informal. Simply stating that the cardinality of the token set is high to prove that the system is private is not very convincing. There were no empirical experiments as well.}
+
+\wajih{Is there a risk of bin-level inference. I think one reviewer said something about that. For example, if an attacker observes which bin a process was mapped to (e.g., “bin 3 → sshd-like processes”), this could still leak meta-information even without raw data. Can we discuss this attack in the privacy analysis section as well.}
 
 In this section, we analyze the preservation of user privacy within \Sys, which is structured around three primary components: the central server, the utility server, and clients. The risk to \Sys's privacy arises from the possibility of inference attacks using model weights at the central server and \wordvec tokens at the utility server. These attacks aim to infer whether some system entity or attributes were used in the training data or not. We will discuss the scope and limitations of these attacks on \Sys below:
 
