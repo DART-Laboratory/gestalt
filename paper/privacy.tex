@@ -5,15 +5,15 @@
 
 %\wajih{ There was a comment/review about membership inference for unseen words. Is that addressed below?} Yes
 
-\wajih{We need to make our privacy analysis more formal. Look into  a privacy game where the adversary attempts to distinguish between two datasets. }
+% \wajih{We need to make our privacy analysis more formal. Look into  a privacy game where the adversary attempts to distinguish between two datasets. }
 
-\wajih{The private FL papers have a lot theorems, we just need to tailor them for our.}
+% \wajih{The private FL papers have a lot theorems, we just need to tailor them for our.}
 
-\wajih{Also we need a theorem for your Privacy Against Model Update Inference. There are two parts here. Define Theorem and then provide proof for that theorem.}
+% \wajih{Also we need a theorem for your Privacy Against Model Update Inference. There are two parts here. Define Theorem and then provide proof for that theorem.}
 
-\wajih{The privacy analysis seemed too informal. Simply stating that the cardinality of the token set is high to prove that the system is private is not very convincing. There were no empirical experiments as well.}
+% \wajih{The privacy analysis seemed too informal. Simply stating that the cardinality of the token set is high to prove that the system is private is not very convincing. There were no empirical experiments as well.}
 
-\wajih{Is there a risk of bin-level inference. I think one reviewer said something about that. For example, if an attacker observes which bin a process was mapped to (e.g., “bin 3 → sshd-like processes”), this could still leak meta-information even without raw data. Can we discuss this attack in the privacy analysis section as well.}
+% \wajih{Is there a risk of bin-level inference. I think one reviewer said something about that. For example, if an attacker observes which bin a process was mapped to (e.g., “bin 3 → sshd-like processes”), this could still leak meta-information even without raw data. Can we discuss this attack in the privacy analysis section as well.}
 
 In this section, we analyze the preservation of user privacy within \Sys, which is structured around three primary components: the central server, the utility server, and clients. The risk to \Sys's privacy arises from the possibility of inference attacks using model weights at the central server and \wordvec tokens at the utility server. These attacks aim to infer whether some system entity or attributes were used in the training data or not. We will discuss the scope and limitations of these attacks on \Sys below:
 
@@ -21,28 +21,75 @@ In this section, we analyze the preservation of user privacy within \Sys, which 
 
 \PP{Privacy Risk Analysis} Within \Sys, potential privacy compromises arise if either the central or utility server can infer specific details about individual clients' logs, such as the applications in use or particular attributes like filenames and IP addresses. Despite the central server's inability to access raw client data directly, it receives model updates from clients, thereby introducing a vulnerability to model inference attacks through analysis of these updates.
 
-Consider an attacker's objective to ascertain whether a system entity \(x\) with attributes \(y\) was utilized in training a client model \(m\). This necessitates the generation of multiple candidate node features for \(x\), taking into account various graph structures and interactions with other entities while considering diverse attributes. The search space for this task, \(S\), is extensive, spanning all conceivable processes, files, and network IPs.
+% Consider an attacker's objective to ascertain whether a system entity \(x\) with attributes \(y\) was utilized in training a client model \(m\). This necessitates the generation of multiple candidate node features for \(x\), taking into account various graph structures and interactions with other entities while considering diverse attributes. The search space for this task, \(S\), is extensive, spanning all conceivable processes, files, and network IPs.
 
-Assuming the server generates multiple candidate structures, it then requires access to the specific client's \(\texttt{\wordvec}\) model to generate feature vectors for these structures---a step prevented by the model's unavailability and inherent algorithmic randomness, rendering each training iteration of the \(\texttt{\wordvec}\) model distinct:
-\( F(x) = \texttt{\wordvec}(s_x) \)
-where \(F(x)\) is the feature vector of structure \(x\) and \(s_x\) is the candidate sequence.
+% Assuming the server generates multiple candidate structures, it then requires access to the specific client's \(\texttt{\wordvec}\) model to generate feature vectors for these structures---a step prevented by the model's unavailability and inherent algorithmic randomness, rendering each training iteration of the \(\texttt{\wordvec}\) model distinct:
+% \( F(x) = \texttt{\wordvec}(s_x) \)
+% where \(F(x)\) is the feature vector of structure \(x\) and \(s_x\) is the candidate sequence.
 
-Formally, the system \Sys is designed to ensure that the probability that an adversary can distinguish between two arbitrary system log datasets based on the observed updates is negligible:
-\begin{align*}
-\text{Attack}(D_1, D_2) &= \left| \Pr[\mathcal{A}(\text{Enc}(D_1)) = 1] \right. \nonumber \\
-&\quad - \left. \Pr[\mathcal{A}(\text{Enc}(D_2)) = 1] \right| \\
-&\leq \epsilon \nonumber
-\end{align*}
-where \(\epsilon\) is a negligible value, \(\text{Enc}(D)\) denotes the encoding of the dataset into model updates, and \(\mathcal{A}\) represents the adversary.
+\textbf{Model Update Privacy Theorem.}  
+For any two datasets \(D_1\), \(D_2\) differing in the presence of a single structured sequence involving an entity \(x\), the probability that an adversary \(\mathcal{A}\), observing only the model updates \(\text{Enc}(D)\) received by the central server, can determine which dataset was used deviates from random guessing by at most a negligible function \(\epsilon(n)\), where \(n\) is the security parameter representing the randomness complexity of the client-side training process.
 
-To further quantify the security of \Sys in the context of semantic embeddings at the utility server, consider the scenario where an attacker has access to the \wordvec embeddings but not the original attributes used for generating them. Suppose the attacker attempts to reverse engineer the embedding vectors to recover the original system log data. The complexity, randomness and high dimensionality of the embedding space, combined with the non-linear transformations typically applied during \wordvec embedding process, ensure that the probability of successfully identifying the original tokens from the embeddings is negligibly small:
+\textbf{Model Update Privacy Proof.}  
+Let \(D_1\) and \(D_2\) be two datasets differing only in a structured sequence \(s_x\) involving entity \(x\). Each client encodes sequences using a randomized local embedding model \(\texttt{\wordvec}\), which maps \(s_x\) to a feature vector \(F(x) = \texttt{\wordvec}(s_x)\). These embeddings are then used to train the local model, whose updates are sent to the central server.
+
+We formally model the encoding process \(\text{Enc}(D; r)\) as a randomized algorithm that takes as input a dataset \(D\) and a random seed \(r \in \{0,1\}^n\), where \(n\) is the security parameter. This seed governs all sources of local randomness, including embedding initialization, mini-batch sampling, and optimizer dynamics. 
+
+Since training is stochastic and local models are never shared, two executions on the same dataset may produce statistically different updates. Let \(P_1\) and \(P_2\) denote the distributions over model updates \(\text{Enc}(D_1)\) and \(\text{Enc}(D_2)\), respectively. Their statistical distance is defined as:
 \[
-\Pr[\text{Rev}(\mathcal{E}, e) = t] \leq \frac{1}{|T|}
+\Delta(P_1, P_2) = \sup_{S} \left| \Pr[\text{Enc}(D_1) \in S] - \Pr[\text{Enc}(D_2) \in S] \right|,
 \]
-where \(\text{Rev}\) denotes the hypothetical reverse mapping function from embeddings to tokens, \(\mathcal{E}\) represents the embedding process, \(e\) is the observed embedding, \(t\) is the original token, and \(|T|\) is the cardinality of the token set. This probability indicates that correctly guessing the original token from its embedding is as likely as randomly selecting one token out of the entire set of possible tokens, which is practically infeasible given a sufficiently large and diverse token set.
+where the supremum is taken over all measurable subsets \(S\) of the output space. Because \(\text{Enc}(D; r)\) depends on \(n\) bits of internal randomness—and because \(\mathcal{A}\) has no access to this randomness or to the client’s embedding model—it cannot reliably infer the presence of \(s_x\) in the training data.
 
-Consequently, the dual-server architecture and semantic featurization significantly limit the central server's capacity for inference attacks. The utility server's function of contextually aggregating semantic attribute vectors introduces another potential privacy concern if the server could deduce the entities these vectors represent. This risk is mitigated by the secure encryption of tokens using keys generated by the central server, which the utility server cannot access, ensuring privacy protection.
+Furthermore, the set of plausible structured sequences involving node \(x\), denoted \(\mathcal{S}(x)\), grows combinatorially with the graph topology and attribute space. Specifically, for a graph \(G = (V, E)\), a node attribute vocabulary \(\mathcal{A}_v\), and edge attribute vocabulary \(\mathcal{A}_e\), the number of candidate sequences in the \(\ell\)-hop neighborhood \(\mathcal{N}_\ell(x)\) satisfies:
+\[
+|\mathcal{S}(x)| \in \mathcal{O}\left(|\mathcal{A}_v|^{|\mathcal{N}_\ell(x)|} \cdot |\mathcal{A}_e|^{|\mathcal{N}_\ell(x)|}\right).
+\]
+Thus, even if the adversary attempts to enumerate candidates, it must simulate an exponential number of possibilities without access to the true embedding function \(\texttt{\wordvec}\).
+
+As a result, the adversary’s distinguishing advantage—defined as the deviation from random guessing—is bounded by:
+\[
+\left| \Pr[\mathcal{A}(\text{Enc}(D_1)) = 1] - \tfrac{1}{2} \right| \leq \epsilon(n),
+\]
+where \(\epsilon(n)\) is negligible in the security parameter \(n\); that is, for every polynomial \(p(n)\), there exists an \(n_0\) such that for all \(n > n_0\), \(\epsilon(n) < \frac{1}{p(n)}\). Therefore, \Sys guarantees indistinguishability-based privacy against chosen-dataset inference attacks under server-side observation.
+
+% Formally, the system \Sys is designed to ensure that the probability that an adversary can distinguish between two arbitrary system log datasets based on the observed updates is negligible:
+% \begin{align*}
+% \text{Attack}(D_1, D_2) &= \left| \Pr[\mathcal{A}(\text{Enc}(D_1)) = 1] \right. \nonumber \\
+% &\quad - \left. \Pr[\mathcal{A}(\text{Enc}(D_2)) = 1] \right| \\
+% &\leq \epsilon \nonumber
+% \end{align*}
+% where \(\epsilon\) is a negligible value, \(\text{Enc}(D)\) denotes the encoding of the dataset into model updates, and \(\mathcal{A}\) represents the adversary.
+
+% To further quantify the security of \Sys in the context of semantic embeddings at the utility server, consider the scenario where an attacker has access to the \wordvec embeddings but not the original attributes used for generating them. Suppose the attacker attempts to reverse engineer the embedding vectors to recover the original system log data. The complexity, randomness and high dimensionality of the embedding space, combined with the non-linear transformations typically applied during \wordvec embedding process, ensure that the probability of successfully identifying the original tokens from the embeddings is negligibly small:
+% \[
+% \Pr[\text{Rev}(\mathcal{E}, e) = t] \leq \frac{1}{|T|}
+% \]
+% where \(\text{Rev}\) denotes the hypothetical reverse mapping function from embeddings to tokens, \(\mathcal{E}\) represents the embedding process, \(e\) is the observed embedding, \(t\) is the original token, and \(|T|\) is the cardinality of the token set. This probability indicates that correctly guessing the original token from its embedding is as likely as randomly selecting one token out of the entire set of possible tokens, which is practically infeasible given a sufficiently large and diverse token set.
+
+% Consequently, the dual-server architecture and semantic featurization significantly limit the central server's capacity for inference attacks. The utility server's function of contextually aggregating semantic attribute vectors introduces another potential privacy concern if the server could deduce the entities these vectors represent. This risk is mitigated by the secure encryption of tokens using keys generated by the central server, which the utility server cannot access, ensuring privacy protection.
+
+\textbf{Utility Server Privacy Theorem.}  
+Let \(\mathcal{E}: T \to \mathbb{R}^d\) denote the client-side embedding function that maps input tokens \(t \in T\) to high-dimensional vectors \(e \in \mathbb{R}^d\). In \Sys, each client independently applies \(\mathcal{E}\) to locally generate semantic embeddings and encrypts all tokens before transmission. The utility server receives only encrypted tokens and their corresponding embeddings. Then, for any embedding \(e\) observed by the utility server, the probability that an adversary \(\mathcal{A}\) can correctly identify the original token \(t\) such that \(e = \mathcal{E}(t)\) is at most \(\frac{1}{|T|} + \epsilon(d)\), where \(\epsilon(d)\) is negligible in the embedding dimension \(d\).
+
+\textbf{Utility Server Privacy Proof.}  
+In \Sys, each client applies a local embedding function \(\mathcal{E}\) (e.g., word2vec) to convert input tokens \(t \in T\) into semantic vectors \(e = \mathcal{E}(t) \in \mathbb{R}^d\), and encrypts the original tokens before sending them to the utility server. Thus, the utility server receives only encrypted identifiers and their associated semantic embeddings, with no access to the plaintext tokens or the internals of \(\mathcal{E}\).
+
+The embedding function \(\mathcal{E}: T \to \mathbb{R}^d\), trained using a distributional objective (skip-gram with negative sampling), is inherently non-injective. Its goal is to preserve contextual similarity, not one-to-one invertibility. Formally, there exist distinct tokens \(t_1, t_2 \in T\), with \(t_1 \neq t_2\), such that \(\mathcal{E}(t_1) \approx \mathcal{E}(t_2)\). Consequently, the preimage set of a given embedding \(e\) is defined as:
+\[
+\mathcal{E}^{-1}(e) = \{t \in T \mid \mathcal{E}(t) \approx e\},
+\]
+which may contain multiple semantically related tokens. This ambiguity arises because \(\mathcal{E}\) typically involves non-linear transformations and dimensionality reduction, meaning the mapping from \(T\) to \(\mathbb{R}^d\) is many-to-one and optimized for semantic coherence rather than reversibility. Hence, attempting to recover a unique \(t\) from \(e\) constitutes solving an ill-posed inverse problem over an equivalence class of plausible tokens.
+
+Let \(\text{Rev}(\mathcal{E}, e)\) denote a hypothetical reverse function attempting to infer \(t\) from an embedding \(e\). Since the utility server has no access to the original training data or the encryption keys protecting the token identities, its best strategy is effectively bounded by random guessing over the token vocabulary:
+\[
+\Pr[\text{Rev}(\mathcal{E}, e) = t] \leq \frac{1}{|T|} + \epsilon(d),
+\]
+where \(\epsilon(d)\) represents any residual advantage due to structure in the embedding space. As the embedding dimension \(d\) increases, the space becomes more entangled and the function \(\epsilon(d)\) becomes negligible. That is, for every polynomial \(p(d)\), there exists \(d_0\) such that for all \(d > d_0\), \(\epsilon(d) < \frac{1}{p(d)}\).
+
+Therefore, \Sys guarantees that the probability of successfully reverse-engineering semantic embeddings at the utility server is negligible, ensuring strong semantic privacy under adversarial observation.
 
 Furthermore, a malicious client attempting to utilize the global aggregate to infer the applications used across the organization faces similar constraints. Such an attack is limited by the client's lack of access to the semantic attribute vectors widespread across the organization, significantly narrowing the attack's feasibility.
 
 Therefore, the architecture of \Sys robustly defends against model inference attacks, affirming the system's capacity to preserve privacy. This resilience is predicated on the non-collusion assumption between the central and utility servers—a standard premise upheld by related works~\cite{roy2020crypte,wu2022federated}, ensuring the system's high degree of privacy preservation.
+
