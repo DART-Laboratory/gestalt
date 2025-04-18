@@ -27,10 +27,10 @@ In this section, we analyze the preservation of user privacy within \Sys, which 
 % \( F(x) = \texttt{\wordvec}(s_x) \)
 % where \(F(x)\) is the feature vector of structure \(x\) and \(s_x\) is the candidate sequence.
 
-\textbf{Model Update Privacy Theorem.}  
+\textbf{Central Server Privacy Theorem.}  
 For any two datasets \(D_1\), \(D_2\) differing in the presence of a single structured sequence involving an entity \(x\), the probability that an adversary \(\mathcal{A}\), observing only the model updates \(\text{Enc}(D)\) received by the central server, can determine which dataset was used deviates from random guessing by at most a negligible function \(\epsilon(n)\), where \(n\) is the security parameter representing the randomness complexity of the client-side training process.
 
-\textbf{Model Update Privacy Proof.}  
+\textbf{Central Server Privacy Proof.}  
 Let \(D_1\) and \(D_2\) be two datasets differing only in a structured sequence \(s_x\) involving entity \(x\). Each client encodes sequences using a randomized local embedding model \(\texttt{\wordvec}\), which maps \(s_x\) to a feature vector \(F(x) = \texttt{\wordvec}(s_x)\). These embeddings are then used to train the local model, whose updates are sent to the central server.
 
 We formally model the encoding process \(\text{Enc}(D; r)\) as a randomized algorithm that takes as input a dataset \(D\) and a random seed \(r \in \{0,1\}^n\), where \(n\) is the security parameter. This seed governs all sources of local randomness, including embedding initialization, mini-batch sampling, and optimizer dynamics. 
@@ -89,7 +89,25 @@ where \(\epsilon(d)\) represents any residual advantage due to structure in the 
 
 Therefore, \Sys guarantees that the probability of successfully reverse-engineering semantic embeddings at the utility server is negligible, ensuring strong semantic privacy under adversarial observation.
 
-Furthermore, a malicious client attempting to utilize the global aggregate to infer the applications used across the organization faces similar constraints. Such an attack is limited by the client's lack of access to the semantic attribute vectors widespread across the organization, significantly narrowing the attack's feasibility.
+\textbf{Client Level Privacy Theorem.}  
+Let \(\theta_g\) be the global model obtained by aggregating updates from a set of clients \(\{C_1, C_2, \ldots, C_N\}\), where each client observes only a disjoint subset of application-specific semantic attribute vectors. Suppose a malicious client \(C_{\text{adv}}\) attempts to infer whether a particular application token \(t \in T\) used by another client is present in the global model. Then, under standard aggregation (e.g., FedAvg) and semantic vector disjointness across clients, the probability that \(C_{\text{adv}}\) can infer the presence of \(t\) is bounded by:
+\[
+\Pr[\text{Infer}(\theta_g, t) = 1] \leq \frac{|T_{\text{adv}}|}{|T|} + \epsilon(m),
+\]
+where \(T_{\text{adv}}\) is the set of semantic tokens accessible to \(C_{\text{adv}}\), \(|T|\) is the total token vocabulary, and \(\epsilon(m)\) is negligible in the number of clients \(m = |T \setminus T_{\text{adv}}|\) contributing disjoint attributes to the global model.
+
+\textbf{Client Level Privacy Proof.}  
+The global model \(\theta_g\) is constructed via aggregation of local updates from multiple clients, each of which computes gradients or embeddings based on their local token set. Let \(T\) denote the full organizational token vocabulary, and let \(T_{\text{adv}} \subset T\) denote the subset observed by the malicious client \(C_{\text{adv}}\).
+
+Client \(C_{\text{adv}}\) observes \(\theta_g\), which encodes statistical signals from all \(T\), but without visibility into which updates correspond to which tokens. The adversary’s goal is to determine whether a specific target token \(t \in T \setminus T_{\text{adv}}\) was present in training. Since \(\theta_g\) is the result of averaging over model updates and \(\mathcal{E}(t)\) (the token's embedding) is not known to \(C_{\text{adv}}\), the adversary cannot attribute global weight shifts to tokens it cannot represent.
+
+We model the attacker’s inference attempt as a binary decision: \(\text{Infer}(\theta_g, t) = 1\) if it believes \(t\) is present. Without access to semantic vectors for tokens outside \(T_{\text{adv}}\), the best strategy for \(C_{\text{adv}}\) is random guessing over the unknown token space \(T \setminus T_{\text{adv}}\). Hence:
+\[
+\Pr[\text{Infer}(\theta_g, t) = 1] \leq \frac{|T_{\text{adv}}|}{|T|} + \epsilon(m),
+\]
+where \(\epsilon(m)\) accounts for any statistical leakage from partial overlaps in tokens across clients. Since the number of clients \(m\) contributing disjoint tokens increases, \(\epsilon(m)\) becomes negligible — i.e., for every polynomial \(p(m)\), there exists \(m_0\) such that for all \(m > m_0\), \(\epsilon(m) < \frac{1}{p(m)}\).
+
+Therefore, in \Sys, the absence of full semantic visibility ensures that malicious clients cannot meaningfully attribute specific applications or tokens to others via global aggregation, preserving privacy under attribution-based inference attacks.
 
 Therefore, the architecture of \Sys robustly defends against model inference attacks, affirming the system's capacity to preserve privacy. This resilience is predicated on the non-collusion assumption between the central and utility servers—a standard premise upheld by related works~\cite{roy2020crypte,wu2022federated}, ensuring the system's high degree of privacy preservation.
 
