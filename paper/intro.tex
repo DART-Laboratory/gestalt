@@ -1,55 +1,12 @@
 \section{Introduction}
 \label{s:intro}
 
-
-% \wajih{I see some inconsistent Notations in this section. Please make sure that in this section all notations are up to date.}
-
-
-% \wajih{Is there a difference between Semantic Harmonization or \wordvec Harmonization? You use \wordvec harmonization here and Semantic Harmonization in Design section. Let's use consistent terminology throughout the paper. }
-
-% \wajih{There is a word "categorized ensemble learning" in the evaluation paragraph that is never described before in the intro. Let's use consistent wording througout the intro and throughout the paper. Also, in the Design section if you need to change the headings/titles to match with the intro, please do that. It is really hard to match the Intro section with the Design section.}
-
-% \wajih{Terminology discrepancies are shown in green color throughout the paper.}
-
-% \wajih{"Semantic Harmonization" vs. "Word2vec Harmonization"}
-
-% \wajih{"Categorized Ensemble Learning" vs. "Categorization-based GNN Ensemble"}
-
-% \wajih{"encoder" vs. "model"}
-
-% \wajih{"GNNglobal" vs. "GNNGlobal":}
-
-% \wajih{Categorized Provenance Subgraph" vs. "Process Entity Categorization"}
-
-% \wajih{"FL using Categorized Process Entities" vs. "Categorized GNN-based Federated Learning"}
-
-% \wajih{"Featurization" vs. "Semantic Encoding"}
-
-% \wajih{"Central Server" vs. "Main Server"}
-
-% \wajih{"Utility Server" vs. "Trusted Utility Server"}
-
-% \wajih{"Semantic Attribute Vectors" vs. "Feature Vectors"}
-
-% \wajih{"Dual-server Architecture" vs. "Two-server Architecture"}
+Intrusion Detection Systems (\ids) are crucial for countering Advanced Persistent Threats (APTs) in enterprises, as highlighted by major attacks~\cite{solarwinds,notpetya}. To strengthen defenses, many organizations turn to Managed Security Service Providers (MSSPs). A survey~\cite{msspsurvey} of over 5,000 IT professionals found that 75\% of companies use MSSPs. These providers integrate with client systems and typically configure them to transmit \logs to the cloud for centralized analysis. Figure~\ref{mssp} illustrates this MSSP architecture.
 
 
 
+Recently, Provenance-based IDS (\pids)~\cite{streamspot,provdetector2020,wang2022threatrace,shadewatcher,yangprographer,han2020unicorn,jia2023magic,flash2024,cheng2023kairos,sigl} have proven highly effective by leveraging the rich contextual information in \logs. These systems transform \logs into provenance graphs and apply machine learning, particularly Graph Neural Networks (\gnnshort), to learn benign behavior patterns. By continuously monitoring these patterns, \pids can detect deviations that may indicate potential security threats. Upon detecting such anomalies, the \pids generates alerts for further investigation.
 
-%\wajih{I have updated the macro logs as it does not make sense to use \ logs for just "system". I have changed the macro to "system logs". Make sure the paper is consistent with that.}
-
-% The effectiveness of IDSes hinges on their ability to accurately detect these threats, maintain low false positive rates, and operate with minimal resource consumption, ensuring system performance is not compromised.
-
-%\wajih{Give the workflow of MSSP and cite that organizations outsource their security. If you find any numbers on how many comapnies use MSSP and outsource their security operations that would be great. If you find any realworld attack examples on MSSP where the data was leaked that would be great as well. }
-
-
-
-
-Privacy concerns are at the heart of modern enterprise cybersecurity. As system logs become the foundation for intrusion detection and forensic analysis, centralizing them for analysis introduces serious risks. These logs often contain sensitive user information, such as URLs, IP addresses, and application metadata. The danger is not hypothetical as recent incidents and industry reports~\cite{datadog} have highlighted how central log storage managed by third parties can become a liability.
-
-Intrusion Detection Systems (IDS) are central to defending against Advanced Persistent Threats (APTs), as evidenced by the wide-reaching impacts of attacks like SolarWinds~\cite{solarwinds} and NotPetya~\cite{notpetya}. Given their complexity, many enterprises now rely on Managed Security Service Providers (MSSPs) to monitor infrastructure. A survey~\cite{msspsurvey} of over 5,000 IT professionals revealed that 75\% of organizations use MSSPs, which often integrate with client systems to ingest and centrally analyze system logs. Figure~\ref{mssp} illustrates this architecture.
-
-Recently, Provenance-based IDS (\pids)~\cite{streamspot,provdetector2020,wang2022threatrace,shadewatcher,yangprographer,han2020unicorn,jia2023magic,flash2024,cheng2023kairos,sigl} have emerged as a powerful class of systems for detecting complex threats. By converting raw logs into provenance graphs that capture causal relationships between processes, files, and sockets, these systems enable graph-based learning methods such as Graph Neural Networks (\gnnshort) to identify deviations from learned benign patterns. Upon detecting such anomalies, \pids trigger alerts for further investigation.
 
 \smallskip
 \PP{Critical Limitations of Existing \pids}
@@ -58,19 +15,20 @@ Recently, Provenance-based IDS (\pids)~\cite{streamspot,provdetector2020,wang202
 \noindent
 Despite \pids potential, the current operational mode of MSSPs and the state-of-the-art \pids face significant challenges in enterprise settings, which are described below.
 
-\noskipheading{1. Privacy Risks \& Centralization.} Current \pids depend on centralized infrastructure, requiring clients to transmit logs to a central server for aggregating large datasets and enabling deep learning models to capture benign behavior. This design introduces serious privacy risks, as logs often contain sensitive information, such as URLs, IP addresses, and application usage. These concerns are supported by a recent Datadog report~\cite{datadog}. Moreover, training on single-machine data is insufficient. Our experiments with \flash~\cite{flash2024} on the DARPA \optc dataset~\cite{darpaoptc} show a 40\% F-score drop when using single-host data compared to multi-host data.
+\noskipheading{1. Privacy Risks \& Centralization.} Current \pids depend on centralized infrastructure, requiring clients to transmit logs to a central server for aggregating large datasets and enabling deep learning models to capture benign behavior. This design introduces serious privacy risks~\cite{aghili2024empirical,ghiasvand2019anonymization,slagell2006flaim}, as logs often contain sensitive information, such as URLs, IP addresses, and application usage. These concerns are supported by a recent Datadog report~\cite{datadog}. Moreover, training on single-machine data is insufficient. Our experiments with \flash~\cite{flash2024} on the DARPA \optc dataset~\cite{darpaoptc} show a 40\% F-score drop when using single-host data compared to multi-host data.
 
 \noskipheading{2. Network Overheads.}
 Many \pids face critical challenges with network overhead and bandwidth constraints. Transmitting large volumes of logs for intrusion detection imposes high costs on users and organizations. Modern systems can produce gigabytes of logs daily~\cite{inam2023sok,hossain+depend}. Our analysis of \flash~\cite{flash2024} and \kairos~\cite{cheng2023kairos} using the \optc dataset (Section~\ref{cost_metric}) highlights these issues. Organizations similar in scale to those in the \optc dataset generate up to 1000 GB of logs daily, leading to significant network expenses. Users with limited bandwidth face difficulties uploading such large amounts efficiently.
 
 \noskipheading{3. Scalability Issues.}
-As the number of hosts increases, centralized \pids suffer from log congestion, resulting in detection delays and high storage demands. \flash and \kairos took 27.7 and 56.6 hours, respectively, to process a single day's OpTC logs. These extended processing times compromise effective threat detection and response capabilities, particularly in large-scale environments.
+As the number of hosts increases, centralized \pids suffer from log congestion, resulting in detection delays and high storage demands~\cite{dong2023distdet}. \flash and \kairos took 27.7 and 56.6 hours, respectively, to process a single day's OpTC logs. These extended processing times compromise effective threat detection and response capabilities, particularly in large-scale environments.
 
 
 
 \smallskip
 \PP{Combine FL with PIDS: Opportunity and Challenges}
 \smallskip
+\wajih{Sprinkle Orthrus in this subsection whereever possibe.}
 
 \noindent
 A seemingly promising solution to mitigate privacy and scalability limitations in centralized \pids is to integrate Federated Learning (FL) into their design. In such a federated \pids framework, each client constructs its local provenance graph, encodes semantic attributes using local feature sets \( \mathcal{F}_i \), and trains a local Graph Neural Network model \( \text{GNN}_{i} \). These clients then transmit only their model updates, rather than raw logs, to a central server, where the updates are aggregated into a global model \( \text{GNN}_{\text{global}} \). This approach preserves data locality and reduce bandwidth while enabling collaborative learning across multiple hosts. However, simply combining FL and \pids introduces several new challenges that hinder effectiveness:
