@@ -7,6 +7,22 @@
 \usepackage[breaklinks,colorlinks]{hyperref}
 \usepackage[usenames,dvipsnames]{xcolor}
 \usepackage[square,comma,numbers,sort&compress]{natbib}
+
+\usepackage{amsthm}
+
+% Define theorem styles
+\newtheorem{theorem}{Theorem}[section]    % Theorems numbered within sections
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\theoremstyle{definition}
+\newtheorem{example}[theorem]{Example}
+
 %%
 \usepackage{fancyhdr,lastpage}
 \usepackage{epsfig}
