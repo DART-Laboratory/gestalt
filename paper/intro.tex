@@ -42,14 +42,14 @@
 
 %\wajih{Give the workflow of MSSP and cite that organizations outsource their security. If you find any numbers on how many comapnies use MSSP and outsource their security operations that would be great. If you find any realworld attack examples on MSSP where the data was leaked that would be great as well. }
 
-\wajih{Highlight in the intro that as contribution that we provide formal privacy analysis our system. }
-
-
-Intrusion Detection Systems (\ids) are crucial for countering Advanced Persistent Threats (APTs) in enterprises, as highlighted by major attacks~\cite{solarwinds,notpetya}. To strengthen defenses, many organizations turn to Managed Security Service Providers (MSSPs). A survey~\cite{msspsurvey} of over 5,000 IT professionals found that 75\% of companies use MSSPs. These providers integrate with client systems and typically configure them to transmit \logs to the cloud for centralized analysis. Figure~\ref{mssp} illustrates this MSSP architecture.
 
 
 
-Recently, Provenance-based IDS (\pids)~\cite{streamspot,provdetector2020,wang2022threatrace,shadewatcher,yangprographer,han2020unicorn,jia2023magic,flash2024,cheng2023kairos,sigl} have proven highly effective by leveraging the rich contextual information in \logs. These systems transform \logs into provenance graphs and apply machine learning, particularly Graph Neural Networks (\gnnshort), to learn benign behavior patterns. By continuously monitoring these patterns, \pids can detect deviations that may indicate potential security threats. Upon detecting such anomalous graph patterns, the \pids generates alerts to prompt further investigation.
+Privacy concerns are at the heart of modern enterprise cybersecurity. As system logs become the foundation for intrusion detection and forensic analysis, centralizing them for analysis introduces serious risks. These logs often contain sensitive user information, such as URLs, IP addresses, and application metadata. The danger is not hypothetical as recent incidents and industry reports~\cite{datadog} have highlighted how central log storage managed by third parties can become a liability.
+
+Intrusion Detection Systems (IDS) are central to defending against Advanced Persistent Threats (APTs), as evidenced by the wide-reaching impacts of attacks like SolarWinds~\cite{solarwinds} and NotPetya~\cite{notpetya}. Given their complexity, many enterprises now rely on Managed Security Service Providers (MSSPs) to monitor infrastructure. A survey~\cite{msspsurvey} of over 5,000 IT professionals revealed that 75\% of organizations use MSSPs, which often integrate with client systems to ingest and centrally analyze system logs. Figure~\ref{mssp} illustrates this architecture.
+
+Recently, Provenance-based IDS (\pids)~\cite{streamspot,provdetector2020,wang2022threatrace,shadewatcher,yangprographer,han2020unicorn,jia2023magic,flash2024,cheng2023kairos,sigl} have emerged as a powerful class of systems for detecting complex threats. By converting raw logs into provenance graphs that capture causal relationships between processes, files, and sockets, these systems enable graph-based learning methods such as Graph Neural Networks (\gnnshort) to identify deviations from learned benign patterns. Upon detecting such anomalies, \pids trigger alerts for further investigation.
 
 \smallskip
 \PP{Critical Limitations of Existing \pids}
@@ -107,6 +107,8 @@ To address ~\ref{itm:c1}, we have designed a novel categorization-based \gnnshor
 
 
 To tackle ~\ref{itm:c2}, we implement a \wordvec harmonization scheme utilizing a dual-server architecture (Section~\ref{sub:model:harmonization}). In this setup, a central server issues encryption keys to clients, allowing them to securely encode \wordvec tokens. Subsequently, a utility server processes these encrypted tokens to achieve a unified, privacy-preserving vector representation. This method ensures that sensitive data remains protected while facilitating accurate and consistent \wordvec encoding across different clients. To avoid the problem of \ref{itm:c3} arising from the use of temporal graph networks, \Sys employs an inductive graph neural network model~\cite{hamilton2017inductive}, which has been shown by prior work~\cite{flash2024,shadewatcher,wang2022threatrace} to offer good performance and is not affected by temporal dependencies. 
+
+\wajih{Highlight the formal privacy analysis our system. }
 
 \smallskip
 \PP{Evaluation Results}
