@@ -3,6 +3,8 @@
 
 Within \Sys, potential privacy compromises arise if either the central, utility server or a malicious client can infer specific details about individual clients' logs, such as the applications in use or particular attributes like filenames and IP addresses. For each of the three components we present the proofs with strong privacy guarantees below:
 
+\renewcommand{\thetheorem}{\arabic{theorem}}
+
 \begin{theorem}[Central Server Privacy]
     For any two provenance graphs \(PGClient_1\), \(PGClient_2\) that differ only in the inclusion of a single node \(x\) and its \(\ell\)-hop attributed neighborhood (i.e., the local subgraph centered at \(x\), including all nodes in \(\mathcal{N}_\ell(x)\), edges, and associated attributes), the probability that an adversary \(\mathcal{A}\), observing only the GNN model updates received by the central server, can determine which graph was used deviates from random guessing by at most a negligible function \(\epsilon(n)\), where \(n\) is the security parameter representing the randomness complexity of the client-side training process.
     \end{theorem}
