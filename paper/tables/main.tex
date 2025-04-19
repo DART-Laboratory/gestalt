@@ -1,31 +1,35 @@
-\renewcommand{\arraystretch}{1.5}
-\begin{table}[!t]
+\renewcommand{\arraystretch}{1.1}
+\begin{table*}[!t]
   \centering
   \scriptsize
   \caption{Comparison of \Sys with SOTA PIDS. Prec.: Precision; Rec.: Recall; F1.: F1-Score. While \flash performs slightly better, \Sys offers strong privacy and scalability through decentralization. Refer to SOTA PIDS papers for their FP/FN details.}
   \setlength{\tabcolsep}{4pt}
-  \begin{tabular}{lcccc}
+  \newcolumntype{Y}{>{\centering\arraybackslash}X}
+  \begin{tabularx}{\textwidth}{lYYYYYY}
     \toprule
     \textbf{Dataset}
+    & \textbf{Ortrhurs}
     & \textbf{MAGIC~\cite{jia2023magic}}
     & \textbf{\flash~\cite{flash2024}}
     & \textbf{\kairos~\cite{cheng2023kairos}}
+    & \textbf{\Sys}
     & \textbf{\Sys} \\
-    \cmidrule(r{\tbspace}){2-2} \cmidrule(r{\tbspace}){3-3} \cmidrule(r{\tbspace}){4-4} \cmidrule(r{\tbspace}){5-5}
+    \cmidrule(r{4pt}){2-2} \cmidrule(r{4pt}){3-3} \cmidrule(r{4pt}){4-4} \cmidrule(r{4pt}){5-5} \cmidrule(r{4pt}){6-6} \cmidrule(r{4pt}){7-7}
       & {\bf Prec./Rec./F1.}
       & {\bf Prec./Rec./F1.}
       & {\bf Prec./Rec./F1.}
-      & {\bf Prec./Rec./F1.} \\
+      & {\bf Prec./Rec./F1.}
+      & {\bf Prec./Rec./F1.}
+      & {\bf Comparable} \\
     \midrule
-    E3-CADETS       &                         & \FCP/\FCR/\FCF       & \KCP/\KCR/\KCF       & \TCP/\TCR/\TCF \\
-    E3-TRACE        &                         & \FTP/\FTR/\FTF       & -                    & \TTP/\TTR/\TTF \\
-    E3-THEIA        &                         & \FTHP/\FTHR/\FTHF    & \KTHP/\KTHR/\KTHF    & \TTHP/\TTHR/\TTHF \\
-    \optc           &                         & \FOP/\FOR/\FOF       & \KOP/\KOR/\KOF       & \TOP/\TOR/\TOF \\
-    E5-CADETS       &                         & \EKCP/\EKCR/\EKCF    & \EFCP/\EFCR/\EFCF    & \ETCP/\ETCR/\ETCF \\
-    E5-THEIA        &                         & \EKTHP/\EKTHR/\EKTHF & \EFTHP/\EFTHR/\EFTHF & \ETTHP/\ETTHR/\ETTHF \\
-    E5-ClearScope   &                         & \EKClP/\EKClR/\EKClF & \EFClP/\EFClR/\EFClF & \ETClP/\ETClR/\ETClF \\
+    E3-CADETS       & 0.52/0.37/0.43 & 0.94/0.99/0.97 & \FCP/\FCR/\FCF       & \KCP/\KCR/\KCF       & \TCP/\TCR/\TCF       & -- \\
+    E3-TRACE        & 0.81/0.40/0.54 & 0.99/0.99/0.99 & \FTP/\FTR/\FTF       & --                   & \TTP/\TTR/\TTF       & -- \\
+    E3-THEIA        & 0.25/0.05/0.08 & 0.98/0.99/0.99 & \FTHP/\FTHR/\FTHF    & \KTHP/\KTHR/\KTHF    & \TTHP/\TTHR/\TTHF    & -- \\
+    \optc           & --             & --             & \FOP/\FOR/\FOF       & \KOP/\KOR/\KOF       & \TOP/\TOR/\TOF       & -- \\
+    E5-CADETS       & 0.17/0.02/0.03 & 0.00/1.00/0.00 & \EKCP/\EKCR/\EKCF    & \EFCP/\EFCR/\EFCF    & \ETCP/\ETCR/\ETCF    & -- \\
+    E5-THEIA        & 0.87/0.19/0.31 & 0.00/0.00/0.00 & \EKTHP/\EKTHR/\EKTHF & \EFTHP/\EFTHR/\EFTHF & \ETTHP/\ETTHR/\ETTHF & -- \\
+    E5-ClearScope   & 0.33/0.08/0.13 & 0.00/1.00/0.00 & \EKClP/\EKClR/\EKClF & \EFClP/\EFClR/\EFClF & \ETClP/\ETClR/\ETClF & -- \\
     \bottomrule
-  \end{tabular}
-
+  \end{tabularx}
   \label{summary:benchmarks:large}
-\end{table}
+\end{table*}
