@@ -3,11 +3,11 @@
 \section{Dataset Description}
 \label{sec:dataset:description}
 
-The E3 dataset contains two kinds of threat actors: a nation-state actor and a common threat actor. The goal of the nation-state attacker is to steal proprietary information from the targeted company. Initially, the attacker intends to exploit the webserver hosted on FreeBSD, inject into the SSHD process, and then wait. At this point, the attacker monitors connections and network activity while residing on the FreeBSD host. Subsequently, the attacker targets and exploits the discovered hosts to exfiltrate proprietary data. The common threat attacker aims to steal Personal Identifiable Information (PII) for financial gain by deceiving targeted users into providing access to the network using spear phishing.
+\PP{DARPA E3} The E3 dataset contains two kinds of threat actors: a nation-state actor and a common threat actor. The goal of the nation-state attacker is to steal proprietary information from the targeted company. Initially, the attacker intends to exploit the webserver hosted on FreeBSD, inject into the SSHD process, and then wait. At this point, the attacker monitors connections and network activity while residing on the FreeBSD host. Subsequently, the attacker targets and exploits the discovered hosts to exfiltrate proprietary data. The common threat attacker aims to steal Personal Identifiable Information (PII) for financial gain by deceiving targeted users into providing access to the network using spear phishing.
 
-The \darpa E5 dataset is more advanced than E3 in terms of attack complexity and data volume. The attackers' capabilities span the entire MITRE ATT\&CK~\cite{xiong2022cyber} adversarial lifecycle, from backdoors to exploit shellcode, from download to the execution of APT simulacra in-memory of the exploited process’s memory, from fingerprinting and surveying the target to exfiltrating sensitive data. Multiple variations of APTs and attack capabilities were delivered for Windows, Ubuntu, FreeBSD, and Android. The logs from E3 and E5 are documented under various scenario names, including Cadets, Trace, Theia, and ClearScope. The attacks in E3 were conducted on a single host per scenario, whereas E5 features three hosts per scenario, presenting a multi-host threat environment.
+\PP{DARPA E5} The \darpa E5 dataset is more advanced than E3 in terms of attack complexity and data volume. The attackers' capabilities span the entire MITRE ATT\&CK~\cite{xiong2022cyber} adversarial lifecycle, from backdoors to exploit shellcode, from download to the execution of APT simulacra in-memory of the exploited process’s memory, from fingerprinting and surveying the target to exfiltrating sensitive data. Multiple variations of APTs and attack capabilities were delivered for Windows, Ubuntu, FreeBSD, and Android. The logs from E3 and E5 are documented under various scenario names, including Cadets, Trace, Theia, and ClearScope. The attacks in E3 were conducted on a single host per scenario, whereas E5 features three hosts per scenario, presenting a multi-host threat environment.
 
-The \optc dataset, another open-source resource from \darpa, encompasses a comprehensive collection of audit logs from an enterprise environment with 1,000 hosts. This dataset includes six days of benign system logs. Subsequently, attack logs span three days of system activities, featuring red team tactics such as initial compromises, privilege escalations, malicious software installations, and data exfiltration. Each attack day targeted different host machines.
+\PP{DARPA OpTC} The \optc dataset, another open-source resource from \darpa, encompasses a comprehensive collection of audit logs from an enterprise environment with 1,000 hosts. This dataset includes six days of benign system logs. Subsequently, attack logs span three days of system activities, featuring red team tactics such as initial compromises, privilege escalations, malicious software installations, and data exfiltration. Each attack day targeted different host machines.
 
 \section{Resource consumption and Processing Overhead}
 \label{sec:resource_consumption}
@@ -34,13 +34,13 @@ The \optc dataset, another open-source resource from \darpa, encompasses a compr
 
 \PP{Processing Time Analysis}We conducted experiments to study the end-to-end processing time of our system for a client machine. For this, we used batches of audit events of various sizes, conducting end-to-end inference with \Sys to measure the time taken to process these events on a client machine. The results, illustrated in Figure~\ref{sizevstime}, demonstrate that \Sys processes events with notable efficiency. For example, it requires approximately 23 seconds to process a batch of 100,000 events. Given our previous analysis of host logs in the \optc dataset, which indicated that each host generates an average of 100,000 events in three hours, \Sys can process 24 hours worth of log data on a client in merely 3 minutes. This level of efficiency ensures that our system is highly effective, preventing any potential log congestion.
 
-\begin{figure}[!t]
- \centering
- \includegraphics[width=0.25\textwidth]{fig/sizevstime.pdf}
- \caption{Processing time for various audit event sizes evaluated using \optc dataset. }
- \label{sizevstime}
- \vspace{-2ex}
-\end{figure}
+\begin{figure}[!h]
+  \centering
+  \includegraphics[width=0.35\textwidth]{fig/sizevstime.pdf}
+  \caption{Processing time for various audit event sizes evaluated using \optc dataset. }
+  \label{sizevstime}
+  \vspace{-2ex}
+ \end{figure}
 
 
 \section{Ablation study}
@@ -65,9 +65,9 @@ In this ablation study, we analyze the impact of key parameters within \Sys. Spe
 We evaluated the effectiveness of our \wordvec vector harmonization scheme through two experiments using the \optc, E3 and E5 datasets. In the first experiment, each client utilized its locally trained \wordvec model to encode semantic features during the training process. In the second experiment, we harmonized the individually trained models into a central \wordvec model using the utility server architecture, as explained in Section~\ref{sec:methodology}. Then each client used this centralized model for generating semantic features. Table~\ref{local:wordvec} presents the average results for the \darpa E3, E5 and \optc datasets. By employing the harmonized models, we achieved significantly better detection outcomes. This is because these local models encode different information for identical tokens across hosts. Such variability leads to heterogeneity in the feature space for the \gnnshort model, impairing the model's ability to generalize and converge effectively during the federated learning process, thereby yielding suboptimal results. However, through our novel, privacy-preserving aggregation of these semantic models, we have addressed this issue by merging the information in these models together to give the \gnnshort more generalized input vectors.
 
 
-\begin{table}[!t]
+\begin{table}[!h]
  \centering
- \footnotesize
+ \small
  \setlength{\tabcolsep}{10pt}
  \caption{Effectiveness of \wordvec harmonization.}
  \begin{tabular}{ | c | c | c | c | c |}
@@ -126,9 +126,9 @@ To examine the effectiveness of our process categorization based \gnnshort ensem
 %   \label{categorized_gnn}
 % \end{table}
 
-\begin{table}[!t]
+\begin{table}[!h]
  \centering
- \footnotesize
+ \small
  \setlength{\tabcolsep}{10pt}
  \caption{Effectiveness of categorization-based ensemble learning.}
  \begin{tabular}{ | c | c | c | c | c |}
@@ -159,7 +159,7 @@ We employed the \darpa E3 dataset to examine the impact of federated averaging r
 
 \begin{figure}[!t]
   \centering
-  \includegraphics[width=0.3\textwidth]{fig/roundsvsscore.pdf}
+  \includegraphics[width=0.35\textwidth]{fig/roundsvsscore.pdf}
   \caption{Federated averaging rounds vs detection performance using E3 dataset.}
   \label{roundsvsscore}
   \vspace{-2ex}
@@ -172,7 +172,7 @@ We studied the impact of varying the number of categories ($k$) on the detection
 
 \begin{figure}[!h]
   \centering
-  \includegraphics[width=0.3\textwidth]{fig/kvsscore.pdf}
+  \includegraphics[width=0.35\textwidth]{fig/kvsscore.pdf}
   \caption{Effect of number of categories vs detection performance using E3 dataset.}
   \label{catgvsscore}
   \vspace{-2ex}
@@ -192,11 +192,11 @@ We analyzed the impact of the number of submodels on the training costs in FL. T
 \subsection{Anomaly threshold}
 \label{app:threshold}
 
-This hyperparameter controls the number of alerts generated by \Sys. It determines the trade-off between precision and recall. We use the E5 dataset to investigate the effects of different anomaly thresholds. Figure~\ref{thresh} illustrates the results.
+This hyperparameter controls the number of alerts generated by \Sys. It determines the trade-off between precision and recall. We use the E5 dataset to investigate the effects of different anomaly thresholds. Figure~\ref{thresh} illustrates the results. \wajih{add more details here. }
 
 \begin{figure}[!h]
   \centering
-  \includegraphics[width=0.3\textwidth]{fig/thresh.pdf}
+  \includegraphics[width=0.35\textwidth]{fig/thresh.pdf}
   \caption{Anomaly threshold effect.}
   \label{thresh}
   \vspace{-2ex}
