@@ -1,32 +1,33 @@
-
 \begin{table*}[!t]
   \centering
   \scriptsize
-  \caption{Comparison of \Sys against vanilla privacy-preserving PIDS as baseline.} %\wajih{Values need to be fixed below}}
-  \begin{tabular}{lcccccccccccccc}
+  \caption{Comparison of \Sys against vanilla privacy-preserving PIDS as baseline.}
+  \setlength{\tabcolsep}{4pt} % slightly narrower columns
+  \renewcommand{\arraystretch}{1} % optional: improves vertical spacing
+  \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lcccccccccccccc}
     \toprule
-    \multirow{2}{*}{\textbf{Dataset}}
-    & \multicolumn{7}{c}{\textbf{Baseline (Vanilla privacy-preserving PIDS)}}
-    & \multicolumn{7}{c}{\textbf{\Sys}} \\
+    \multirow{2}{*}{\textbf{Dataset}} &
+    \multicolumn{7}{c}{\textbf{Baseline (Vanilla privacy-preserving PIDS)}} &
+    \multicolumn{7}{c}{\textbf{\Sys}} \\
     \cmidrule(lr){2-8} \cmidrule(lr){9-15}
     & Precision & Recall & F1-score & TP & FP & FN & TN
     & Precision & Recall & F1-score & TP & FP & FN & TN \\
     \midrule
-    E3-CADETS       & 0.64   &  0.99   & 0.78   & 12846  &  7243  & 4   & 699,725
-                    & \TCP   & \TCR   & \TCF   & \TCTP & \TCFP & \TCFN & \TCTN  \\
-    E3-TRACE        & 0.85   & 0.99   & 0.92   & 67357   & 11390  & 20   & 2,404,623
-                    & \TTP   & \TTR   & \TTF   & \TTTP & \TTFP & \TTFN & \TTTN \\
-    E3-THEIA        & 0.69   & 0.99   & 0.81  & 25314   & 11337   & 38   & 3,493,999
-                    & \TTHP  & \TTHR  & \TTHF  & \TTHTP & \TTHFP & \TTHFN & \TTHTN \\
-    OpTC            & 0.36   & 0.99   & 0.53   & 649   & 1142   & 1   & 1,285,214
-                    & \TOP   & \TOR   & \TOF   & \TOTP & \TOFP & \TOFN & \TOTN \\
-    E5-CADETS       &  0.76  & 0.99   & 0.86   &  40098   & 12356  & 10   & 1,258,638
-                    & \ETCP  & \ETCR  & \ETCF  & \ETCTP & \ETCFP & \ETCFN & \ETCTN \\
-    E5-THEIA        & 0.73   & 0.99   & 0.84   & 54810  & 20767   & 270   & 1,250,910
+    E3-CADETS       & 0.64 & 0.99 & 0.78 & 12846 & 7243 & 4 & 699725
+                    & \TCP & \TCR & \TCF & \TCTP & \TCFP & \TCFN & \TCTN \\
+    E3-TRACE        & 0.85 & 0.99 & 0.92 & 67357 & 11390 & 20 & 2404623
+                    & \TTP & \TTR & \TTF & \TTTP & \TTFP & \TTFN & \TTTN \\
+    E3-THEIA        & 0.69 & 0.99 & 0.81 & 25314 & 11337 & 38 & 3493999
+                    & \TTHP & \TTHR & \TTHF & \TTHTP & \TTHFP & \TTHFN & \TTHTN \\
+    OpTC            & 0.36 & 0.99 & 0.53 & 649 & 1142 & 1 & 1285214
+                    & \TOP & \TOR & \TOF & \TOTP & \TOFP & \TOFN & \TOTN \\
+    E5-CADETS       & 0.76 & 0.99 & 0.86 & 40098 & 12356 & 10 & 1258638
+                    & \ETCP & \ETCR & \ETCF & \ETCTP & \ETCFP & \ETCFN & \ETCTN \\
+    E5-THEIA        & 0.73 & 0.99 & 0.84 & 54810 & 20767 & 270 & 1250910
                     & \ETTHP & \ETTHR & \ETTHF & \ETTHTP & \ETTHFP & \ETTHFN & \ETTHTN \\
-    E5-ClearScope   & 0.79   & 0.97   & 0.88   & 13670   & 3491   & 397   & 80,242
+    E5-ClearScope   & 0.79 & 0.97 & 0.88 & 13670 & 3491 & 397 & 80242
                     & \ETClP & \ETClR & \ETClF & \ETClTP & \ETClFP & \ETClFN & \ETClTN \\
     \bottomrule
-  \end{tabular}
+  \end{tabular*}
   \label{summary:benchmarks:vanilla}
 \end{table*}
