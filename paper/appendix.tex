@@ -84,7 +84,7 @@ We evaluated the effectiveness of our \wordvec vector harmonization scheme throu
    \hline
    \multirow{2}{*}{E5} & Local & 0.81 & 0.94 & 0.87 \\
    \cline{2-5}
-   & Harmonized & 0.99 & 0.96 & 0.97 \\
+   & Harmonized & 0.98 & 0.98 & 0.98 \\
    \hline
  \end{tabular}
  \label{local:wordvec}
@@ -145,7 +145,7 @@ To examine the effectiveness of our process categorization based \gnnshort ensem
    \hline
    \multirow{2}{*}{E5} & Single & 0.92 & 0.96 & 0.94 \\
    \cline{2-5}
-   & Ensemble & 0.99 & 0.96 & 0.97 \\
+   & Ensemble & 0.98 & 0.98 & 0.98 \\
    \hline
  \end{tabular}
  \label{categorized_gnn}
@@ -212,7 +212,7 @@ We conducted experiments to evaluate the efficacy of existing federated learning
 FedProx's penalty on global and local deviations focuses the model on patterns common across all clients, preventing it from learning client-specific patterns. Consequently, using this global model for anomaly detection on individual clients often yields numerous false alarms and poor detection performance. Moreover, while FedOpt can effectively aggregate model updates using an optimizer rather than simple averaging, updates that are highly disparate—a common scenario in system logs due to diverse client activities—cause FedOpt to fail in harmonizing the updates. As a result, it loses information on important benign patterns, leading to low precision and recall.
 
 In contrast, our system employs an ensemble learning framework. First, it categorizes system patterns into standardized bins via process entity categorization. Next, \gnnshort submodels learn the data distribution within each bin. Submodels with similar learned distributions are then averaged, preventing the conflation of unique client patterns and improving precision. Moreover, our semantic vector harmonization reduces heterogeneity in the \gnnshort feature vectors, making the updates less disparate and improving model convergence in comparison to other techniques.
- 
+
 
 \begin{table}[!t]
   \centering
@@ -226,14 +226,15 @@ In contrast, our system employs an ensemble learning framework. First, it catego
     & {\bf Prec.} &  {\bf Rec.} & {\bf F-score} & {\bf Prec.}  & {\bf Rec.} & {\bf F-score} & {\bf Prec.}  & {\bf Rec.} & {\bf F-score} \\
     \midrule
 
-    FedAvg & \VFOP & \VFOR & \VFOF & 0.83 & 0.96 & 0.89 & 0.81 & 0.94 & 0.87 \\
-    FedProx & 0.64 & 0.95 & 0.76 & 0.87 & 0.98 & 0.92 & 0.86 & 0.95 & 0.90 \\
-    FedOpt & 0.63 & 0.90  & 0.74 & 0.85 & 0.97 & 0.91 & 0.87 & 0.92 & 0.89 \\
+    FedAvg & 0.36 & 0.99 & 0.53  & 0.73 & 0.99 & 0.84 & 0.76 & 0.98 & 0.86 \\
+    FedProx & 0.48 & 0.95 & 0.64 & 0.79 & 0.98 & 0.87 & 0.82 & 0.95 & 0.88 \\
+    FedOpt & 0.52 & 0.90  & 0.74 & 0.81 & 0.97 & 0.88 & 0.84 & 0.92 & 0.87 \\
     {\bf \Sys} & \TOP & \TOR & \TOF & 0.96 & 0.99 & 0.97 & 0.99 & 0.96 & 0.97 \\
     \bottomrule
   \end{tabular}
 \label{fedoptprox}
 \end{table}
+
 
 
 \section{Comparison of encryption methods}
