@@ -1,10 +1,6 @@
 \section{Privacy Preservation Analysis}
 \label{sec:privacy}
 
-\wajih{Make sure that all the assumptions that you are making below are present in the threat model. Also please use ~\ref{sec:threat} where you are taking about assumptions. For example, non-collusion assumption between utility and central server needs a reference to the section. }
-
-
-
 \subsection{Privacy guarantees}
 
 Within \Sys, potential privacy compromises arise if either the central server, utility server or a malicious client can infer specific details about individual clients' logs, such as the applications in use or particular attributes like filenames and IP addresses. For each of the three components we present the proofs with strong privacy guarantees below:
@@ -89,5 +85,5 @@ Therefore, \Sys guarantees that the probability of reverse-engineering semantic 
   This anonymity-by-aggregation ensures that model contributions cannot be disaggregated or linked to specific sources. Therefore, \Sys preserves client-level privacy against attribution and token inference attacks under the federated aggregation setting.
   \end{proof}  
 
-Therefore, the architecture of \Sys robustly defends against inference attacks from both servers and malicious clients. Its privacy guarantees rely on decentralized learning, semantic embedding ambiguity, and the assumption of non-colluding servers, as upheld by prior works~\cite{roy2020crypte,wu2022federated}.
+Therefore, the architecture of \Sys robustly defends against inference attacks from both servers and malicious clients. Its privacy guarantees rely on decentralized learning, semantic embedding ambiguity, and the assumption of non-colluding servers, as upheld by prior works~\cite{roy2020crypte,wu2022federated} and established in our threat model~\ref{sec:threat}.
 
