@@ -2,33 +2,31 @@
 \begin{table*}[!t]
   \centering
   \scriptsize
-  \caption{Comparison of \Sys with SOTA PIDS. Prec.: Precision; Rec.: Recall; F1.: F1-Score. While \flash performs slightly better, \Sys offers strong privacy and scalability through decentralization. Refer to SOTA PIDS papers for their FP/FN details. \wajih{Let's not make another column for MIRAGE. Let's put colored fraction with each metrics and for example, in the first row put 0.97 (X/4) 0.99 (X/4) 0.98 (X/4). Also for MIRAGE column let's not use "Prec./Rec./F1." instead make sepearate columns "Prec.    Rec.    F1.". Also explain in the caption what Fraction in paranthesis means.}}
+  \caption{Comparison of \Sys with SOTA PIDS. Prec.: Precision; Rec.: Recall; F1.: F1-Score. While \flash performs slightly better, \Sys offers strong privacy and scalability through decentralization. Refer to SOTA PIDS papers for their FP/FN details. The fraction in parentheses for Mirage indicates how many systems (out of the total compared) it outperforms or matches on that metric.}
   \setlength{\tabcolsep}{4pt}
   \newcolumntype{Y}{>{\centering\arraybackslash}X}
-  \begin{tabularx}{\textwidth}{lYYYYYY}
+  \begin{tabularx}{\textwidth}{lYYYYYYY}
     \toprule
     \textbf{Dataset}
     & \textbf{Ortrhurs}
     & \textbf{MAGIC~\cite{jia2023magic}}
     & \textbf{\flash~\cite{flash2024}}
     & \textbf{\kairos~\cite{cheng2023kairos}}
-    & \textbf{\Sys}
-    & \textbf{\Sys} \\
-    \cmidrule(r{4pt}){2-2} \cmidrule(r{4pt}){3-3} \cmidrule(r{4pt}){4-4} \cmidrule(r{4pt}){5-5} \cmidrule(r{4pt}){6-6} \cmidrule(r{4pt}){7-7}
+    & \multicolumn{3}{c}{\textbf{\Sys}} \\
+    \cmidrule(r{4pt}){2-2} \cmidrule(r{4pt}){3-3} \cmidrule(r{4pt}){4-4} \cmidrule(r{4pt}){5-5} \cmidrule(lr){6-8}
       & {\bf Prec./Rec./F1.}
       & {\bf Prec./Rec./F1.}
       & {\bf Prec./Rec./F1.}
       & {\bf Prec./Rec./F1.}
-      & {\bf Prec./Rec./F1.}
-      & {\bf Comparable} \\
+      & \textbf{Prec.} & \textbf{Rec.} & \textbf{F1.} \\
     \midrule
-    E3-CADETS       & 0.52/0.37/0.43 & 0.94/0.99/0.97 & \FCP/\FCR/\FCF       & \KCP/\KCR/\KCF       & \TCP/\TCR/\TCF       & \ycmark{3/4} \\
-    E3-TRACE        & 0.81/0.40/0.54 & 0.99/0.99/0.99 & \FTP/\FTR/\FTF       & --                   & \TTP/\TTR/\TTF       & \ycmark{2/4} \\
-    E3-THEIA        & 0.25/0.05/0.08 & 0.98/0.99/0.99 & \FTHP/\FTHR/\FTHF    & \KTHP/\KTHR/\KTHF    & \TTHP/\TTHR/\TTHF    & \ycmark{2/4} \\
-    \optc           & --             & --             & \FOP/\FOR/\FOF       & \KOP/\KOR/\KOF       & \TOP/\TOR/\TOF       & \ycmark{1/2} \\
-    E5-CADETS       & 0.17/0.02/0.03 & 0.00/1.00/0.00 & \EKCP/\EKCR/\EKCF    & \EFCP/\EFCR/\EFCF    & \ETCP/\ETCR/\ETCF    & \ycmark{2/4} \\
-    E5-THEIA        & 0.87/0.19/0.31 & 0.00/0.00/0.00 & \EKTHP/\EKTHR/\EKTHF & \EFTHP/\EFTHR/\EFTHF & \ETTHP/\ETTHR/\ETTHF & \ccmark{4/4} \\
-    E5-ClearScope   & 0.33/0.08/0.13 & 0.00/1.00/0.00 & \EKClP/\EKClR/\EKClF & \EFClP/\EFClR/\EFClF & \ETClP/\ETClR/\ETClF & \ccmark{4/4} \\
+    E3-CADETS       & 0.52/0.37/0.43 & 0.94/0.99/0.97 & \FCP/\FCR/\FCF       & \KCP/\KCR/\KCF       & \TCP~(\ycmark{3/4}) & \TCR~(\ycmark{3/4}) & \TCF~(\ycmark{3/4}) \\
+    E3-TRACE        & 0.81/0.40/0.54 & 0.99/0.99/0.99 & \FTP/\FTR/\FTF       & --                   & \TTP~(\ycmark{1/3}) & \TTR~(\ccmark{3/3}) & \TTF~(\ycmark{1/3}) \\
+    E3-THEIA        & 0.25/0.05/0.08 & 0.98/0.99/0.99 & \FTHP/\FTHR/\FTHF    & \KTHP/\KTHR/\KTHF    & \TTHP~(\ycmark{2/4}) & \TTHR~(\ycmark{3/4}) & \TTHF~(\ycmark{2/4}) \\
+    \optc           & --             & --             & \FOP/\FOR/\FOF       & \KOP/\KOR/\KOF       & \TOP~(\ycmark{1/2}) & \TOR~(\ycmark{1/2}) & \TOF~(\ycmark{1/2}) \\
+    E5-CADETS       & 0.17/0.02/0.03 & 0.00/1.00/0.00 & \EKCP/\EKCR/\EKCF    & \EFCP/\EFCR/\EFCF    & \ETCP~(\ycmark{2/4}) & \ETCR~(\ycmark{3/4}) & \ETCF~(\ycmark{2/4}) \\
+    E5-THEIA        & 0.87/0.19/0.31 & 0.00/0.00/0.00 & \EKTHP/\EKTHR/\EKTHF & \EFTHP/\EFTHR/\EFTHF & \ETTHP~(\ccmark{4/4}) & \ETTHR~(\ycmark{3/4}) & \ETTHF~(\ccmark{4/4}) \\
+    E5-ClearScope   & 0.33/0.08/0.13 & 0.00/1.00/0.00 & \EKClP/\EKClR/\EKClF & \EFClP/\EFClR/\EFClF & \ETClP~(\ccmark{4/4}) & \ETClR~(\ycmark{3/4}) & \ETClF~(\ccmark{4/4}) \\
     \bottomrule
   \end{tabularx}
   \label{summary:benchmarks:large}
