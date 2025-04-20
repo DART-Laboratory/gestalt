@@ -38,23 +38,3 @@ Multi-Krum compares each client’s gradient with those of other clients, retain
   \end{figure}
 
 \PP{Gradient-based Attacks} These attacks~\cite{chakraborty2021survey} exploit detailed knowledge of the target model, including its architecture and parameters, to calculate and apply malicious perturbations. Such white-box access allows an attacker to compute precise gradients that indicate how inputs should be modified to degrade the model’s performance. Other attacks tend to be black-box in nature, relying on iterative, query-based techniques to influence the model’s decisions. However, these repeated computations and queries run counter to the attacker’s aim of remaining inconspicuous, as they generate substantial activity and leave a significant footprint. Consequently, such attacks are often impractical in real-world scenarios. Several defenses can be employed during model training to bolster the system’s resilience against these threats. Adversarial training~\cite{tramer2019adversarial} is one effective strategy in which the model is trained on perturbed input data, thereby increasing its robustness against these attacks.
-
-\subsection{Effect of differential privacy on accuracy}
-\label{app:dp}
-
-In Section~\ref{sec:privacy}, we analyze how our system design offers strong guarantees against model inference attacks. Here we discuss another alternative technique for preserving privacy through the use of Differential Privacy (DP). It can be integrated with federated learning to protect against inference attacks~\cite{lyu2020threats,nasr2019comprehensive,zari2021efficient}, though it comes at the cost of detection accuracy.
-
-Differential privacy safeguards the model by injecting a controlled amount of Gaussian noise into its parameters, thereby concealing the influence of any individual data point. In our work, we adopt a node-level DP strategy, which ensures that each node’s features and labels are protected when noise is added to the gradient updates. As a result, individual node contributions remain obscured in the aggregated model parameters, reducing the likelihood of identifying specific nodes or their features. We conduct experiments to examine how varying levels of differential privacy noise affect the detection performance of \Sys. The noise is adjusted based on a privacy budget defined by~$\epsilon$. This noise is applied to local \gnnshort model updates before they are aggregated at the central server during federated averaging, as described in Section~\ref{sec:methodology}.
-
-\begin{figure}[!t]
-  \centering
-  \includegraphics[width=0.3\textwidth]{fig/epsvsscore.pdf}
-  \caption{Effect of differential privacy noise on detection using E3 dataset. Note that we observed similar results on the other datasets.}
-  \label{epsvsscore}
-  \vspace{-2ex}
-\end{figure}
-
-
-The privacy budget~$\epsilon$ plays a pivotal role. Lower values of $\epsilon$ increase the noise injected into the model, which enhances privacy at the expense of detection performance. Conversely, higher values of $\epsilon$ inject less noise, improving detection accuracy but offering weaker privacy guarantees. By tuning $\epsilon$ during training, we explore the balance between privacy and detection effectiveness across various settings. As shown in Figure~\ref{epsvsscore}, increasing the noise level (i.e., reducing $\epsilon$) degrades the model’s utility, thereby providing more privacy at the cost of lower accuracy.
-
-Hence, although DP is a valid solution for protecting privacy, the accuracy deterioration that comes with it reduces its utility in the domain of intrusion detection, where high detection performance is needed. Due to these reasons, we do not use DP in \Sys and instead design a dual-server architecture to offer privacy guarantees without adding noise to the model updates.

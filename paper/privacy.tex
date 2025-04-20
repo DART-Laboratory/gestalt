@@ -1,6 +1,8 @@
 \section{Privacy Preservation Analysis}
 \label{sec:privacy}
 
+\subsection{Privacy guarantees}
+
 Within \Sys, potential privacy compromises arise if either the central, utility server or a malicious client can infer specific details about individual clients' logs, such as the applications in use or particular attributes like filenames and IP addresses. For each of the three components we present the proofs with strong privacy guarantees below:
 
 \renewcommand{\thetheorem}{\arabic{theorem}}
@@ -91,3 +93,23 @@ where \(\epsilon(m)\) accounts for statistical leakage from partial token overla
 \end{proof}
 
 Therefore, the architecture of \Sys robustly defends against inference attacks from both servers and malicious clients. Its privacy guarantees rely on decentralized learning, semantic embedding ambiguity, and the assumption of non-colluding servers, as upheld by prior works~\cite{roy2020crypte,wu2022federated}.
+
+\subsection{Effect of differential privacy on accuracy}
+\label{app:dp}
+
+In Section~\ref{sec:privacy}, we analyze how our system design offers strong guarantees against model inference attacks. Here we discuss another alternative technique for preserving privacy through the use of Differential Privacy (DP). It can be integrated with federated learning to protect against inference attacks~\cite{lyu2020threats,nasr2019comprehensive,zari2021efficient}, though it comes at the cost of detection accuracy.
+
+Differential privacy safeguards the model by injecting a controlled amount of Gaussian noise into its parameters, thereby concealing the influence of any individual data point. In our work, we adopt a node-level DP strategy, which ensures that each node’s features and labels are protected when noise is added to the gradient updates. As a result, individual node contributions remain obscured in the aggregated model parameters, reducing the likelihood of identifying specific nodes or their features. We conduct experiments to examine how varying levels of differential privacy noise affect the detection performance of \Sys. The noise is adjusted based on a privacy budget defined by~$\epsilon$. This noise is applied to local \gnnshort model updates before they are aggregated at the central server during federated averaging, as described in Section~\ref{sec:methodology}.
+
+\begin{figure}[!t]
+  \centering
+  \includegraphics[width=0.3\textwidth]{fig/epsvsscore.pdf}
+  \caption{Effect of differential privacy noise on detection using E3 dataset. Note that we observed similar results on the other datasets.}
+  \label{epsvsscore}
+  \vspace{-2ex}
+\end{figure}
+
+
+The privacy budget~$\epsilon$ plays a pivotal role. Lower values of $\epsilon$ increase the noise injected into the model, which enhances privacy at the expense of detection performance. Conversely, higher values of $\epsilon$ inject less noise, improving detection accuracy but offering weaker privacy guarantees. By tuning $\epsilon$ during training, we explore the balance between privacy and detection effectiveness across various settings. As shown in Figure~\ref{epsvsscore}, increasing the noise level (i.e., reducing $\epsilon$) degrades the model’s utility, thereby providing more privacy at the cost of lower accuracy.
+
+Hence, although DP is a valid solution for protecting privacy, the accuracy deterioration that comes with it reduces its utility in the domain of intrusion detection, where high detection performance is needed. Due to these reasons, we do not use DP in \Sys and instead design a dual-server architecture to offer privacy guarantees without adding noise to the model updates.
