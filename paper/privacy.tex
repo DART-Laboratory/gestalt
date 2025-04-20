@@ -72,53 +72,22 @@ Let \(\text{Rev}(M_{\text{w2v-harm}}, e)\) denote a hypothetical reverse functio
 \]
 where \(\epsilon(d)\) becomes negligible as \(d\) increases. That is, for every polynomial \(p(d)\), there exists \(d_0\) such that for all \(d > d_0\), \(\epsilon(d) < \frac{1}{p(d)}\).
 
-Therefore, \Sys guarantees that the probability of reverse-engineering semantic embeddings at the utility server is negligible, ensuring strong semantic privacy.
+Therefore, \Sys guarantees that the probability of reverse-engineering semantic embeddings at the utility server is negligible, ensuring strong privacy protection.
 
-\wajih{What is "semantic privacy"?}
 \end{proof}
 
-\wajih{You are assuming that clients observe disjoint semantic vocabularies. Is that true? Because there will be overlapping tokens. Can you refer to our design here if we make this assumption in our design or this aligns with our design. }
+  
 \begin{theorem}[Client-Level Privacy]
-Let \(w_j^{(r)}\) be the global model weights obtained by aggregating updates from clients \(\mathcal{C} = \{C_1, C_2, \ldots, C_N\}\), where each client observes only a disjoint subset of application-specific semantic attribute vectors. Suppose a malicious client \(C_{\text{adv}} \in \mathcal{C}\) attempts to infer whether a particular token \(p \in \mathcal{P}_{\text{global}}\) used by another client is present in the global model. Then, under standard aggregation (e.g., FedAvg) and semantic vector disjointness across clients, the probability that \(C_{\text{adv}}\) can infer the presence of \(p\) is bounded by:
-\[
-\Pr[\text{Infer}(w_j^{(r)}, p) = 1] \leq \frac{|\mathcal{P}_{\text{adv}}|}{|\mathcal{P}_{\text{global}}|} + \epsilon(m),
-\]
-where \(\mathcal{P}_{\text{adv}}\) is the set of tokens accessible to \(C_{\text{adv}}\), and \(\epsilon(m)\) is negligible in the number of disjoint-contributing clients \(m = |\mathcal{P}_{\text{global}} \setminus \mathcal{P}_{\text{adv}}|\).
-\end{theorem}
-
-\begin{proof}
-The global model \(w_j^{(r)}\) is constructed via aggregation of updates from clients \(\mathcal{C}\), each of which trains a local GNN ensemble using embeddings from their private token subset. Let \(\mathcal{P}_{\text{global}}\) denote the full vocabulary and \(\mathcal{P}_{\text{adv}} \subset \mathcal{P}_{\text{global}}\) the subset observed by adversarial client \(C_{\text{adv}}\).
-
-Client \(C_{\text{adv}}\) observes \(w_j^{(r)}\), which encodes aggregated signals from all participating clients. However, without access to \(M_{\text{w2v-harm}}(p)\) for \(p \notin \mathcal{P}_{\text{adv}}\), the adversary cannot attribute any weight shifts to specific unseen tokens.
-
-We model the inference as a binary decision: \(\text{Infer}(w_j^{(r)}, p) = 1\) if the adversary believes \(p\) is present. Since the adversary lacks semantic embeddings for tokens outside \(\mathcal{P}_{\text{adv}}\), its best strategy is random guessing over the unknown token space. Thus:
-\[
-\Pr[\text{Infer}(w_j^{(r)}, p) = 1] \leq \frac{|\mathcal{P}_{\text{adv}}|}{|\mathcal{P}_{\text{global}}|} + \epsilon(m),
-\]
-where \(\epsilon(m)\) accounts for statistical leakage from partial token overlaps. As \(m\) increases, \(\epsilon(m)\) becomes negligible.
-
-\end{proof}
+  In \Sys, let \(w_j^{(r)}\) denote the global model weights for category \(j\) after round \(r\), obtained via aggregation of updates from clients \(\mathcal{C} = \{C_1, \ldots, C_N\}\). Suppose a malicious client \(C_{\text{adv}} \in \mathcal{C}\) attempts to determine whether a specific process entity \(p \in \mathcal{P}_{\text{global}}\) was used by another client. Then, under \Sys’s federated aggregation design, \(C_{\text{adv}}\) cannot attribute the presence of \(p\) to any specific client, and client-level privacy is preserved.
+  \end{theorem}
+  
+  \begin{proof}
+  \Sys uses standard federated averaging to compute global model weights \(w_j^{(r)}\) by aggregating local model updates from all clients in \(\mathcal{C}\). These local updates are never shared directly among clients; only their aggregated result is transmitted to participating parties.
+  
+  As a result, a malicious client \(C_{\text{adv}}\) receives only the final aggregated model and has no visibility into individual contributions. The influence of any specific process entity \(p \in \mathcal{P}_{\text{global}}\) on \(w_j^{(r)}\) is diluted across all participating updates. Without access to isolated gradients or update traces, \(C_{\text{adv}}\) cannot determine whether \(p\) originated from any specific client.
+  
+  This anonymity-by-aggregation ensures that model contributions cannot be disaggregated or linked to specific sources. Therefore, \Sys preserves client-level privacy against attribution and token inference attacks under the federated aggregation setting.
+  \end{proof}  
 
 Therefore, the architecture of \Sys robustly defends against inference attacks from both servers and malicious clients. Its privacy guarantees rely on decentralized learning, semantic embedding ambiguity, and the assumption of non-colluding servers, as upheld by prior works~\cite{roy2020crypte,wu2022federated}.
 
-\wajih{I think we discussed that the subsection below does not fit well here. Let's move this to appendix.}
-
-\subsection{Effect of differential privacy on accuracy}
-\label{app:dp}
-
-In Section~\ref{sec:privacy}, we analyze how our system design offers strong guarantees against model inference attacks. Here we discuss another alternative technique for preserving privacy through the use of Differential Privacy (DP). It can be integrated with federated learning to protect against inference attacks~\cite{lyu2020threats,nasr2019comprehensive,zari2021efficient}, though it comes at the cost of detection accuracy.
-
-Differential privacy safeguards the model by injecting a controlled amount of Gaussian noise into its parameters, thereby concealing the influence of any individual data point. In our work, we adopt a node-level DP strategy, which ensures that each node’s features and labels are protected when noise is added to the gradient updates. As a result, individual node contributions remain obscured in the aggregated model parameters, reducing the likelihood of identifying specific nodes or their features. We conduct experiments to examine how varying levels of differential privacy noise affect the detection performance of \Sys. The noise is adjusted based on a privacy budget defined by~$\epsilon$. This noise is applied to local \gnnshort model updates before they are aggregated at the central server during federated averaging, as described in Section~\ref{sec:methodology}.
-
-\begin{figure}[!t]
-  \centering
-  \includegraphics[width=0.3\textwidth]{fig/epsvsscore.pdf}
-  \caption{Effect of differential privacy noise on detection using E3 dataset. Note that we observed similar results on the other datasets.}
-  \label{epsvsscore}
-  \vspace{-2ex}
-\end{figure}
-
-
-The privacy budget~$\epsilon$ plays a pivotal role. Lower values of $\epsilon$ increase the noise injected into the model, which enhances privacy at the expense of detection performance. Conversely, higher values of $\epsilon$ inject less noise, improving detection accuracy but offering weaker privacy guarantees. By tuning $\epsilon$ during training, we explore the balance between privacy and detection effectiveness across various settings. As shown in Figure~\ref{epsvsscore}, increasing the noise level (i.e., reducing $\epsilon$) degrades the model’s utility, thereby providing more privacy at the cost of lower accuracy.
-
-Hence, although DP is a valid solution for protecting privacy, the accuracy deterioration that comes with it reduces its utility in the domain of intrusion detection, where high detection performance is needed. Due to these reasons, we do not use DP in \Sys and instead design a dual-server architecture to offer privacy guarantees without adding noise to the model updates.
