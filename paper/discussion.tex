@@ -1,7 +1,7 @@
 \section{Discussion \& Future Work}
 \label{sec:discussion}
 
-% \wajih{Explain in the discussion section why we chose GraphSage over GCN and TGN and then in the design section you "say the detailed disscussion on why we chose GraphSage blah blah"}
+\wajih{Explain here why we chose GraphSage over GCN and TGN.}
 
 \PP{Reason for Combining FL with \gnnshort} APTs involve causally linked steps across system entities, best modeled by provenance graphs~\cite{inam2023sok}. Traditional log-level systems~\cite{deeplog2017,liu2019log2vec,xia2019loggan} fail to capture these relationships, whereas graph learning techniques effectively detect such patterns~\cite{flash2024,cheng2023kairos,jia2023magic}. By integrating FL with graph representation learning, \Sys enables decentralized, privacy-preserving intrusion detection without sacrificing accuracy.
 
@@ -22,7 +22,7 @@
 
 \PP{Unseen Tokens in Semantic Encoder} \Sys relies on \wordvec models to encode semantic attributes, but \wordvec only generates embeddings for tokens it has previously encountered, which can degrade the quality of feature vectors for new nodes with unseen tokens. To construct node representations, we combine semantic attributes with neighboring nodes' system calls, but for nodes with unseen tokens, the representation is predominantly based on system calls, as seen in systems like \threatrace~\cite{wang2022threatrace}. To address this limitation, retraining the \wordvec model more frequently or adopting subword-level embedding models like fastText~\cite{joulin2016bag}, which generate embeddings from subword units, can improve coverage. Tokenization methods such as Byte-Pair Encoding~\cite{araabi2022effective} further enhance new token representation by breaking unknown words into smaller subword components.
 
-\PP{Unseen Tokens in Semantic Encoder} \Sys relies on \wordvec models to encode semantic attributes, but \wordvec only generates embeddings for tokens it has previously encountered, which can degrade the quality of feature vectors for new nodes with unseen tokens. To construct node representations, we combine semantic attributes with neighboring nodes' system calls, but for nodes with unseen tokens, the representation is predominantly based on system calls, as seen in systems like \threatrace~\cite{wang2022threatrace}. To address this limitation, retraining the \wordvec model more frequently or adopting subword-level embedding models like fastText~\cite{joulin2016bag}, which generate embeddings from subword units, can improve coverage. Tokenization methods such as Byte-Pair Encoding~\cite{araabi2022effective} further enhance new token representation by breaking unknown words into smaller subword components.
+\wajih{Let's move this into adversarial attack section as this fits there well.}
 
 \PP{Bin-level Inference Attacks}  
 In addition to the privacy risks outlined in Section~\ref{sec:privacy}, we identify another potential avenue for information leakage: bin-level inference attacks during training. In this scenario, a malicious client attempts to infer information about system entities held by other clients. It does so by manipulating the tokens it submits and observing changes in the utility server's harmonized vectors. Since overlapping token vectors are averaged, any noticeable change in the returned vector indicates that the token is shared across clients within the organization.  

@@ -1,9 +1,13 @@
 \section{Privacy Preservation Analysis}
 \label{sec:privacy}
 
+\wajih{Make sure that all the assumptions that you are making below are present in the threat model. Also please use ~\ref{sec:threat} where you are taking about assumptions. For example, non-collusion assumption between utility and central server needs a reference to the section. }
+
+
+
 \subsection{Privacy guarantees}
 
-Within \Sys, potential privacy compromises arise if either the central, utility server or a malicious client can infer specific details about individual clients' logs, such as the applications in use or particular attributes like filenames and IP addresses. For each of the three components we present the proofs with strong privacy guarantees below:
+Within \Sys, potential privacy compromises arise if either the central server, utility server or a malicious client can infer specific details about individual clients' logs, such as the applications in use or particular attributes like filenames and IP addresses. For each of the three components we present the proofs with strong privacy guarantees below:
 
 \renewcommand{\thetheorem}{\arabic{theorem}}
 
@@ -69,8 +73,11 @@ Let \(\text{Rev}(M_{\text{w2v-harm}}, e)\) denote a hypothetical reverse functio
 where \(\epsilon(d)\) becomes negligible as \(d\) increases. That is, for every polynomial \(p(d)\), there exists \(d_0\) such that for all \(d > d_0\), \(\epsilon(d) < \frac{1}{p(d)}\).
 
 Therefore, \Sys guarantees that the probability of reverse-engineering semantic embeddings at the utility server is negligible, ensuring strong semantic privacy.
+
+\wajih{What is "semantic privacy"?}
 \end{proof}
 
+\wajih{You are assuming that clients observe disjoint semantic vocabularies. Is that true? Because there will be overlapping tokens. Can you refer to our design here if we make this assumption in our design or this aligns with our design. }
 \begin{theorem}[Client-Level Privacy]
 Let \(w_j^{(r)}\) be the global model weights obtained by aggregating updates from clients \(\mathcal{C} = \{C_1, C_2, \ldots, C_N\}\), where each client observes only a disjoint subset of application-specific semantic attribute vectors. Suppose a malicious client \(C_{\text{adv}} \in \mathcal{C}\) attempts to infer whether a particular token \(p \in \mathcal{P}_{\text{global}}\) used by another client is present in the global model. Then, under standard aggregation (e.g., FedAvg) and semantic vector disjointness across clients, the probability that \(C_{\text{adv}}\) can infer the presence of \(p\) is bounded by:
 \[
@@ -93,6 +100,8 @@ where \(\epsilon(m)\) accounts for statistical leakage from partial token overla
 \end{proof}
 
 Therefore, the architecture of \Sys robustly defends against inference attacks from both servers and malicious clients. Its privacy guarantees rely on decentralized learning, semantic embedding ambiguity, and the assumption of non-colluding servers, as upheld by prior works~\cite{roy2020crypte,wu2022federated}.
+
+\wajih{I think we discussed that the subsection below does not fit well here. Let's move this to appendix.}
 
 \subsection{Effect of differential privacy on accuracy}
 \label{app:dp}

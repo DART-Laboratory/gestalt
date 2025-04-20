@@ -62,6 +62,7 @@ Our evaluation experiments are conducted on a machine running Ubuntu 18.04.6 LTS
 
 \PP{Excluded Detectors} We do not compare against Streamspot~\cite{streamspot} and Unicorn~\cite{han2020unicorn} as they are graph-level detectors, and recent systems like \threatrace and \flash have been shown to surpass them in detection performance. While \disdet~\cite{dong2023distdet}, Prographer~\cite{yangprographer} and Shadewatcher~\cite{shadewatcher} are notable \pids, we exclude them from our comparison because \disdet and Prographer are closed-source and a major component of Shadewatcher is proprietary, which hinders our ability to conduct a thorough comparison. It is important to note that, similar to existing works (e.g., \kairos, Shadewatcher, and Prographer), \Sys considers only three node types in provenance graphs: \emph{processes}, \emph{files}, and \emph{sockets}. However, in the E3 dataset, \flash has also been evaluated using additional node types. Therefore, we executed \flash using these three node types to report the results in Table~\ref{summary:benchmarks:large}.
 
+\wajih{Let's add RQXX in the headings of the subsections as it will be easy to cross-reference.}
 
 \subsection{Detection Performance Against a Vanilla Privacy-Preserving PIDS}
 \label{sub:detect:perf:vanilla}
