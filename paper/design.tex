@@ -3,6 +3,8 @@
 
 \wajih{Algorithm 2 (categorization) is cited as Algorithm 12 in some parts.}
 
+\wajih{Make sure you clarify this point at the revelant place in the design section. You probably also need to make it concise. "Central Server's Encryption Role: To clarify, the central server only generates the encryption key. It then distributes this key to the clients but does not perform any encryption or decryption operations on the semantic tokens themselves. This design prevents the central server from accessing the plaintext data. The central server does not possess the decryption key and therefore cannot decrypt the individual tokens. Its role is limited to key generation and distribution, ensuring it cannot access plaintext data."}
+
 
 \begin{figure*}[t!]
   \centering
