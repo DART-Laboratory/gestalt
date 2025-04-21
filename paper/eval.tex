@@ -23,7 +23,7 @@
 
 %\wajih{Handle this comment in the evaluation section: "I'm quite concerned about the evaluation results in Table 2. It doesn't look right to me that the number of malicious nodes in DARPA TC datasets can be sometimes around 20\%!"}
 
-\wajih{ We claim that the categorization-based ensemble improves convergence. But there is no empirical convergence analysis in the evaluation section e.g., training loss curves or number of FL rounds, etc. }
+%\wajih{ We claim that the categorization-based ensemble improves convergence. But there is no empirical convergence analysis in the evaluation section e.g., training loss curves or number of FL rounds, etc. }
 
 %\wajih{Add in the evaluation section how many clients we have in each dataset. "I can't find the number of FL clients in your text" }
 
@@ -65,7 +65,9 @@ Our evaluation experiments are conducted on a machine running Ubuntu 18.04.6 LTS
 \subsection{RQ1: Detection Performance Against a Vanilla Privacy-Preserving PIDS}
 \label{sub:detect:perf:vanilla}
 
-\wajih{Add a line about Vanilla Privacy-Preserving PIDS and how it was created by using basic FL with Flash. and say that Besides Flash we tried other SOTA PIDS and we got similar results for Vanilla Privacy-Preserving PIDS so we only include results for Flash.}
+%\wajih{Add a line about Vanilla Privacy-Preserving PIDS and how it was created by using basic FL with Flash. and say that Besides Flash we tried other SOTA PIDS and we got similar results for Vanilla Privacy-Preserving PIDS so we only include results for Flash.}
+
+We conducted experiments to analyze the detection performance of \Sys in comparison to a vanilla privacy-preserving \pids, constructed by naively applying FL to an existing centralized \pids such as \flash. To simulate this setup, we operated \flash in a decentralized manner: each client locally trained \wordvec to encode semantic features and then trained their own \gnnshort models. These models were subsequently aggregated into a global model using the standard federated averaging algorithm. The results are shown in Table~\ref{summary:benchmarks:vanilla}. \Sys consistently outperforms the vanilla FL \flash across all detection metrics. This performance gain stems from \Sys's use of \wordvec harmonization and categorization-based ensemble learning, which effectively handle data heterogeneity. In contrast, the vanilla FL \flash lacks any mechanism to address this heterogeneity, resulting in degraded detection performance.
 
 \input{tables/vanilla.tex}
 
