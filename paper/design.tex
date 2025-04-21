@@ -92,19 +92,26 @@ Transferring tokens -- containing sensitive data like process names, file names,
 \subsection{Process Entity Categorization}
 \label{sys:catg}
 
-\wajih{This is section difficult to absorb. So let's make figure for the workflow. In the figure we will clarify how processes from different clients are collected, categorized into Kcat bins, and redistributed. In the figure have two Client A and Client B each send encrypted process names. Utility server merges them into Pglobal. Randomly assigns categories via Phi (p). Sends category mappings back to clients. Clients form per-category bins. Use consistent terminology. I am expecting a Flowchart-style with arrows and category bins.}
+% \wajih{This is section difficult to absorb. So let's make figure for the workflow. In the figure we will clarify how processes from different clients are collected, categorized into Kcat bins, and redistributed. In the figure have two Client A and Client B each send encrypted process names. Utility server merges them into Pglobal. Randomly assigns categories via Phi (p). Sends category mappings back to clients. Clients form per-category bins. Use consistent terminology. I am expecting a Flowchart-style with arrows and category bins.}
 
+\begin{figure}[t!]
+    \centering
+    \includegraphics[width=0.4\textwidth]{fig/categorization_flow.pdf}
+    \caption{Secure Process Entity Categorization workflow.}
+    \label{proc:cate}
+    \vspace{-3ex}
+  \end{figure}
 
 During our initial experiments (Table~\ref{categorized_gnn}), we found that a single \( {GNN}_{\text{global}} \) cannot achieve good detection performance in an FL setting due to the diverse and heterogeneous distributions of clients data. The disparity in data distributions among \( N \) clients poses a significant challenge in effectively training a unified model that can generalize well across all clients, since the global model struggles to capture the unique characteristics and patterns inherent in each client's data. To address this limitation, we developed a comprehensive framework that organizes process entities across different clients into distinct groups. Each category is modeled by a dedicated submodel, enabling it to focus on the unique distribution and intricate patterns of its assigned category and thereby enhance overall detection performance.
 
 % \wajih{please refer to algorithm in the whole paragraph. Divide the following paragraph into three steps using latex enumerate macro.}
-As shown in Algorithm~\ref{alg:categories}, the framework leverages a central utility server to orchestrate the categorization of process entities. Specifically, it proceeds in three main steps:
+As shown in Algorithm~\ref{alg:categories} and Figure~\ref{proc:cate}, the framework leverages a central utility server to orchestrate the categorization of process entities. Specifically, it proceeds in three main steps:
 \begin{enumerate}[itemsep=0.1em, parsep=0em, topsep=0em, leftmargin=*]
     \item \textbf{Collection of Encrypted Process Names.} Each client \(C_i \in \mathcal{C}\) transmits an encrypted list of its process names to the utility server. The server merges these into a global list of unique process entities, denoted by \( \mathcal{P}_{\text{global}} \).
 
     \item \textbf{Random Categorization.} The utility server applies the categorization map \( \psi(p) \) to randomly partition all process names in \( \mathcal{P}_{\text{global}} \) into \( K_{cat} \) categories. Although the partitioning is random, it is performed only once at the global level, ensuring that any process name \( p \) is consistently mapped to the same category \( j \) across all clients, i.e., \( \psi(p) = j \).
 
-    \item \textbf{Distribution of Categories.} Finally, the resulting category assignments are disseminated back to each client, guaranteeing a unified and consistent mapping of processes into categories across the federated network.
+    \item \textbf{Distribution of Categories.} Finally, the resulting category assignments are disseminated back to each client, guaranteeing a unified and consistent mapping of processes into categorized bins across the federated network.
 \end{enumerate}
 
 
