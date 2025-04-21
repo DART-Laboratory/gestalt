@@ -25,9 +25,9 @@
 
 \wajih{ We claim that the categorization-based ensemble improves convergence. But there is no empirical convergence analysis in the evaluation section e.g., training loss curves or number of FL rounds, etc. }
 
-\wajih{Add in the evaluation section how many clients we have in each dataset. "I can't find the number of FL clients in your text" }
+%\wajih{Add in the evaluation section how many clients we have in each dataset. "I can't find the number of FL clients in your text" }
 
-Our evaluation experiments are conducted on a machine running Ubuntu 18.04.6 LTS, equipped with a 10-core Intel CPU, NVIDIA RTX 2080 GPU, and 120 GB of memory. In our experiments, we set the federated learning rounds and the number of categorized \gnnshort to 10 per host. Each model is trained for 20 epochs per round. We use regularization and dropout layers in our models to avoid overfitting. To evaluate \Sys, we address the following research questions: \wajih{I have moved things around so align the RQs with that.}
+Our evaluation experiments are conducted on a machine running Ubuntu 18.04.6 LTS, equipped with a 10-core Intel CPU, NVIDIA RTX 2080 GPU, and 120 GB of memory. In our experiments, we set the federated learning rounds and the number of categorized \gnnshort to 10 per host. Each model is trained for 20 epochs per round. We use regularization and dropout layers in our models to avoid overfitting. To evaluate \Sys, we address the following research questions: %\wajih{I have moved things around so align the RQs with that.}
 
 %\wajih{RQ6 is not in this section. so please remove it. }
 
@@ -37,14 +37,16 @@ Our evaluation experiments are conducted on a machine running Ubuntu 18.04.6 LTS
 
 % \wajih{These are just too many research question. You need to combine similar RQs into one. If you think something is an ablation study then move it to the ablation study section. }
 \begin{itemize}[leftmargin=*,itemsep=0.1em, parsep=0em, topsep=0em]
-  \item \textbf{RQ1.} How does \Sys compare to existing systems in terms of detection performance? (Section~\ref{sub:detect:perf})
-  \item \textbf{RQ2.} How effective is the Word2vec harmonization scheme for handling feature heterogeneity? (Section~\ref{sub:word2vec:harmonization:efficacy})
-  \item \textbf{RQ3.} How effective is the categorization-based \gnnshort ensemble for handling data heterogeneity? (Section~\ref{sub:categorized:learning:efficacy})
-  \item \textbf{RQ4.} How does \Sys compare to existing FL solutions in addressing data heterogeneity and non-IID challenges? (Section~\ref{sec:fedalternatives})
-  \item \textbf{RQ5.} How scalable is \Sys in an enterprise-level setting with multiple host machines? (Section~\ref{cost_metric})
+  \item \textbf{RQ1.} How does \Sys compare to vanilla privacy-preserving \pids in terms of detection performance? (Section~\ref{sub:detect:perf:vanilla})
+  \item \textbf{RQ2.} How does \Sys compare to existing systems in terms of detection performance? (Section~\ref{sub:detect:perf})
+  \item \textbf{RQ3.} How scalable is \Sys in an enterprise-level setting with multiple host machines? (Section~\ref{cost_metric})
+  \item \textbf{RQ4.} How robust is \Sys against various adversarial attacks?
+  %\item \textbf{RQ5.} How effective is the Word2vec harmonization scheme for handling feature heterogeneity? (Appendix~\ref{sub:word2vec:harmonization:efficacy})
+  %\item \textbf{RQ6.} How effective is the categorization-based \gnnshort ensemble for handling data heterogeneity? (Appendix~\ref{sub:categorized:learning:efficacy})
+  \item \textbf{RQ5.} How does \Sys compare to existing FL solutions in addressing data heterogeneity and non-IID challenges? (Appendix~\ref{sec:fedalternatives})
   % \item \textbf{RQ6.} How robust is \Sys against adversarial mimicry attacks?
   \item \textbf{RQ6.} What is the resource consumption of various components of \Sys and its end-to-end processing time on a client machine? (Appendix~\ref{sec:resource_consumption})
-  \item \textbf{RQ7.} What does the ablation study reveal about \Sys's scalability and effectiveness across key factors like \gnnshort submodels, averaging rounds, federated averaging rounds, etc.? (Appendix~\ref{app:ablation})
+  \item \textbf{RQ7.} What does the ablation study reveal about \Sys's effectiveness across key factors like \gnnshort submodels, averaging rounds, federated averaging rounds, \wordvec harmonization and categorization-based \gnnshort ensemble? (Appendix~\ref{app:ablation})
   
   \end{itemize}  
 
@@ -56,24 +58,18 @@ Our evaluation experiments are conducted on a machine running Ubuntu 18.04.6 LTS
 \PP{Datasets} We have utilized the \darpa E3~\cite{error3}, E5~\cite{bug5}, and \optc~\cite{darpaoptc} datasets for our evaluation. These datasets contain real-world APT attacks observed in enterprise networks. The attack traces they include are stealthy, span several days, and mirror the characteristics of actual APTs. Consequently, achieving strong detection accuracy on these datasets indicates that our system can deliver comparable performance in real-world deployments. Furthermore, these datasets incorporate logs of various sizes from Linux, FreeBSD, Android, and Windows operating systems. Our system’s robust detection accuracy across all datasets demonstrates its effective generalization to heterogeneous platforms with differing log sizes, reaching performance levels on par with state-of-the-art centralized \pids. Notably, the datasets capture APT attacks of varying stealthiness, with the proportion of malicious nodes ranging from 0.05\% in \optc to 2\% in E3, and approximately 19\% in E5. The low infiltration rate in \optc underscores the system’s capacity for detecting highly stealthy adversaries, whereas the more widespread attacks in E5 highlight the resilience of our approach when confronted with a higher density of malicious nodes. Collectively, these datasets serve as a strong benchmark to evaluate the scalability and adaptability of our system. Each \darpa dataset is accompanied by ground truth documents that aid in distinguishing benign events from malicious ones. For this evaluation, we employ attack labels from existing systems such as \threatrace, \kairos, and \flash. Further details regarding the datasets appear in Appendix~\ref{sec:dataset:description}. ATLASv2~\cite{riddle2023atlasv2} is another recent dataset containing APT attack traces, but we did not evaluate it because it only includes data from two hosts, making it unrepresentative of a typical federated learning scenario.
 
 
-
-
 \PP{Detectors for comparison} To benchmark our system, we conduct comparisons against existing state-of-the-art \pids. \threatrace~\cite{wang2022threatrace}, a node-level system, employs graph representation learning to identify anomalous nodes within a provenance graph. MAGIC~\cite{jia2023magic} is another recent \pids which uses masked graph representation learning to detect system threats. \flash~\cite{flash2024} is another notable node-level system, which utilizes semantic feature vectors and an embedding recycling database to offer superior detection performance and efficiency. \flash detection results, as shown in Table~\ref{summary:benchmarks:large}, have been shown to surpass \threatrace. Hence, our comparison primarily focuses on \flash. Additionally, we include \kairos~\cite{cheng2023kairos} in our comparison, which utilizes temporal graph networks to capture the evolution of a system's provenance graph over time.
 
 \PP{Excluded Detectors} We do not compare against Streamspot~\cite{streamspot} and Unicorn~\cite{han2020unicorn} as they are graph-level detectors, and recent systems like \threatrace and \flash have been shown to surpass them in detection performance. While \disdet~\cite{dong2023distdet}, Prographer~\cite{yangprographer} and Shadewatcher~\cite{shadewatcher} are notable \pids, we exclude them from our comparison because \disdet and Prographer are closed-source and a major component of Shadewatcher is proprietary, which hinders our ability to conduct a thorough comparison. It is important to note that, similar to existing works (e.g., \kairos, Shadewatcher, and Prographer), \Sys considers only three node types in provenance graphs: \emph{processes}, \emph{files}, and \emph{sockets}. However, in the E3 dataset, \flash has also been evaluated using additional node types. Therefore, we executed \flash using these three node types to report the results in Table~\ref{summary:benchmarks:large}.
 
-\wajih{Let's add RQXX in the headings of the subsections as it will be easy to cross-reference.}
-
-\subsection{Detection Performance Against a Vanilla Privacy-Preserving PIDS}
+\subsection{RQ1: Detection Performance Against a Vanilla Privacy-Preserving PIDS}
 \label{sub:detect:perf:vanilla}
 
 \wajih{Add a line about Vanilla Privacy-Preserving PIDS and how it was created by using basic FL with Flash. and say that Besides Flash we tried other SOTA PIDS and we got similar results for Vanilla Privacy-Preserving PIDS so we only include results for Flash.}
 
-\wajih{Add results and table for Vanilla Privacy-Preserving PIDS}
-
 \input{tables/vanilla.tex}
 
- \subsection{Detection Performance Against SOTA PIDS}
+ \subsection{RQ2: Detection Performance Against SOTA PIDS}
  \label{sub:detect:perf}
 
  \input{tables/main.tex}
@@ -118,7 +114,7 @@ Our evaluation experiments are conducted on a machine running Ubuntu 18.04.6 LTS
 
 % Scalability concerns are addressed in this section
 
-\subsection{Scalability in Enterprise settings}
+\subsection{RQ3: Scalability in Enterprise settings}
 \label{cost_metric}
 We analyzed the performance of our system in an enterprise setting using the \optc dataset, which includes a large number of host machines. We compared our system to centralized systems such as \flash and \kairos, focusing on important metrics including network and processing overhead. We also provide further discussion on scaling FL to massive enterprise networks in Appendix~\ref{state:explosion}.
 
