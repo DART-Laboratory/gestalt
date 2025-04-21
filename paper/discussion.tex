@@ -3,7 +3,7 @@
 
 % \wajih{Explain here why we chose GraphSage over GCN and TGN.}
 
-\wajih{Explain why Utility Server's Random Split is okay from privacy standpoint and accuracy standpoint and will not affect anything else. Also you can refer for more details in the design section.}
+% \wajih{Explain why Utility Server's Random Split is okay from privacy standpoint and accuracy standpoint and will not affect anything else. Also you can refer for more details in the design section.}
 
 \PP{Reason for Combining FL with \gnnshort} 
 APTs involve causally linked steps across system entities, best modeled by provenance graphs~\cite{inam2023sok}. Traditional log-level systems~\cite{deeplog2017,liu2019log2vec,xia2019loggan} fail to capture these relationships, whereas graph learning techniques effectively detect such patterns~\cite{flash2024,cheng2023kairos,jia2023magic}. By integrating FL with graph representation learning, \Sys enables decentralized, privacy-preserving intrusion detection without sacrificing accuracy. We adopt GraphSAGE as our base \gnnshort\ due to its inductive capability and efficient minibatch training, both well-suited for federated settings. Compared to GCN, which requires full-graph access, and TGN, which imposes a temporal constraint that complicates federated learning, GraphSAGE offers a better balance of scalability, flexibility, and performance.
