@@ -9,36 +9,6 @@
 
 \PP{DARPA OpTC} The \optc dataset, another open-source resource from \darpa, encompasses a comprehensive collection of audit logs from an enterprise environment with 1,000 hosts. This dataset includes six days of benign system logs. Subsequently, attack logs span three days of system activities, featuring red team tactics such as initial compromises, privilege escalations, malicious software installations, and data exfiltration. Each attack day targeted different host machines.
 
- \section{RQ5: Comparison with existing FL solutions for heterogeneity.}
-\label{sec:fedalternatives}
-
-We conducted experiments to evaluate the efficacy of existing federated learning solutions that address data heterogeneity and the non-IID problem. Specifically, we examined FedProx~\cite{li2020federated} and FedOpt~\cite{asad2020fedopt}. FedProx mitigates client heterogeneity by adding a proximal term to the local loss function, penalizing deviations from the global model and thereby reducing the impact of statistical heterogeneity. In contrast, FedOpt uses a server-side optimizer to aggregate updates from distributed clients, enhancing convergence. We compared these techniques with standard FedAvg and the \Sys variant of FedAvg, which incorporates semantic harmonization and categorization based gnn ensemble learning. Table~\ref{fedoptprox} presents the evaluation results. Both FedProx and FedOpt outperform FedAvg; however, neither matches the performance of \Sys.
-
-FedProx's penalty on global and local deviations focuses the model on patterns common across all clients, preventing it from learning client-specific patterns. Consequently, using this global model for anomaly detection on individual clients often yields numerous false alarms and poor detection performance. Moreover, while FedOpt can effectively aggregate model updates using an optimizer rather than simple averaging, updates that are highly disparate—a common scenario in system logs due to diverse client activities—cause FedOpt to fail in harmonizing the updates. As a result, it loses information on important benign patterns, leading to low precision and recall.
-
-In contrast, our system employs an ensemble learning framework. First, it categorizes system patterns into standardized bins via process entity categorization. Next, \gnnshort submodels learn the data distribution within each bin. Submodels with similar learned distributions are then averaged, preventing the conflation of unique client patterns and improving precision. Moreover, our semantic vector harmonization reduces heterogeneity in the \gnnshort feature vectors, making the updates less disparate and improving model convergence in comparison to other techniques.
-
-
-\begin{table}[!t]
-  \centering
-  \footnotesize
-  \caption{Federated averaging algorithms comparison.}
-  \setlength{\tabcolsep}{1.6pt}
-  \begin{tabular}{cccccccccc}
-    \toprule
-    \multirow{2}{*}{\textbf{Methods}} & \multicolumn{3}{c }{\textbf{\optc}} & \multicolumn{3}{c }{\textbf{E3}} & \multicolumn{3}{c }{\textbf{E5}} \\
-    \cmidrule(r){2-4} \cmidrule(r){5-7} \cmidrule(r){8-10}
-    & {\bf Prec.} &  {\bf Rec.} & {\bf F-score} & {\bf Prec.}  & {\bf Rec.} & {\bf F-score} & {\bf Prec.}  & {\bf Rec.} & {\bf F-score} \\
-    \midrule
-
-    FedAvg & 0.36 & 0.99 & 0.53  & 0.73 & 0.99 & 0.84 & 0.76 & 0.98 & 0.86 \\
-    FedProx & 0.48 & 0.95 & 0.64 & 0.79 & 0.98 & 0.87 & 0.82 & 0.95 & 0.88 \\
-    FedOpt & 0.52 & 0.90  & 0.74 & 0.81 & 0.97 & 0.88 & 0.84 & 0.92 & 0.87 \\
-    {\bf \Sys} & \TOP & \TOR & \TOF & 0.96 & 0.99 & 0.97 & 0.99 & 0.96 & 0.97 \\
-    \bottomrule
-  \end{tabular}
-\label{fedoptprox}
-\end{table}
 
 \section{RQ6: Resource consumption and Processing Overhead}
 \label{sec:resource_consumption}

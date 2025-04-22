@@ -4,7 +4,7 @@
 
 % During the training phase, poisoning attacks executed by malicious actors may introduce corrupt weights to compromise the global model~\cite{jagielski2018manipulating}. To improve \Sys's resilience against such threats, several defensive methods can be used. Among these, advanced model aggregation methods, such as Multi-Krum~\cite{munoz2019byzantine}, can be particularly effective. This method employs clustering techniques on the central server to identify anomalous updates during model aggregation. Consequently, outlier updates are removed, enhancing the system's robustness against poisoning.
 
-\subsection{RQ4: Adversarial Attacks Analysis}
+\subsection{RQ5: Adversarial Attacks Analysis}
 \label{sec:adversarial}
 
 % \wajih{would it be possible to combine Figure 4 and Figure 3 into one figure with three subflots/subfigures.}
@@ -20,25 +20,27 @@
 
 In this section, we analyze the robustness of our system against mimicry, model poisoning, gradient-based attacks and bin-level inference attacks. Membership inference attacks are discussed in Section~\ref{sec:privacy}.
 
+\begin{figure*}[!t]
+  \centering
+  \subfloat[Model poisoning: FedAvg aggregation.]{\includegraphics[width=0.3\textwidth]{fig/FedAvg_poisoning.pdf}\label{fedavgpoison}}
+  \hfill
+  \subfloat[Model poisoning: Multi-Krum aggregation.]{\includegraphics[width=0.3\textwidth]{fig/multi-krum.pdf}\label{multikrumpoison}}
+  \hfill
+  \subfloat[Adversarial mimicry attack]{\includegraphics[width=0.294\textwidth]{fig/adversarial.pdf}\label{mimicryattack}}
+  \hfill
+  \caption{Adversarial attacks analysis. \wajih{the font size is not consistent among figures. also the width and hieght of the figures is also not same. Let's not make these mistakes again.}}
+  \label{fig:poison}
+  \vspace{-3ex}
+\end{figure*}
+
 \PP{Mimicry Attacks}  We evaluated our system's resilience against the adversarial mimicry attack detailed by Goyal et al.~\cite{goyal2023sometimes} and compared its robustness with \flash. The attack aims to mimic benign graph embeddings, integrating benign node structures to evade detection. Using the E3 dataset, similar to \flash for fair comparison, our findings (shown in Figure~\ref{mimicryattack}) reveal that our detector remains robust; the integration of benign structures has a minimal impact on anomaly scores. Our system's superior robustness is due to our process-categorization-based ensemble \gnnshort architecture, which allows model specialization for different system entities, enhancing detection of structural changes. Conversely, \flash, relying on a generalized model for anomaly detection, exhibits vulnerabilities to mimicry attacks, as it may miss critical details. As demonstrated by the authors, \flash initially experiences a drop in anomaly scores, increasing the likelihood of attack nodes evading detection—a vulnerability not present in our system. \footnote{PROVNINJA~\cite{mukherjee2023evading} is another mimicry attack that uses benign process profiles to find adversarial evasion strategies. It faces challenges against \pids like \flash and \Sys due to their multimodal architecture, which combines \wordvec for featurization and \gnnshort for anomaly detection. This complexity makes it difficult for attackers to create effective evasion strategies without accessing \wordvec directly or excessively querying the model, which conflicts with the black box nature of the assumed threat model of PROVNINJA.}
 
 
-\PP{Model Poisoning Attacks} These occur when one or more malicious clients submit corrupted local model updates to the central server during training, thereby degrading the model’s performance. Existing methods typically assume an attack-free training phase, providing no defense against such attacks. We conducted experiments on the \optc dataset to assess the impact of poisoning attacks on our system, and we also evaluated how robust aggregation methods—such as Multi-Krum~\cite{munoz2019byzantine}—can enhance resilience.
+\PP{Model Poisoning Attacks} These occur when one or more malicious clients submit corrupted local model updates to the central server during training, thereby degrading the model’s performance. Existing methods typically assume an attack-free training phase, providing no defense against such attacks. We conducted experiments on the \optc dataset to assess the impact of poisoning attacks on our system, and we also evaluated how robust aggregation methods,such as Multi-Krum~\cite{munoz2019byzantine}, can enhance resilience.
 
 Multi-Krum compares each client’s gradient with those of other clients, retaining only the most consistent updates. Since malicious updates must deviate significantly from benign ones to degrade performance, Multi-Krum effectively identifies and discards them as outliers. Figure~\ref{fig:poison} shows our experimental results using both FedAvg and Multi-Krum. With simple federated averaging, malicious noise critically affects the model by disrupting the benign distribution it learns. In contrast, Multi-Krum isolates and removes erroneous updates from malicious clients, preserving the global model. Notably, Multi-Krum assumes that fewer than one-third of all clients are malicious; therefore, in our experiments, we tested with a maximum of 30\% compromised clients.
 
-\begin{figure*}[!t]
-    \centering
-    \subfloat[Model poisoning: FedAvg aggregation.]{\includegraphics[width=0.3\textwidth]{fig/FedAvg_poisoning.pdf}\label{fedavgpoison}}
-    \hfill
-    \subfloat[Model poisoning: Multi-Krum aggregation.]{\includegraphics[width=0.3\textwidth]{fig/multi-krum.pdf}\label{multikrumpoison}}
-    \hfill
-    \subfloat[Adversarial mimicry attack]{\includegraphics[width=0.294\textwidth]{fig/adversarial.pdf}\label{mimicryattack}}
-    \hfill
-    \caption{Adversarial attacks analysis.}
-    \label{fig:poison}
-    \vspace{-3ex}
-  \end{figure*}
+
 
 \PP{Gradient-based Attacks} These attacks~\cite{chakraborty2021survey} exploit detailed knowledge of the target model, including its architecture and parameters, to calculate and apply malicious perturbations. Such white-box access allows an attacker to compute precise gradients that indicate how inputs should be modified to degrade the model’s performance. Other attacks tend to be black-box in nature, relying on iterative, query-based techniques to influence the model’s decisions. However, these repeated computations and queries run counter to the attacker’s aim of remaining inconspicuous, as they generate substantial activity and leave a significant footprint. Consequently, such attacks are often impractical in real-world scenarios. Several defenses can be employed during model training to bolster the system’s resilience against these threats. Adversarial training~\cite{tramer2019adversarial} is one effective strategy in which the model is trained on perturbed input data, thereby increasing its robustness against these attacks.
 
