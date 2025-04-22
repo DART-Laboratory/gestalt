@@ -97,7 +97,7 @@ Transferring tokens -- containing sensitive data like process names, file names,
 \begin{figure}[t!]
     \centering
     \includegraphics[width=0.4\textwidth]{fig/categorization_flow.pdf}
-    \caption{Secure process entity categorization workflow. \wajih{The colors are not consistent with the Figure 2. Also, there is some mismatch between what you presented Figure 2 and Figure 4. Also, I was hoping you can use actual example of two clients A and B that you have in the subsection. This way we might be able to save some space as well. Also, the caption's some words have capital letters and some are not. I am not sure why do keep making these careless mistakes in the paper. }}
+    \caption{Secure process entity categorization workflow.}
     \label{proc:cate}
     \vspace{-3ex}
   \end{figure}
@@ -105,7 +105,7 @@ Transferring tokens -- containing sensitive data like process names, file names,
 During our initial experiments (Table~\ref{categorized_gnn}), we found that a single \( {GNN}_{\text{global}} \) cannot achieve good detection performance in an FL setting due to the diverse and heterogeneous distributions of clients data. The disparity in data distributions among \( N \) clients poses a significant challenge in effectively training a unified model that can generalize well across all clients, since the global model struggles to capture the unique characteristics and patterns inherent in each client's data. To address this limitation, we developed a comprehensive framework that organizes process entities across different clients into distinct groups. Each category is modeled by a dedicated submodel, enabling it to focus on the unique distribution and intricate patterns of its assigned category and thereby enhance overall detection performance.
 
 % \wajih{please refer to algorithm in the whole paragraph. Divide the following paragraph into three steps using latex enumerate macro.}
-As shown in Algorithm~2 and Figure~\ref{proc:cate}, the framework leverages a central utility server to orchestrate the categorization of process entities. Specifically, it proceeds in three main steps:
+As shown in Algorithm~2, the framework leverages a central utility server to orchestrate the categorization of process entities. Specifically, it proceeds in three main steps:
 \begin{enumerate}[itemsep=0.1em, parsep=0em, topsep=0em, leftmargin=*]
     \item \textbf{Collection of Encrypted Process Names.} Each client \(C_i \in \mathcal{C}\) transmits an encrypted list of its process names to the utility server. The server merges these into a global list of unique process entities, denoted by \( \mathcal{P}_{\text{global}} \).
 
@@ -114,12 +114,10 @@ As shown in Algorithm~2 and Figure~\ref{proc:cate}, the framework leverages a ce
     \item \textbf{Distribution of Categories.} Finally, the resulting category assignments are disseminated back to each client, guaranteeing a unified and consistent mapping of processes into categorized bins across the federated network.
 \end{enumerate}
 
-
-
 % Once the categories are established, each client employs the categorized process sets to build provenance subgraphs \( PGClient_{i} \). The neighborhood hop length of these subgraphs is aligned with the number of graph convolution layers in \( {GNN}_{\text{global}} \), ensuring the model has complete neighborhood information for each node. In our experiments, we fix this hop length to two, which past studies~\cite{wang2022threatrace,flash2024} have shown to offer an optimal trade-off between efficiency and accuracy. These subgraphs provide training data for an ensemble of \({GNN}_{\text{global}}\) models in a federated manner. Each submodel specializes in learning the patterns of its assigned category and participates in federated averaging. This ensures a balanced segmentation of data across clients and maintains consistency in the training datasets for each submodel before federated averaging.
 
 % \wajih{move this example at the of this subsection. Make sure that transitions among all the paragraphs is smooth.}
-To illustrate this process, consider two clients: \emph{A} and \emph{B}:
+Figure~\ref{proc:cate} illustrates this process with an example, consider two clients: \emph{A} and \emph{B}:
 \begin{itemize}[itemsep=0.1em, parsep=0em, topsep=0em, leftmargin=*]
     \item \emph{A} has a set of processes \{\texttt{chrome}, \texttt{ssh}, \texttt{mysql}\}.
     \item \emph{B} has a set of processes \{\texttt{chrome}, \texttt{firefox}, \texttt{ssh}, \texttt{mysql}\}.
