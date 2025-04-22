@@ -97,7 +97,7 @@ Transferring tokens -- containing sensitive data like process names, file names,
 \begin{figure}[t!]
     \centering
     \includegraphics[width=0.4\textwidth]{fig/categorization_flow.pdf}
-    \caption{Secure process entity categorization workflow.}
+    \caption{Secure process entity categorization workflow: Clients encrypt their process names and send them to the utility server, which categorizes them into bins and sends the results back. The clients then generate a provenance subgraph for each bin to support \gnnshort ensemble learning.}
     \label{proc:cate}
     \vspace{-3ex}
   \end{figure}
@@ -117,14 +117,15 @@ The framework leverages a central utility server to orchestrate the categorizati
 % Once the categories are established, each client employs the categorized process sets to build provenance subgraphs \( PGClient_{i} \). The neighborhood hop length of these subgraphs is aligned with the number of graph convolution layers in \( {GNN}_{\text{global}} \), ensuring the model has complete neighborhood information for each node. In our experiments, we fix this hop length to two, which past studies~\cite{wang2022threatrace,flash2024} have shown to offer an optimal trade-off between efficiency and accuracy. These subgraphs provide training data for an ensemble of \({GNN}_{\text{global}}\) models in a federated manner. Each submodel specializes in learning the patterns of its assigned category and participates in federated averaging. This ensures a balanced segmentation of data across clients and maintains consistency in the training datasets for each submodel before federated averaging.
 
 % \wajih{move this example at the of this subsection. Make sure that transitions among all the paragraphs is smooth.}
-Figure~\ref{proc:cate} illustrates this process with an example, consider two clients: \emph{A} and \emph{B}:
-\begin{itemize}[itemsep=0.1em, parsep=0em, topsep=0em, leftmargin=*]
-    \item \emph{A} has a set of processes \{\texttt{chrome}, \texttt{ssh}, \texttt{mysql}\}.
-    \item \emph{B} has a set of processes \{\texttt{chrome}, \texttt{firefox}, \texttt{ssh}, \texttt{mysql}\}.
-\end{itemize}
-Both clients send encrypted lists of these process names to the utility server, which combines them into a single global list of unique names \{\texttt{chrome}, \texttt{ssh}, \texttt{mysql}, \texttt{firefox}\}. The server then applies \( \psi \) to randomly assign each name to one of the \( K_{cat} \) categories. For example, \( \psi(\texttt{chrome}) \) and \( \psi(\texttt{mysql}) \) may map to category~1, while \( \psi(\texttt{ssh}) \) and \( \psi(\texttt{firefox}) \) map to category~2.
+Figure~\ref{proc:cate} illustrates this with an example. The categorization process divides the overall learning task into sub-tasks (submodels) by distributing them into different subsets of processes across clients in a standardized manner. As a result, the influence of clients with larger datasets is spread across multiple models. This approach reduces the risk of any single client dominating the federated learning process and promotes more balanced contributions from all participants, ultimately enhancing the system's robustness and performance.
+%consider two clients: \emph{A} and \emph{B}:
+% \begin{itemize}[itemsep=0.1em, parsep=0em, topsep=0em, leftmargin=*]
+%     \item \emph{A} has a set of processes \{\texttt{chrome}, \texttt{ssh}, \texttt{mysql}\}.
+%     \item \emph{B} has a set of processes \{\texttt{chrome}, \texttt{firefox}, \texttt{ssh}, \texttt{mysql}\}.
+% \end{itemize}
+% Both clients send encrypted lists of these process names to the utility server, which combines them into a single global list of unique names \{\texttt{chrome}, \texttt{ssh}, \texttt{mysql}, \texttt{firefox}\}. The server then applies \( \psi \) to randomly assign each name to one of the \( K_{cat} \) categories. For example, \( \psi(\texttt{chrome}) \) and \( \psi(\texttt{mysql}) \) may map to category~1, while \( \psi(\texttt{ssh}) \) and \( \psi(\texttt{firefox}) \) map to category~2.
 
-This assignment is transmitted back to both clients, ensuring that \texttt{chrome} and \texttt{mysql} are consistently grouped under category~1, and \texttt{ssh} and \texttt{firefox} under category~2. As a result, each category gathers similar processes across all clients, even though the initial split is random. By dividing the overall task into sub-tasks (submodels) and distributing them to different subsets of processes, the influence of clients with larger datasets is shared among multiple models. This approach reduces the risk of any single client dominating the federated training process and facilitates more balanced contributions from all participants, ultimately improving the robustness and performance of the system.
+% This assignment is transmitted back to both clients, ensuring that \texttt{chrome} and \texttt{mysql} are consistently grouped under category~1, and \texttt{ssh} and \texttt{firefox} under category~2. As a result, each category gathers similar processes across all clients, even though the initial split is random. By dividing the overall task into sub-tasks (submodels) and distributing them to different subsets of processes, the influence of clients with larger datasets is shared among multiple models. This approach reduces the risk of any single client dominating the federated training process and facilitates more balanced contributions from all participants, ultimately improving the robustness and performance of the system.
 
 %\input{algos/cat.tex}
 
