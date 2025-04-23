@@ -18,15 +18,6 @@
 \subsection{Overview}
 \Sys comprises six key components. Section~\ref{sub:provconstruct} builds provenance graphs from system logs on each client. Section~\ref{sub:word2vec:model} trains local \wordvec models to encode semantic attributes. Section~\ref{sub:model:harmonization} harmonizes these models using encryption and a utility server. Section~\ref{sys:catg} categorizes process entities across clients. Section~\ref{sys:fpgl} trains category-specific GNNs locally and aggregates them via federated learning. Section~\ref{sys:anomaly_detection} performs anomaly detection using the aggregated models. Figure~\ref{fig:arch} illustrates the architecture of \Sys.
 
-
-\subsection{Problem Statement}
-% \wajih{double check this subsection as I added this.}
-
-\Sys aims to detect anomalous nodes in client-specific provenance graphs \( \{PGClient_{1}, PGClient_{2}, \ldots, PGClient_{N}\} \), which are constructed from system logs on a set of decentralized clients \( \mathcal{C} \). These anomalies represent deviations from benign behavior and are indicative of potential security threats.
-
-To achieve this, \Sys employs a novel adaptation of Federated Learning (FL) to collaboratively train a set of global GNN models \( {GNN}_{\text{global}} = \{GNN_1, GNN_2, \ldots, GNN_{K_{cat}}\} \) without requiring raw log data to leave client machines. Each client locally optimizes its model by minimizing a loss function \( \mathcal{L}_i(w) \) and shares only model updates \( \Delta w_i \) with the central server. The global model is updated iteratively through aggregation: \( w = \frac{1}{N} \sum_{i=1}^{N} \Delta w_i, \)
-where \( N \) represents the total number of clients. This decentralized approach preserves privacy while enabling the detection of threats across diverse and distributed system logs. The key notations for our system are summarized in Table~\ref{tab:keynotations}.
-
 \input{tables/notations.tex}
 
 \begin{figure}[t!]
@@ -37,10 +28,20 @@ where \( N \) represents the total number of clients. This decentralized approac
   \vspace{-3ex}
 \end{figure}
 
+\subsection{Problem Statement}
+% \wajih{double check this subsection as I added this.}
+
+\Sys aims to detect anomalous nodes in client-specific provenance graphs \( \{PGClient_{1}, PGClient_{2}, \ldots, PGClient_{N}\} \), which are constructed from system logs on a set of decentralized clients \( \mathcal{C} \). These anomalies represent deviations from benign behavior and are indicative of potential security threats.
+
+To achieve this, \Sys employs a novel adaptation of Federated Learning (FL) to collaboratively train a set of global GNN models \( {GNN}_{\text{global}} = \{GNN_1, GNN_2, \ldots, GNN_{K_{cat}}\} \) without requiring raw log data to leave client machines. Each client locally optimizes its model by minimizing a loss function \( \mathcal{L}_i(w) \) and shares only model updates \( \Delta w_i \) with the central server. The global model is updated iteratively through aggregation: \( w = \frac{1}{N} \sum_{i=1}^{N} \Delta w_i, \)
+where \( N \) represents the total number of clients. This decentralized approach preserves privacy while enabling the detection of threats across diverse and distributed system logs. The key notations for our system are summarized in Table~\ref{tab:keynotations}.
+
+
+
 \subsection{Provenance Graph Constructor}
 \label{sub:provconstruct}
 
-\Sys utilizes \logs to construct a system provenance graph. It operates on each client machine, using their local system logs to build the graph. Major operating systems, including Linux and Windows, come equipped with built-in mechanisms for log collection -- specifically, the Linux Audit system~\cite{linuxaudit} and Windows Event Tracing~\cite{windowsaudit}. These logs provide detailed insights into the interactions among various system entities, capturing activities, such as process executions, file operations, and network connections. Using this data, \Sys forms a graph where nodes represent system entities including processes, files, and sockets. The edges of this graph denote events, identified by syscalls, that occur between these entities. Moreover, \Sys enhances each node with comprehensive attributes, including process names, command lines, file names, and network IP addresses. As demonstrated by prior works~\cite{flash2024,cheng2023kairos}, these contextual attributes enable the model to develop a robust understanding of system behavior. Figure~\ref{provexp} shows an example graph where \textit{Explorer.exe} executes processes like \textit{Notepad.exe} and \textit{Firefox.exe}, which then interact with file and socket nodes.
+\Sys builds a system provenance graph on each client using local \logs. It leverages built-in logging tools, such as Linux Audit~\cite{linuxaudit}, which record detailed system activities. These include process executions, file accesses, and network events. \Sys constructs a graph where nodes represent entities like processes, files, and sockets. Edges correspond to syscalls capturing interactions between them. Each node is enriched with attributes such as process names, command lines, file names, and IP addresses. Prior work~\cite{flash2024,cheng2023kairos} shows these attributes help the model learn normal system behavior. Figure~\ref{provexp} illustrates a graph where \textit{Explorer.exe} spawns processes like \textit{Notepad.exe} and \textit{Firefox.exe}, which interact with file and socket nodes.
 
 
 

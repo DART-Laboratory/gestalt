@@ -7,8 +7,8 @@
 
 
 
-\PP{Reason for Combining FL with \gnnshort} 
-APTs involve causally linked steps across system entities, best modeled by provenance graphs~\cite{inam2023sok}. Traditional log-level systems~\cite{deeplog2017,liu2019log2vec,xia2019loggan} fail to capture these relationships, whereas graph learning techniques effectively detect such patterns~\cite{flash2024,cheng2023kairos,jia2023magic}. By integrating FL with graph representation learning, \Sys enables decentralized, privacy-preserving intrusion detection without sacrificing accuracy.
+\PP{Combining FL with \gnnshort}
+APTs involve causally linked steps across system entities, best modeled by provenance graphs~\cite{inam2023sok}. Traditional log-level systems~\cite{deeplog2017,liu2019log2vec,xia2019loggan} fail to capture these relationships, whereas graph learning techniques effectively detect such patterns~\cite{flash2024,cheng2023kairos,jia2023magic}. By integrating FL with \gnnshort, \Sys enables decentralized, privacy-preserving intrusion detection without sacrificing accuracy.
 
 \PP{Unseen Tokens in Semantic Encoder} \Sys relies on \wordvec models to encode semantic attributes, but \wordvec only generates embeddings for tokens it has previously encountered, which can degrade the quality of feature vectors for new nodes with unseen tokens. To construct node representations, we combine semantic attributes with neighboring nodes' system calls, but for nodes with unseen tokens, the representation is predominantly based on system calls, as seen in systems like \threatrace~\cite{wang2022threatrace}. To address this limitation, retraining the \wordvec model more frequently or adopting subword-level embedding models like fastText~\cite{joulin2016bag}, which generate embeddings from subword units, can improve coverage. Tokenization methods such as Byte-Pair Encoding~\cite{araabi2022effective} further enhance new token representation by breaking unknown words into smaller subword components.
 
