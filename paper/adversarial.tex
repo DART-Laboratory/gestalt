@@ -22,11 +22,20 @@ In this section, we analyze the robustness of our system against mimicry, model 
 
 \begin{figure*}[!t]
   \centering
-  \subfloat[Model poisoning: FedAvg aggregation.]{\includegraphics[width=0.3\textwidth]{fig/FedAvg_poisoning.pdf}\label{fedavgpoison}}
+  \subfloat[Model poisoning: FedAvg aggregation.]{%
+    \includegraphics[height=0.15\textwidth]{fig/FedAvg_poisoning.pdf}%
+    \label{fedavgpoison}
+  }
   \hfill
-  \subfloat[Model poisoning: Multi-Krum aggregation.]{\includegraphics[width=0.3\textwidth]{fig/multi-krum.pdf}\label{multikrumpoison}}
+  \subfloat[Model poisoning: Multi-Krum aggregation.]{%
+    \includegraphics[height=0.15\textwidth]{fig/multi-krum.pdf}%
+    \label{multikrumpoison}
+  }
   \hfill
-  \subfloat[Adversarial mimicry attack]{\includegraphics[width=0.3\textwidth]{fig/adversarial.pdf}\label{mimicryattack}}
+  \subfloat[Adversarial mimicry attack]{%
+    \includegraphics[height=0.15\textwidth]{fig/adversarial.pdf}%
+    \label{mimicryattack}
+  }
   \hfill
   \caption{Adversarial attacks analysis.}
   \label{fig:poison}
