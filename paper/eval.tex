@@ -40,14 +40,16 @@ Our evaluation experiments are conducted on a machine running Ubuntu 18.04.6 LTS
   \item \textbf{RQ1.} How does \Sys compare to vanilla privacy-preserving \pids in terms of detection performance? (Section~\ref{sub:detect:perf:vanilla})
   \item \textbf{RQ2.} How does \Sys compare to existing systems in terms of detection performance? (Section~\ref{sub:detect:perf})
   \item \textbf{RQ3.} How scalable is \Sys in an enterprise-level setting with multiple host machines? (Section~\ref{cost_metric})
-  \item \textbf{RQ4.} How does \Sys compare to existing FL solutions in addressing data heterogeneity and non-IID challenges? (Section~\ref{sec:fedalternatives})
-  \item \textbf{RQ5.} How robust is \Sys against various adversarial attacks?
+  \item \textbf{RQ4.} How robust is \Sys against adversarial attacks?
+  \item \textbf{RQ5.} How does \Sys compare to existing FL solutions in addressing data heterogeneity and non-IID challenges? (Section~\ref{sec:fedalternatives})
+
   %\item \textbf{RQ5.} How effective is the Word2vec harmonization scheme for handling feature heterogeneity? (Appendix~\ref{sub:word2vec:harmonization:efficacy})
   %\item \textbf{RQ6.} How effective is the categorization-based \gnnshort ensemble for handling data heterogeneity? (Appendix~\ref{sub:categorized:learning:efficacy})
   
   % \item \textbf{RQ6.} How robust is \Sys against adversarial mimicry attacks?
   \item \textbf{RQ6.} What is the resource consumption of various components of \Sys and its end-to-end processing time on a client machine? (Appendix~\ref{sec:resource_consumption})
   \item \textbf{RQ7.} What does the ablation study reveal about \Sys's effectiveness across key factors like \gnnshort submodels, averaging rounds, federated averaging rounds, \wordvec harmonization and categorization-based \gnnshort ensemble? (Appendix~\ref{app:ablation})
+  \item \wajih{Add RQ8 related to DP experiment that you have in Appendix}
   
   \end{itemize}  
 
@@ -124,7 +126,9 @@ We analyzed the performance of our system in an enterprise setting using the \op
 
 \PP{Processing Overhead:} Additionally, \flash processes one million events in about 100 seconds, implying that processing events from 1,000 clients would necessitate approximately 27.7 hours. In contrast, \kairos processes 57,000 events in 11.6 seconds, leading to a processing time of 204 seconds for one million events. Consequently, processing data from 1,000 clients with \kairos would require around 56.6 hours. Compared to existing systems, \Sys processes client logs in a decentralized manner and the total processing time is bounded by the client with the most log data; it will only take approximately 3 minutes to run inference on the complete \optc dataset. The central and utility servers conduct a simple mean operation on the models, taking only a few seconds.
 
-\subsection{RQ4: Comparison with existing FL solutions for heterogeneity.}
+\input{adversarial}
+
+\subsection{RQ5: Comparison with existing FL solutions}
 \label{sec:fedalternatives}
 
 We conducted experiments to evaluate the efficacy of existing federated learning solutions that address data heterogeneity and the non-IID problem. Specifically, we examined FedProx~\cite{li2020federated} and FedOpt~\cite{asad2020fedopt}. FedProx mitigates client heterogeneity by adding a proximal term to the local loss function, penalizing deviations from the global model and thereby reducing the impact of statistical heterogeneity. In contrast, FedOpt uses a server-side optimizer to aggregate updates from distributed clients, enhancing convergence. We compared these techniques with standard FedAvg and the \Sys variant of FedAvg, which incorporates semantic harmonization and categorization-based GNN ensemble learning. We used the \optc, E3, and E5 datasets to conduct this experiment. Table~\ref{fedoptprox} presents the evaluation results. We averaged the results for E3 and E5 across individual scenarios (Cadets, Theia, ClearScope) due to space constraints. Both FedProx and FedOpt outperform FedAvg; however, neither matches the performance of \Sys.

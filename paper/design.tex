@@ -29,6 +29,14 @@ where \( N \) represents the total number of clients. This decentralized approac
 
 \input{tables/notations.tex}
 
+\begin{figure}[t!]
+  \centering
+  \includegraphics[width=0.4\textwidth]{fig/provexp.pdf}
+  \caption{Data provenance graph example.}
+  \label{provexp}
+  \vspace{-3ex}
+\end{figure}
+
 \subsection{Provenance Graph Constructor}
 \label{sub:provconstruct}
 
@@ -48,13 +56,7 @@ For this encoding, we employ the \wordvec~model which processes different semant
     \item \textbf{Socket:} IP addresses and port.
 \end{itemize}
 
-\begin{figure}[t!]
-    \centering
-    \includegraphics[width=0.4\textwidth]{fig/provexp.pdf}
-    \caption{Data provenance graph example.}
-    \label{provexp}
-    \vspace{-3ex}
-  \end{figure}
+
   
 
 For each node \(v \in \mathcal{V}_i\), we extract its 1-hop subgraph by collecting all neighbors of \(v\). We transform this node subgraph into a ``document'' by combining:
@@ -69,23 +71,23 @@ These node-centric documents are then encoded into fixed-length vectors via \wor
 \subsection{Privacy-preserving Model Harmonization}
 \label{sub:model:harmonization}
 
-\input{algos/word2vec.tex}
+
 
 \PP{Addressing Token Variability Across Clients}
-Each client independently trains a \wordvec model using their local logs for feature encoding. However, before these models can be utilized to encode text attributes effectively, it is essential to contextually merge individual client \wordvec models into a unified model \( M_{\text{w2v-harm}} \) for use across all clients. This unification is crucial; without it, each client would produce a different encoding, \(v_a^i\), for identical inputs, where \(i\) denotes the client. The variability in feature vectors, \(\{v_a^1, v_a^2, \ldots, v_a^N\}\), for the same attribute \(a\) across \(N\) clients, would compromise the consistency of client-based \gnnshort models. To ensure uniformity, the feature vectors for overlapping attributes must be averaged across clients. Such averaging ensures consistency in the feature representation, enhancing the effectiveness of the downstream federated averaging technique by maintaining uniformity in the input space for the \gnnshort models across all clients.
+Each client independently trains a \wordvec model using their local logs for feature encoding. However, before these models can be utilized to encode text attributes effectively, it is essential to contextually merge individual client \wordvec models into a unified model \( M_{\text{w2v-harm}} \) for use across all clients. This unification is crucial; without it, each client would produce a different encoding, \(v_a^i\), for identical inputs, where \(i\) denotes the client. The variability in feature vectors, \(\{v_a^1, v_a^2, \ldots, v_a^N\}\), for the same attribute \(a\) across \(N\) clients, would compromise the consistency of client-based \gnnshort models. To ensure uniformity, the feature vectors for overlapping attributes must be averaged across clients. Such averaging ensures consistency in the feature representation, enhancing the effectiveness of the federated averaging technique by maintaining uniformity in the input space for the \gnnshort models across all clients.
 
 Our system harmonizes only the tokens that overlap in the \wordvec models across clients. Tokens that do not overlap are not averaged and remain unchanged. While clients share common activities due to standard system-level routines, some variations and patterns are unique to each client. Non-overlapping tokens preserve these unique patterns; however, they contribute to additional heterogeneity, which cannot be eliminated through harmonization. If these unique patterns are not accurately learned, they can lead to high false alarm rates. To capture these distinct local variations between clients, we have developed a novel ensemble GNN learning framework, detailed in Section~\ref{sys:fpgl}, where each submodel specializes in distinct system patterns across clients, enhancing model precision as shown in Section~\ref{sec:eval}.
 \emph{To better understand the degree of overlap in real-world settings, we now turn to an examination of client token overlap statistics.}
 
 %\wajih{Let's handle this comment as well "For "Overlap Statistics Across Clients.", I guess the authors compute the numbers on 0-hop node (no neighborhood information is used), but the Word2Vec aggregation is based on 1-hop. "}
 
-
+\input{algos/word2vec.tex}
 \PP{Overlap Statistics Across Clients}
 Our experiments with the \optc dataset revealed that, on average, different hosts can have up to 75\% overlap in process names, 41\% in files, and 60\% in network flows in the system logs. This finding aligns with related work \cite{flash2024}, which shows that many system-level processes and files are common across different systems. In a centralized \pids, these attributes are learned by a single semantic model, mapping them to the same embedding space. In contrast, a federated setting, where each client trains its own model, can introduce model bias into the token embeddings, complicating the convergence for downstream GNN models using these vectors. To address this, it is essential to harmonize overlapping tokens to provide the model with a unified understanding of the semantic information present in system logs.
 \emph{However, to achieve this harmonization securely and without compromising user privacy, we employ an encryption-based strategy, as described next.}
 
-\PP{Harmonization with Encryption \& Utility Server}
-Transferring tokens -- containing sensitive data like process names, file names, and IP addresses -- to a central server could breach user privacy. To mitigate this, we employ a trusted utility server. Initially, the central server uses Fernet symmetric key encryption~\cite{ismail2020fernet,bokhari2016review} to generate an encryption key, which is distributed to clients. Clients then encrypt their \wordvec model tokens using the encryption key: \(E(v_{k}) = v_{k}^{'}\) and send them to the utility server. This server merges the encrypted models and dispatches the unified semantic vectors back to the respective clients, who decrypt them back: \(D(v_{k}^{'}) = v_{k}.\) This procedure ensures that neither the central server nor the utility server can access the actual token information, assuming no collusion between the two servers. The process is detailed in Algorithm~\ref{alg:secure_integration_averaging_word2vec}.
+\PP{Harmonization with Encryption}
+Transferring tokens, containing sensitive data like process names, file names, and IP addresses, to a central server could breach user privacy. To mitigate this, we employ a trusted utility server. Initially, the central server uses Fernet symmetric key encryption~\cite{ismail2020fernet,bokhari2016review} to generate an encryption key, which is distributed to clients. Clients then encrypt their \wordvec model tokens using the encryption key: \(E(v_{k}) = v_{k}^{'}\) and send them to the utility server. This server merges the encrypted models and dispatches the unified semantic vectors back to the respective clients, who decrypt them back: \(D(v_{k}^{'}) = v_{k}.\) This procedure ensures that neither the central server nor the utility server can access the actual token information, assuming no collusion between the two servers. The process is detailed in Algorithm~\ref{alg:secure_integration_averaging_word2vec}.
 
 
 
@@ -97,7 +99,7 @@ Transferring tokens -- containing sensitive data like process names, file names,
 \begin{figure}[t!]
     \centering
     \includegraphics[width=0.4\textwidth]{fig/categorization_flow.pdf}
-    \caption{Secure process entity categorization workflow: Clients encrypt their process names and send them to the utility server, which categorizes them into bins and sends the results back. The clients then generate a provenance subgraph for each bin to support \gnnshort ensemble learning.}
+    \caption{Secure process entity categorization workflow: Clients encrypt their process names and send them to the utility server, which categorizes them into bins and sends the results back. The clients then generate a provenance subgraph for each bin to support \gnnshort ensemble learning. \Fix{Grey boxes represent encrypted.}}
     \label{proc:cate}
     \vspace{-3ex}
   \end{figure}
