@@ -84,7 +84,9 @@ To address \ref{itm:c2}, \Sys employs a novel categorization scheme for process 
 We evaluated \Sys using open-source datasets from \darpa, including E3~\cite{error3}, E5~\cite{bug5}, and \optc~\cite{anjum2021analyzing}. The evaluation covers four dimensions: (1) Accuracy, (2) Efficiency and scalability, (3) Robustness, and (4) Privacy. For accuracy, we compare \Sys against a vanilla privacy-preserving \pids baseline that combines FL with a state-of-the-art (SOTA) \pids. We find that \Sys significantly outperforms this baseline. Since existing SOTA \pids already achieve near-perfect detection accuracy, {\it the primary goal of \Sys is to demonstrate that a privacy-preserving \pids can be built while maintaining similar performance.} Our results show that \Sys achieves an average precision of 96\% and recall of 97\%, matching the accuracy of centralized SOTA \pids. To evaluate efficiency and scalability, we show that \Sys achieves a 170-fold reduction in network communication costs compared to centralized systems. Its decentralized design enables much faster inference, bounded only by the slowest client. \Sys completes the full \optc dataset in a few minutes, while existing \pids require several hours. To evaluate robustness, we present a comprehensive analysis of \Sys’s resilience against adversarial attacks in Section~\ref{sec:adversarial}. In Section~\ref{sec:privacy}, we provide a detailed analysis of the privacy guarantees offered by \Sys. We also present an ablation study to evaluate individual components (Appendix~\ref{app:ablation}), analyze the impact of differential privacy on detection accuracy (Appendix~\ref{app:dp}), and compare encryption methods (Appendix~\ref{app:encrypt}).
 
 
-%\PP{Availability} \url{https://anonymous.4open.science/r/TrustWatch/}
+\PP{Availability} We will open-source our code upon publication.
+
+% \url{https://anonymous.4open.science/r/TrustWatch/}
 % The main contributions of our work are as follows:
 
 % \begin{itemize}[topsep=.1ex,itemsep=-.1ex,leftmargin=*]
