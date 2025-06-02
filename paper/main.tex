@@ -1,22 +1,11 @@
 
-\documentclass[conference]{./sty/IEEEtran-3}
-\include{macros}
+\documentclass[conference,compsoc]{sty/IEEEtran}
+\IEEEoverridecommandlockouts\include{macros}
 \include{table-macros/exp}
 
 \begin{document}
 
 \title{Private Yet Accurate: A Decentralized Approach to System Intrusion Detection}
-
-\IEEEoverridecommandlockouts
-\makeatletter\def\@IEEEpubidpullup{6.5\baselineskip}\makeatother
-\IEEEpubid{\parbox{\columnwidth}{
-		Network and Distributed System Security (NDSS) Symposium 2026\\
-		23-27 February 2026, San Diego, CA, USA\\
-		ISBN 979-8-9894372-8-3\\
-		https://dx.doi.org/10.14722/ndss.2026.230020\\
-		www.ndss-symposium.org
-}
-\hspace{\columnsep}\makebox[\columnwidth]{}}
 
 \maketitle
 
@@ -48,10 +37,8 @@
 % \input{appendix}
 
 \balance
-\bibliographystyle{IEEEtranS}
-{
-\footnotesize
-\setlength{\bibsep}{3pt}
+\bibliographystyle{abbrvnat}
+{\footnotesize\setlength{\bibsep}{3pt}
 \bibliography{bib-files/hassan,bib-files/hassan-misc}}
 \input{appendix}
 \end{document}
