@@ -56,3 +56,47 @@ main.pdf
 *.gz
 *.aux
 *.fdb_latexmk
+
+
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Jupyter Lab workspace settings
+.lab/
+
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+env/
+venv/
+ENV/
+*.env
+*.venv
+
+# Jupyter runtime and metadata
+.jupyter/
+~$*
+*.bak
+*.swp
+*.tmp
+
+# VSCode or other editor settings (optional)
+.vscode/
+.idea/
+
+# Output or cache files
+*.log
+*.out
+*.dat
+*.csv
+*.tsv
+*.db
+*.sqlite
+
+# Hidden system files
+.DS_Store
+Thumbs.db
